@@ -1,0 +1,40 @@
+<div class="container">
+  <form>
+    <div class="row mb-3 mt-5">
+      <div class="col">
+        <h1>Cadastro de Categorias</h1>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <label for="name" class="form-label">Nome</label>
+        <input [field]="formName" type="text" class="form-control" id="name" />
+        @if (formName().touched() && formName().invalid()) {
+        <div class="is-invalid">
+          @for (error of formName().errors(); track $index) {
+          <small>{{error.message}}</small>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-end d-grid d-sm-block">
+        @if (isSaveAction) {
+        <img class="save-control loading" src="assets/images/loading.png" />
+        <label class="save-control loading">{{saveControl().message}}</label>
+        } @else {
+        <button (click)="onCancelAction()" type="button" class="btn btn-danger">
+          <img src="assets/images/cancelar.png" />
+          <span>Cancelar</span>
+        </button>
+        &nbsp;
+        <button [disabled]="isDisabledSaveAction" (click)="onSaveAction()" type="button" class="btn btn-primary">
+          <img src="assets/images/salvar.png" />
+          <span>Salvar</span>
+        </button>
+        }
+      </div>
+    </div>
+  </form>
+</div>

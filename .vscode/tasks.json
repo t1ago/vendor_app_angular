@@ -37,6 +37,19 @@
           }
         }
       }
+    },
+    {
+      "label": "Gerar Cobertura",
+      "type": "shell",
+      "command": "ng test --coverage",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": true
+      }
     }
   ]
 }

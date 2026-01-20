@@ -1,0 +1,41 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      @for (title of titles; track $index) {
+        <th scope="col">{{title.name}}</th>
+      }
+
+      @if (buttons.length > 0) {
+        <th scope="col">Ações</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of data; track $index) {
+      <tr>
+        @for (title of titles; track $index) {
+          <td>
+            {{item[title.dataField]}}
+          </td>
+        }
+
+        @if (buttons.length > 0) {
+          <td>
+            @for (button of buttons; track $index) {
+              @if (button.show(item)) {
+                <button class="btn btn-primary" type="button" (click)="button.action(item)">
+                  
+                  @if(button.icon) {
+                    <img [src]="button.icon">
+                  }
+
+                  {{button.name}}
+                </button>
+              }
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

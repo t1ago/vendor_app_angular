@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@use "bootstrap/scss/bootstrap" as *;
+
+.is-invalid {
+    color: $danger !important;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+div {
+    >label.save-control.loading {
+        color: $primary !important;
+    }
+    
+    >img.save-control.loading {
+        height: 50px;
+        width: 50px;
+        margin: 5px;
+        animation: rotacao 5s linear infinite;
+    }
+}
+
+
+@keyframes rotacao {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

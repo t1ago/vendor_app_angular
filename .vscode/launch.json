@@ -3,18 +3,30 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ng serve",
+      "name": "Angular: Run",
       "type": "chrome",
       "request": "launch",
       "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "url": "http://localhost:4200/category/form"
     },
     {
-      "name": "ng test",
+      "name": "Angular: Test (Debug)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "test"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "autoAttachChildProcesses": true
+    },
+    {
+      "name": "Angular: Test (Cobertura)",
       "type": "chrome",
       "request": "launch",
-      "preLaunchTask": "npm: test",
-      "url": "http://localhost:9876/debug.html"
+      "file": "${workspaceFolder}/coverage/vendor_app_angular/index.html",
+      "preLaunchTask": "Gerar Cobertura",
+      "sourceMaps": true
     }
   ]
 }
