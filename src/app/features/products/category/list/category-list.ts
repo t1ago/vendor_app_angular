@@ -1,7 +1,9 @@
-import { Component, WritableSignal } from '@angular/core';
+import { Component, inject, WritableSignal } from '@angular/core';
 import { ICategoryModel } from '../interfaces/category-model';
 import { Table } from "../../../../shared/components/table/table";
 import { TableConfig } from '../../../../shared/components/table/interfaces/table-config';
+import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-category-list',
@@ -12,34 +14,30 @@ import { TableConfig } from '../../../../shared/components/table/interfaces/tabl
 })
 export class CategoryList {
 
-  tableConfig: TableConfig<ICategoryModel> = {
-    hasHover: true,
-    data: [{
-      id: 1,
-      name: 'Teste'
-    },
-    {
-      id: 2,
-      name: 'Teste'
-    }
-  ],
-    titles: [{
-      name: 'Nome da Categoria',
-      dataField: 'name'
-    }],
-    buttons: [
-      {
-        name: 'salvar',
-        show: (data) => {
-          return true
-        },
-        action(data) {
-        },
-        icon: './assets/images/salvar.png'
-      }
-    ]
+  private route = inject(ActivatedRoute);
+
+  tableConfig!: TableConfig<ICategoryModel>;
+
+  constructor() {
+    this.loadData()
   }
 
+  private loadData() {
+    const routeData = toSignal(this.route.data);
+    const dataModel = routeData()?.['data'];
 
+    this.tableConfig = {
+      hasHover: true,
+      data: dataModel,
+      titles: [
+        {
+          name: 'Nome da Categoria',
+          dataField: 'name'
+        }
+      ],
+      buttons: []
+    }
+
+  }
 
 }

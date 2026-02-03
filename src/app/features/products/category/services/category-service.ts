@@ -28,6 +28,16 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
     );
   }
 
+  override getAll(): Observable<Object> {
+    this.request = this.http.get(`http://localhost:3000/categorias`);
+
+    return this.resultObservable().pipe(
+      map((value: any) => {
+        return this.mapModels(value.data);
+      })
+    );
+  }
+
   override mapDto(model: ICategoryModel): ICategoryDto {
     return {
       id: model.id,
@@ -40,5 +50,11 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
       id: dto.id,
       name: dto.nome,
     };
+  }
+
+  private mapModels(data: ICategoryDto[]): ICategoryModel[] {
+    return data.map((value: ICategoryDto) => {
+      return this.mapModel(value)
+    })
   }
 }

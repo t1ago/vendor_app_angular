@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table" [class]="{'table-hover': hasHover}">
   <thead>
     <tr>
       @for (title of titles; track $index) {

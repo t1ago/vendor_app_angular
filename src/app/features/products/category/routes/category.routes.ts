@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { categoryResolver } from './category-data-resolver';
+import { categoryDataAllResolver } from './category-data-all-resolver';
+import { categoryDataIdResolver } from './category-data-id-resolver copy';
 
 export const categoryRoutes: Routes = [
   {
@@ -10,11 +11,14 @@ export const categoryRoutes: Routes = [
     path: 'form/:id',
     loadComponent: () => import('../form/category-form').then((m) => m.CategoryForm),
     resolve: {
-      data: categoryResolver,
+      data: categoryDataIdResolver,
     },
   },
   {
     path: 'list',
     loadComponent: () => import('../list/category-list').then((m) => m.CategoryList),
+    resolve: {
+      data: categoryDataAllResolver,
+    },
   },
 ];

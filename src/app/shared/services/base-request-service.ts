@@ -19,6 +19,10 @@ export class BaseRequestService<MODEL, DTO> {
     throw new Error('Method not implemented.');
   }
 
+  getAll(): Observable<Object> {
+    throw new Error('Method not implemented.');
+  }
+
   mapDto(model: MODEL): DTO {
     throw new Error('Method not implemented.');
   }
