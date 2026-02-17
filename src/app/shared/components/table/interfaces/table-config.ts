@@ -1,9 +1,9 @@
-import { TableButtonConfig } from "./table-button-config";
-import { TableTitleConfig } from "./table-title-config";
+import { ITableButtonConfig } from "./table-button-config";
+import { ITableTitleConfig } from "./table-title-config";
 
-export interface TableConfig<MODEL> {
+export interface ITableConfig<MODEL> {
     hasHover: boolean;
-    titles: TableTitleConfig<MODEL>[];
+    titles: ITableTitleConfig<MODEL>[];
     data: MODEL[];
-    buttons: TableButtonConfig<MODEL>[]
+    buttons: ITableButtonConfig<MODEL>[]
 }

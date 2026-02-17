@@ -9,4 +9,8 @@ export const routes: Routes = [
     path: 'category',
     loadChildren: () => import('./features/products/category/routes/category.routes').then((m) => m.categoryRoutes),
   },
+  {
+    path: 'coin',
+    loadChildren: () => import('./features/products/coin/routes/coin.routes').then((m) => m.coinRoutes),
+  },
 ];

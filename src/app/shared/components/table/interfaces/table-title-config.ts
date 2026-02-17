@@ -1,4 +1,4 @@
-export interface TableTitleConfig<MODEL> {
+export interface ITableTitleConfig<MODEL> {
     name: string
     dataField: keyof MODEL;
 }

@@ -23,6 +23,11 @@ export class App {
           route: '/category/list',
           children: [],
         },
+        {
+          name: 'Moedas',
+          route: '/coin/list',
+          children: [],
+        }
       ],
     },
   ];

@@ -1,5 +1,5 @@
 import { Signal, signal, WritableSignal, inject, computed } from "@angular/core";
-import { TableConfig } from "../components/table/interfaces/table-config";
+import { ITableConfig } from "../components/table/interfaces/table-config";
 import { ActivatedRoute, Router } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 
@@ -7,7 +7,7 @@ export class BaseList<MODEL, SERVICE> {
 
     model: WritableSignal<MODEL[]> = signal<MODEL[]>([])
 
-    tableConfig!: Signal<TableConfig<MODEL>>;
+    tableConfig!: Signal<ITableConfig<MODEL>>;
 
     service!: SERVICE;
 
@@ -37,7 +37,7 @@ export class BaseList<MODEL, SERVICE> {
         throw new Error('Method not implemented.');
     }
 
-    public getTableConfig(): TableConfig<MODEL> {
+    public getTableConfig(): ITableConfig<MODEL> {
         throw new Error('Method not implemented.');
     }
 

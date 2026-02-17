@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { TableConfig } from './interfaces/table-config';
+import { ITableConfig } from './interfaces/table-config';
 
 @Component({
   selector: 'app-table',
@@ -8,7 +8,7 @@ import { TableConfig } from './interfaces/table-config';
   styleUrl: './table.scss',
 })
 export class Table<MODEL> {
-  tableConfig = input<TableConfig<MODEL>>();
+  tableConfig = input<ITableConfig<MODEL>>();
 
   get titles() {
     return this.tableConfig()!.titles

@@ -1,46 +1,46 @@
-import { Component, computed, inject, Signal, signal, WritableSignal } from '@angular/core';
-import { ICategoryModel } from '../interfaces/category-model';
-import { Table } from "../../../../shared/components/table/table";
-import { ITableConfig } from '../../../../shared/components/table/interfaces/table-config';
-import { ActivatedRoute } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { CategoryService } from '../services/category-service';
+import { Component, inject } from '@angular/core';
+import { Table } from '../../../../shared/components/table/table';
 import { BaseList } from '../../../../shared/classes/base-list';
-import { NOOP_ACTION, SHOW_ALWAYS } from '../../../../shared/components/table/constants/table-constants';
-import { IMAGES } from '../../../../shared/constants/images';
+import { ICoinModel } from '../interfaces/coin-model';
+import { CoinService } from '../services/coin-service';
 import { ToastService } from '../../../../shared/components/toast/services/toast-service';
+import { IMAGES } from '../../../../shared/constants/images';
+import { ITableConfig } from '../../../../shared/components/table/interfaces/table-config';
+import { SHOW_ALWAYS } from '../../../../shared/components/table/constants/table-constants';
 
 @Component({
-  selector: 'app-category-list',
+  selector: 'app-coin-list',
   imports: [Table],
-  templateUrl: './category-list.html',
-  styleUrl: './category-list.scss',
-  standalone: true,
+  templateUrl: './coin-list.html',
+  styleUrl: './coin-list.scss',
 })
-export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
-
-  override service = inject(CategoryService);
+export class CoinList extends BaseList<ICoinModel, CoinService> {
+  override service = inject(CoinService);
 
   private toastService = inject(ToastService);
 
-  override buttonAddTitle: string = 'Nova Categoria';
+  override buttonAddTitle: string = 'Nova Moeda';
 
   override buttonAddIcon: string = IMAGES.NEW;
 
   constructor() {
     super()
 
-    this.title = 'Lista de Categorias';
+    this.title = 'Lista de Moedas';
     this.loadData();
   }
 
-  public override getTableConfig(): ITableConfig<ICategoryModel> {
+  public override getTableConfig(): ITableConfig<ICoinModel> {
     return {
       hasHover: true,
       data: this.model(),
       titles: [
         {
-          name: 'Nome da Categoria',
+          name: 'Símbolo',
+          dataField: 'symbol'
+        },
+        {
+          name: 'Nome da Moeda',
           dataField: 'name'
         }
       ],
@@ -65,11 +65,11 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
     }
   }
 
-  public override onEditAction = (dataModel: ICategoryModel) => {
-    this.router.navigate(['category', 'form', dataModel.id!])
+  public override onEditAction = (dataModel: ICoinModel) => {
+    this.router.navigate(['coin', 'form', dataModel.id!])
   }
 
-  public override onRemoveAction = (dataModel: ICategoryModel, callback: any) => {
+  public override onRemoveAction = (dataModel: ICoinModel, callback: any) => {
     this.service.delete(dataModel.id!).subscribe({
       next: () => {
         callback();
@@ -88,6 +88,6 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
   };
 
   public override onAddAction = () => {
-    this.router.navigate(['category', 'form'])
+    this.router.navigate(['coin', 'form'])
   };
 }

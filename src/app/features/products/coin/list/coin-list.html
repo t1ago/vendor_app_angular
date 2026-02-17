@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <div class="row mb-3 align-items-center">
+        <div class="col">
+            <h1 class="m-0">{{title}}</h1>
+        </div>
+        
+        <div class="col-auto">
+            <button type="button" (click)="onAddAction()" class="btn btn-primary">
+                <img src="{{buttonAddIcon}}" />
+                <span>{{buttonAddTitle}}</span>
+          </button>
+        </div>
+    </div>
+    <app-table [tableConfig]="tableConfig()"></app-table>
+</div>
