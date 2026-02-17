@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
+import { ForeignKeyViolateError } from '../erros/foreign-key-violate-error';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +16,15 @@ export class BaseRequestService<MODEL, DTO> {
     throw new Error('Method not implemented.');
   }
 
-  getById(id: number | string): Observable<Object> {
+  getById(id: number | string): Observable<MODEL> {
     throw new Error('Method not implemented.');
   }
 
-  getAll(): Observable<Object> {
+  getAll(): Observable<MODEL[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  delete(id: number | string): Observable<Object> {
     throw new Error('Method not implemented.');
   }
 
@@ -37,9 +42,15 @@ export class BaseRequestService<MODEL, DTO> {
 
   resultObservable() {
     return this.request!.pipe(
-      catchError((error) => {
-        this.defaultError(error);
-        throw error;
+      catchError((errorResponse) => {
+        this.defaultError(errorResponse);
+        const errorMessage = errorResponse.error.mensagem;
+
+        if (errorMessage.toLowerCase().includes('violates foreign key constraint')) {
+          throw new ForeignKeyViolateError()
+        } else {
+          throw errorResponse;
+        }
       })
     );
   }

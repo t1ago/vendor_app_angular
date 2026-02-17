@@ -1,0 +1,19 @@
+<div class="toast-container position-fixed top-0 end-0 p-3 mt-5" style="z-index: 1080">
+  
+  @if (toastService.message()) {
+    <div class="toast show border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+      
+      <div class="toast-header text-white" [class.bg-success]="toastService.type() === 'success'"
+                                           [class.bg-danger]="toastService.type() === 'danger'"
+                                           [class.bg-info]="toastService.type() === 'info'">
+        <strong class="me-auto">{{ toastService.title() }}</strong>
+        <button type="button" class="btn-close btn-close-white" (click)="toastService.clear()" aria-label="Close"></button>
+      </div>
+      
+      <div class="toast-body">
+        {{ toastService.message() }}
+      </div>
+    </div>
+  }
+
+</div>

@@ -18,7 +18,7 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
     return this.resultObservable();
   }
 
-  override getById(id: number | string): Observable<Object> {
+  override getById(id: number | string): Observable<ICategoryModel> {
     this.request = this.http.get(`http://localhost:3000/categorias/${id}`);
 
     return this.resultObservable().pipe(
@@ -28,7 +28,7 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
     );
   }
 
-  override getAll(): Observable<Object> {
+  override getAll(): Observable<ICategoryModel[]> {
     this.request = this.http.get(`http://localhost:3000/categorias`);
 
     return this.resultObservable().pipe(
@@ -36,6 +36,12 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
         return this.mapModels(value.data);
       })
     );
+  }
+
+  override delete(id: number | string): Observable<Object> {
+    this.request = this.http.delete(`http://localhost:3000/categorias/${id}`);
+
+    return this.resultObservable();
   }
 
   override mapDto(model: ICategoryModel): ICategoryDto {

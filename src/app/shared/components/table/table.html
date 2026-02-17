@@ -6,7 +6,7 @@
       }
 
       @if (buttons.length > 0) {
-        <th scope="col">Ações</th>
+        <th scope="col" class="text-end">Ações</th>
       }
     </tr>
   </thead>
@@ -20,19 +20,21 @@
         }
 
         @if (buttons.length > 0) {
-          <td>
+          <td class="text-end">
+            <div class="d-flex justify-content-end gap-2">
             @for (button of buttons; track $index) {
               @if (button.show(item)) {
-                <button class="btn btn-primary" type="button" (click)="button.action(item)">
+                <button class="btn btn-outline-primary" type="button" (click)="button.action(item)">
                   
                   @if(button.icon) {
-                    <img [src]="button.icon">
+                    <img [src]="button.icon" class="button-icon">
                   }
 
                   {{button.name}}
                 </button>
               }
             }
+            </div>
           </td>
         }
       </tr>

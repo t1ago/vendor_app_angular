@@ -1,0 +1,7 @@
+.btn .button-icon {
+  transition: filter 0.3s ease-in-out;
+}
+
+.btn:hover .button-icon {
+  filter: brightness(0) invert(1) brightness(1.8);
+}

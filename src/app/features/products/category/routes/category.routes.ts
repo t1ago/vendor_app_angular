@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
+import { categoryDataIdResolver } from './category-data-id-resolver';
 import { categoryDataAllResolver } from './category-data-all-resolver';
-import { categoryDataIdResolver } from './category-data-id-resolver copy';
 
 export const categoryRoutes: Routes = [
   {
