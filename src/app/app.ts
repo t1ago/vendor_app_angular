@@ -20,7 +20,7 @@ export class App {
       children: [
         {
           name: 'Categoria',
-          route: '/category/form',
+          route: '/category/list',
           children: [],
         },
       ],
