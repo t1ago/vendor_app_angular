@@ -20,7 +20,10 @@ export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
   }
 
   override getById(id: number | string): Observable<ICoinModel> {
-    this.request = this.http.get(`http://localhost:3000/moedas/${id}`);
+    const queryParams = { id: id }
+
+    this.request = this.http.get(`http://localhost:3000/moedas`, { params: queryParams });
+
 
     return this.resultObservable().pipe(
       map((value: any) => {
