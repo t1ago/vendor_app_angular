@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 import { ICategoryModel } from '../interfaces/category-model';
 import { ICategoryDto } from '../interfaces/category-dto';
-import { BaseRequestService } from '../../../../shared/services/base-request-service';
+import { BaseRequestService } from '@shared/services/base-request-service';
 import { catchError, map, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService extends BaseRequestService<ICategoryModel, ICategoryDto> {
+
+  override basePath: string = '/categorias';
+
   override save(model: ICategoryModel): Observable<Object> {
     if (model.id) {
-      this.request = this.http.put(`http://localhost:3000/categorias/${model.id}`, this.mapDto(model));
+      this.request = this.http.put(`${this.APIPath}/${model.id}`, this.mapDto(model));
     } else {
-      this.request = this.http.post('http://localhost:3000/categorias', this.mapDto(model));
+      this.request = this.http.post(`${this.APIPath}`, this.mapDto(model));
     }
 
     return this.resultObservable();
   }
 
   override getById(id: number | string): Observable<ICategoryModel> {
-    this.request = this.http.get(`http://localhost:3000/categorias/${id}`);
+    this.request = this.http.get(`${this.APIPath}/${id}`);
 
     return this.resultObservable().pipe(
       map((value: any) => {
@@ -29,7 +32,7 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
   }
 
   override getAll(): Observable<ICategoryModel[]> {
-    this.request = this.http.get(`http://localhost:3000/categorias`);
+    this.request = this.http.get(`${this.APIPath}`);
 
     return this.resultObservable().pipe(
       map((value: any) => {
@@ -39,7 +42,7 @@ export class CategoryService extends BaseRequestService<ICategoryModel, ICategor
   }
 
   override delete(id: number | string): Observable<Object> {
-    this.request = this.http.delete(`http://localhost:3000/categorias/${id}`);
+    this.request = this.http.delete(`${this.APIPath}/${id}`);
 
     return this.resultObservable();
   }

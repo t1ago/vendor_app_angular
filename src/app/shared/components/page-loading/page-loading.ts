@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, input, Signal, signal } from '@angular/core';
+import { PageLoadingService } from './services/page-loading-service';
 
 @Component({
   selector: 'app-page-loading',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './page-loading.scss',
 })
 export class PageLoading {
-
+  isLoading = input<Boolean>(false);
 }

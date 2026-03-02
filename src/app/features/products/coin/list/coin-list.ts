@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { Table } from '../../../../shared/components/table/table';
-import { BaseList } from '../../../../shared/classes/base-list';
+import { Table } from '@shared/components/table/table';
+import { BaseList } from '@shared/classes/base-list';
 import { ICoinModel } from '../interfaces/coin-model';
 import { CoinService } from '../services/coin-service';
-import { ToastService } from '../../../../shared/components/toast/services/toast-service';
-import { IMAGES } from '../../../../shared/constants/images';
-import { ITableConfig } from '../../../../shared/components/table/interfaces/table-config';
-import { SHOW_ALWAYS } from '../../../../shared/components/table/constants/table-constants';
+import { ToastService } from '@shared/components/toast/services/toast-service';
+import { IMAGES } from '@shared/constants/images';
+import { ITableConfig } from '@shared/components/table/interfaces/table-config';
+import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
+import { loadingObservablePipe } from '@shared/observable-pipe/loading-observable-pipe';
+import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 
 @Component({
   selector: 'app-coin-list',
@@ -18,6 +20,8 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
   override service = inject(CoinService);
 
   private toastService = inject(ToastService);
+
+  private pageLoadingService = inject(PageLoadingService);
 
   override buttonAddTitle: string = 'Nova Moeda';
 
@@ -70,15 +74,18 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
   }
 
   public override onRemoveAction = (dataModel: ICoinModel, callback: any) => {
-    this.service.delete(dataModel.id!).subscribe({
-      next: () => {
-        callback();
-        this.toastService.show('Registro removido com sucesso', 'success');
-      },
-      error: (errorData) => {
-        this.toastService.show(errorData.message, 'danger');
-      }
-    });
+    this.service.delete(dataModel.id!)
+      .pipe(
+        loadingObservablePipe(this.pageLoadingService)
+      ).subscribe({
+        next: () => {
+          callback();
+          this.toastService.show('Registro removido com sucesso', 'success');
+        },
+        error: (errorData) => {
+          this.toastService.show(errorData.message, 'danger');
+        }
+      });
   };
 
   public override onRefreshAction = () => {

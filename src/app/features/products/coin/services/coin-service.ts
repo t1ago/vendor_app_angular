@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ICoinModel } from '../interfaces/coin-model';
 import { ICoinDto } from '../interfaces/coin-dto';
-import { BaseRequestService } from '../../../../shared/services/base-request-service';
+import { BaseRequestService } from '@shared/services/base-request-service';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -9,11 +9,13 @@ import { map, Observable } from 'rxjs';
 })
 export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
 
+  override basePath: string = '/moedas';
+
   override save(model: ICoinModel): Observable<Object> {
     if (model.id) {
-      this.request = this.http.put(`http://localhost:3000/moedas/${model.id}`, this.mapDto(model));
+      this.request = this.http.put(`${this.APIPath}/${model.id}`, this.mapDto(model));
     } else {
-      this.request = this.http.post('http://localhost:3000/moedas', this.mapDto(model));
+      this.request = this.http.post(`${this.APIPath}`, this.mapDto(model));
     }
 
     return this.resultObservable();
@@ -22,7 +24,7 @@ export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
   override getById(id: number | string): Observable<ICoinModel> {
     const queryParams = { id: id }
 
-    this.request = this.http.get(`http://localhost:3000/moedas`, { params: queryParams });
+    this.request = this.http.get(`${this.APIPath}`, { params: queryParams });
 
 
     return this.resultObservable().pipe(
@@ -33,7 +35,7 @@ export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
   }
 
   override getAll(): Observable<ICoinModel[]> {
-    this.request = this.http.get(`http://localhost:3000/moedas`);
+    this.request = this.http.get(`${this.APIPath}`);
 
     return this.resultObservable().pipe(
       map((value: any) => {
@@ -43,7 +45,7 @@ export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
   }
 
   override delete(id: number | string): Observable<Object> {
-    this.request = this.http.delete(`http://localhost:3000/moedas/${id}`);
+    this.request = this.http.delete(`${this.APIPath}/${id}`);
 
     return this.resultObservable();
   }

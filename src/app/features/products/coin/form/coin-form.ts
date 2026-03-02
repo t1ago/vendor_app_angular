@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { BaseForm } from '../../../../shared/classes/base-form';
+import { BaseForm } from '@shared/classes/base-form';
 import { ICoinModel } from '../interfaces/coin-model';
 import { CoinService } from '../services/coin-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../../../shared/components/toast/services/toast-service';
+import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ICategoryModel } from '../../category/interfaces/category-model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Field, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { ISateSaveControl } from '../../../../shared/interfaces/save-control';
+import { ISateSaveControl } from '@shared/interfaces/save-control';
 
 @Component({
   selector: 'app-coin-form',

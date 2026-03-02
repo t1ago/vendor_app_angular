@@ -10,6 +10,9 @@ export class BaseRequestService<MODEL, DTO> {
   http = inject(HttpClient);
 
   host: string = 'http://localhost:3000';
+
+  basePath: string = '';
+
   request: Observable<Object> | undefined;
 
   save(model: MODEL): Observable<Object> {
@@ -53,5 +56,9 @@ export class BaseRequestService<MODEL, DTO> {
         }
       })
     );
+  }
+
+  get APIPath(): String {
+    return `${this.host}${this.basePath}`
   }
 }

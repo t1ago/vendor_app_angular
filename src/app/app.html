@@ -1,9 +1,5 @@
 
 <app-navbar [items]="navbarItems"></app-navbar>
 <router-outlet />
-
-@if (isNavigating()) {
-    <app-page-loading></app-page-loading>
-}
-
+<app-page-loading [isLoading]="isCurrentNavigation() || isLoading()"></app-page-loading>
 <app-toast></app-toast>
