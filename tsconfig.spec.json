@@ -4,7 +4,18 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     // "outDir": "./out-tsc/spec",
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals"
+    ]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts",
+    "src/app/shared/classes/base-list.spec2.ts",
+    "src/app/shared/components/navbar/navbar.spec2.ts",
+    "src/app/shared/components/page-loading/page-loading.spec2.ts",
+    "src/app/shared/components/table/table.spec2.ts",
+    "src/app/shared/components/toast/toast.spec2.ts",
+    "src/app/features/products/coin/form/coin-form.spec2.ts"
+  ]
 }

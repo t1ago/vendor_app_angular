@@ -11,48 +11,37 @@ export default defineConfig({
     }
   },
   plugins: [angular({
-    jit: true, // Força o modo JIT para resolver templates externos
-    tsconfig: './tsconfig.spec.json' // Garante que ele use as regras de teste
+    jit: true,
+    tsconfig: './tsconfig.spec.json'
   })],
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
-    include: ['**/*.spec.ts'],
+    include: ['src/**/*.spec.ts'],
+    coverage: {
+      enabled: false,
+      provider: 'v8',
+      clean: true,
+      reporter: ['text', 'json', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.ts'],
+      exclude: [
+        'src/**/*.spec.ts',
+        'src/**/*.config.ts',
+        'src/main.ts',
+        'src/main.server.ts',
+        'src/server.ts',
+        'src/environments/**',
+        '**/*.d.ts',
+        '**/node_modules/**',
+      ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      }
+    }
   },
 });
-
-
-// import path from 'path';
-// import { defineConfig } from 'vitest/config';
-
-// export default defineConfig({
-//   resolve: {
-//     alias: {
-//       '@shared': path.resolve(__dirname, './src/app/shared')
-//     }
-//   },
-//   test: {
-//     globals: true,
-//     css: false,
-//     environment: 'jsdom',
-//     setupFiles: ['./vitest.setup.ts'],
-//     coverage: {
-//       provider: 'v8',
-//       reporter: [
-//         'text',
-//         'json',
-//         'html',
-//       ],
-//       thresholds: {
-//         statements: 80,
-//         branches: 80,
-//         functions: 80,
-//         lines: 80,
-//       },
-//       reportsDirectory: './coverage',
-//       include: ['src/**/*.ts'],
-//       exclude: ['**/*.spec.ts', '**/*.module.ts', '**/*.routes.ts', '**/main.ts'],
-//     }
-//   },
-// });

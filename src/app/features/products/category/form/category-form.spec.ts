@@ -55,65 +55,75 @@ describe('CategoryForm', () => {
         expect(editComponent.model().id).toBe(5);
     });
 
-    // it('should validate required field', () => {
-    //     component.formName().value.set('');
-    //     fixture.detectChanges();
-    //     const errors = component.formName().errors() as any;
-    //     expect(errors?.required).toBeDefined();
-    // });
+    it('should validate required field', () => {
+        component.formName().value.set('');
+        fixture.detectChanges();
+        const errors = component.formName().errors();
 
-    // it('should validate minLength field', () => {
-    //     component.formName().value.set('Ab');
-    //     fixture.detectChanges();
-    //     const errors = component.formName().errors() as any;
-    //     expect(errors?.minLength).toBeDefined();
-    // });
+        if (errors.length == 0) {
+            expect.fail('Nenhum erro encontrado para teste')
+        } else {
+            const error = errors[0];
+            expect(error.kind).toBe('required')
+            expect(error.message).toBe('Nome é obrigatório')
+        }
+    });
 
-    // it('should show "Salvando categoria" toast when id is null', () => {
-    //     component.formName().value.set('Nova Cat');
-    //     mockCategoryService.save.mockReturnValue(of({}));
-    //     component.onSaveAction();
-    //     expect(mockToastService.show).toHaveBeenCalledWith('Salvando categoria', 'info');
-    // });
+    it('should validate minLength field', () => {
+        component.formName().value.set('Ab');
+        fixture.detectChanges();
+        const errors = component.formName().errors();
 
-    // it('should show "Atualizando categoria" toast when id exists', () => {
-    //     routeDataSubject.next({ data: { id: 1, name: 'Teste' } });
-    //     const editFixture = TestBed.createComponent(CategoryForm);
-    //     const editComp = editFixture.componentInstance;
-    //     editFixture.detectChanges();
+        if (errors.length == 0) {
+            expect.fail('Nenhum erro encontrado para teste')
+        } else {
+            const error = errors[0];
+            expect(error.kind).toBe('minLength')
+            expect(error.message).toBe('Nome deve ter 3 caracteres')
+        }
+    });
 
-    //     mockCategoryService.save.mockReturnValue(of({}));
-    //     editComp.onSaveAction();
-    //     expect(mockToastService.show).toHaveBeenCalledWith('Atualizando categoria', 'info');
-    // });
+    it('should show "Salvando categoria" toast when id is null', () => {
+        component.formName().value.set('Nova Cat');
+        mockCategoryService.save.mockReturnValue(of({}));
+        component.onSaveAction();
+        expect(mockToastService.show).toHaveBeenCalledWith('Salvando categoria', 'info');
+    });
 
-    // it('should handle success on save: toast, state and navigation', () => {
-    //     component.formName().value.set('Categoria Valida');
-    //     mockCategoryService.save.mockReturnValue(of({}));
-    //     const cancelSpy = vi.spyOn(component, 'onCancelAction');
+    it('should show "Atualizando categoria" toast when id exists', () => {
+        routeDataSubject.next({ data: { id: 1, name: 'Teste' } });
+        const editFixture = TestBed.createComponent(CategoryForm);
+        const editComp = editFixture.componentInstance;
+        editFixture.detectChanges();
 
-    //     component.onSaveAction();
+        mockCategoryService.save.mockReturnValue(of({}));
+        editComp.onSaveAction();
+        expect(mockToastService.show).toHaveBeenCalledWith('Atualizando categoria', 'info');
+    });
 
-    //     expect(mockToastService.show).toHaveBeenCalledWith('Registro salvo com sucesso', 'success', 1000);
-    //     expect(component.saveControl().state).toBe(ISateSaveControl.OPEN);
-    //     expect(cancelSpy).toHaveBeenCalled();
-    // });
+    it('should handle success on save: toast, state and navigation', () => {
+        component.formName().value.set('Categoria Valida');
+        mockCategoryService.save.mockReturnValue(of({}));
+        const cancelSpy = vi.spyOn(component, 'onCancelAction');
 
-    // it('should handle error on save: danger toast', () => {
-    //     component.formName().value.set('Categoria Valida');
-    //     mockCategoryService.save.mockReturnValue(throwError(() => new Error('API Error')));
+        component.onSaveAction();
 
-    //     component.onSaveAction();
+        expect(mockToastService.show).toHaveBeenCalledWith('Registro salvo com sucesso', 'success', 1000);
+        expect(component.saveControl().state).toBe(ISateSaveControl.OPEN);
+        expect(cancelSpy).toHaveBeenCalled();
+    });
 
-    //     expect(mockToastService.show).toHaveBeenCalledWith('Falha ao salvar o registro', 'danger');
-    // });
+    it('should handle error on save: danger toast', () => {
+        component.formName().value.set('Categoria Valida');
+        mockCategoryService.save.mockReturnValue(throwError(() => new Error('API Error')));
 
-    // it('should navigate to list on onCancelAction', () => {
-    //     component.onCancelAction();
-    //     expect(mockRouter.navigate).toHaveBeenCalledWith(['category', 'list']);
-    // });
+        component.onSaveAction();
 
-    // it('should return formName getter correctly', () => {
-    //     expect(component.formName()).toBe(component.formData.name);
-    // });
+        expect(mockToastService.show).toHaveBeenCalledWith('Falha ao salvar o registro', 'danger');
+    });
+
+    it('should navigate to list on onCancelAction', () => {
+        component.onCancelAction();
+        expect(mockRouter.navigate).toHaveBeenCalledWith(['category', 'list']);
+    });
 });
