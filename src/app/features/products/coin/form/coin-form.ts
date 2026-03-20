@@ -6,12 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ICategoryModel } from '../../category/interfaces/category-model';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Field, maxLength, minLength, required, submit } from '@angular/forms/signals';
+import { form, FormField, maxLength, minLength, required, submit } from '@angular/forms/signals';
 import { ISateSaveControl } from '@shared/interfaces/save-control';
 
 @Component({
     selector: 'app-coin-form',
-    imports: [Field],
+    imports: [FormField],
     templateUrl: './coin-form.html',
     styleUrl: './coin-form.scss',
 })
@@ -26,7 +26,7 @@ export class CoinForm extends BaseForm<ICoinModel, CoinService> {
 
     constructor() {
         super();
-        this.createForm(this.createModel(), (schemaPath) => {
+        this.createForm(this.createModel(), (schemaPath: any) => {
             (required(schemaPath.name, { message: 'Nome da Moeda é obrigatório' }),
                 minLength(schemaPath.name, 3, { message: 'Nome da Moeda deve ter 3 caracteres' }),
                 required(schemaPath.symbol, { message: 'Símbolo é obrigatório' }),

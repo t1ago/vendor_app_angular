@@ -8,7 +8,7 @@
         <div class="row mb-3">
             <div class="col">
                 <label for="name" class="form-label">Nome</label>
-                <input [field]="formName" type="text" class="form-control" id="name" />
+                <input [formField]="formName" type="text" class="form-control" id="name" />
                 @if (formName().touched() && formName().invalid()) {
                 <div class="is-invalid">
                     @for (error of formName().errors(); track $index) {

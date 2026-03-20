@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ICategoryModel } from '../interfaces/category-model';
-import { Field, form, minLength, required, submit } from '@angular/forms/signals';
+import { form, FormField, minLength, required, submit } from '@angular/forms/signals';
 import { CategoryService } from '../services/category-service';
 import { ISateSaveControl } from '@shared/interfaces/save-control';
 import { BaseForm } from '@shared/classes/base-form';
@@ -10,7 +10,7 @@ import { ToastService } from '@shared/components/toast/services/toast-service';
 
 @Component({
     selector: 'app-category-form',
-    imports: [Field],
+    imports: [FormField],
     templateUrl: './category-form.html',
     styleUrl: './category-form.scss',
 })
@@ -25,7 +25,7 @@ export class CategoryForm extends BaseForm<ICategoryModel, CategoryService> {
 
     constructor() {
         super();
-        this.createForm(this.createModel(), (schemaPath) => {
+        this.createForm(this.createModel(), (schemaPath: any) => {
             (required(schemaPath.name, { message: 'Nome é obrigatório' }),
                 minLength(schemaPath.name, 3, { message: 'Nome deve ter 3 caracteres' }));
         });

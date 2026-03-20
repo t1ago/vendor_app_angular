@@ -11,7 +11,7 @@ export class BaseForm<MODEL, SERVICE> {
 
     service!: SERVICE;
 
-    createForm(model: MODEL, schemaPath: SchemaOrSchemaFn<MODEL> | FormOptions) {
+    createForm(model: MODEL, schemaPath: SchemaOrSchemaFn<MODEL>) {
         this.model = signal(model);
         this.formData = form(this.model, schemaPath);
     }
