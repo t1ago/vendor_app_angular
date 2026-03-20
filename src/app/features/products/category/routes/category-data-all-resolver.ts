@@ -3,7 +3,7 @@ import { ResolveFn } from '@angular/router';
 import { CategoryService } from '../services/category-service';
 
 export const categoryDataAllResolver: ResolveFn<any> = (route, _state) => {
-  const service = inject(CategoryService);
+    const service = inject(CategoryService);
 
-  return service.getAll();
+    return service.getAll();
 };

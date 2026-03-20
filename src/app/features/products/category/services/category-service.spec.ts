@@ -14,17 +14,13 @@ describe('CategoryService', () => {
     const mockDtoResponse: { data: ICategoryDto[] } = {
         data: [
             { id: 1, nome: 'Eletrônicos' },
-            { id: 2, nome: 'Livros' }
-        ]
+            { id: 2, nome: 'Livros' },
+        ],
     };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                CategoryService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [CategoryService, provideHttpClient(), provideHttpClientTesting()],
         });
 
         service = TestBed.inject(CategoryService);
@@ -43,8 +39,8 @@ describe('CategoryService', () => {
         const mockResponse: { data: ICategoryDto[] } = {
             data: [
                 { id: 1, nome: 'Electronics' },
-                { id: 2, nome: 'Books' }
-            ]
+                { id: 2, nome: 'Books' },
+            ],
         };
 
         const requestPromise = firstValueFrom(service.getAll());
@@ -61,7 +57,7 @@ describe('CategoryService', () => {
 
     it('should fetch a single category by ID and map it to ICategoryModel', async () => {
         const mockResponse = {
-            data: [{ id: 1, nome: 'Eletrônicos' }]
+            data: [{ id: 1, nome: 'Eletrônicos' }],
         };
         const categoryId = 1;
 
@@ -126,5 +122,4 @@ describe('CategoryService', () => {
         expect(service.mapDto(model)).toEqual(dto);
         expect(service.mapModel(dto)).toEqual(model);
     });
-
 });

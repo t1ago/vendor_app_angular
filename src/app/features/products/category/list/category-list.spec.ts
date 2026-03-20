@@ -19,30 +19,30 @@ describe('CategoryList', () => {
 
     const mockCategories: ICategoryModel[] = [
         { id: 1, name: 'Electronics' },
-        { id: 2, name: 'Books' }
+        { id: 2, name: 'Books' },
     ];
 
     beforeEach(async () => {
         categoryServiceMock = {
             getAll: vi.fn().mockReturnValue(of(mockCategories)),
-            delete: vi.fn().mockReturnValue(of({}))
+            delete: vi.fn().mockReturnValue(of({})),
         };
 
         toastServiceMock = {
-            show: vi.fn()
+            show: vi.fn(),
         };
 
         pageLoadingServiceMock = {
             show: vi.fn(),
-            hide: vi.fn()
+            hide: vi.fn(),
         };
 
         routerMock = {
-            navigate: vi.fn()
+            navigate: vi.fn(),
         };
 
         activatedRouteMock = {
-            data: of({ data: mockCategories })
+            data: of({ data: mockCategories }),
         };
 
         await TestBed.configureTestingModule({
@@ -52,8 +52,8 @@ describe('CategoryList', () => {
                 { provide: ToastService, useValue: toastServiceMock },
                 { provide: PageLoadingService, useValue: pageLoadingServiceMock },
                 { provide: Router, useValue: routerMock },
-                { provide: ActivatedRoute, useValue: activatedRouteMock }
-            ]
+                { provide: ActivatedRoute, useValue: activatedRouteMock },
+            ],
         }).compileComponents();
 
         component = TestBed.createComponent(CategoryList).componentInstance;

@@ -5,9 +5,7 @@ export function loadingObservablePipe<T>(loader: IPageLoadingService) {
     return (source: Observable<T>) => {
         return defer(() => {
             loader.show();
-            return source.pipe(
-                finalize(() => loader.hide())
-            );
+            return source.pipe(finalize(() => loader.hide()));
         });
     };
 }

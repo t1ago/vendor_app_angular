@@ -1,4 +1,4 @@
-@use "bootstrap/scss/bootstrap" as *;
+@use 'bootstrap/scss/bootstrap' as *;
 
 .is-invalid {
     color: $danger !important;
@@ -9,18 +9,17 @@
 }
 
 div {
-    >label.save-control.loading {
+    > label.save-control.loading {
         color: $primary !important;
     }
-    
-    >img.save-control.loading {
+
+    > img.save-control.loading {
         height: 50px;
         width: 50px;
         margin: 5px;
         animation: rotacao 5s linear infinite;
     }
 }
-
 
 @keyframes rotacao {
     from {

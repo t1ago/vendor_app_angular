@@ -28,8 +28,8 @@ describe('CategoryForm', () => {
                 { provide: CategoryService, useValue: mockCategoryService },
                 { provide: ToastService, useValue: mockToastService },
                 { provide: Router, useValue: mockRouter },
-                { provide: ActivatedRoute, useValue: mockActivatedRoute }
-            ]
+                { provide: ActivatedRoute, useValue: mockActivatedRoute },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CategoryForm);
@@ -61,11 +61,11 @@ describe('CategoryForm', () => {
         const errors = component.formName().errors();
 
         if (errors.length == 0) {
-            expect.fail('Nenhum erro encontrado para teste')
+            expect.fail('Nenhum erro encontrado para teste');
         } else {
             const error = errors[0];
-            expect(error.kind).toBe('required')
-            expect(error.message).toBe('Nome é obrigatório')
+            expect(error.kind).toBe('required');
+            expect(error.message).toBe('Nome é obrigatório');
         }
     });
 
@@ -75,11 +75,11 @@ describe('CategoryForm', () => {
         const errors = component.formName().errors();
 
         if (errors.length == 0) {
-            expect.fail('Nenhum erro encontrado para teste')
+            expect.fail('Nenhum erro encontrado para teste');
         } else {
             const error = errors[0];
-            expect(error.kind).toBe('minLength')
-            expect(error.message).toBe('Nome deve ter 3 caracteres')
+            expect(error.kind).toBe('minLength');
+            expect(error.message).toBe('Nome deve ter 3 caracteres');
         }
     });
 

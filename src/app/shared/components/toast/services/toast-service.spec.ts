@@ -3,67 +3,67 @@ import { ToastService } from './toast-service';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('ToastService', () => {
-  let service: ToastService;
+    let service: ToastService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ToastService],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ToastService],
+        });
+
+        service = TestBed.inject(ToastService);
+        vi.useFakeTimers();
     });
 
-    service = TestBed.inject(ToastService);
-    vi.useFakeTimers();
-  });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+    it('should be created with default values', () => {
+        expect(service.message()).toBeNull();
+        expect(service.type()).toBe('info');
+        expect(service.title()).toBe('Sistema');
+    });
 
-  it('should be created with default values', () => {
-    expect(service.message()).toBeNull();
-    expect(service.type()).toBe('info');
-    expect(service.title()).toBe('Sistema');
-  });
+    it('should show a toast with correct title and message', () => {
+        service.show('Operação realizada', 'success');
 
-  it('should show a toast with correct title and message', () => {
-    service.show('Operação realizada', 'success');
+        expect(service.message()).toBe('Operação realizada');
+        expect(service.type()).toBe('success');
+        expect(service.title()).toBe('Sucesso');
+    });
 
-    expect(service.message()).toBe('Operação realizada');
-    expect(service.type()).toBe('success');
-    expect(service.title()).toBe('Sucesso');
-  });
+    it('should set the title to "Erro" when type is danger', () => {
+        service.show('Falha crítica', 'danger');
 
-  it('should set the title to "Erro" when type is danger', () => {
-    service.show('Falha crítica', 'danger');
+        expect(service.type()).toBe('danger');
+        expect(service.title()).toBe('Erro');
+    });
 
-    expect(service.type()).toBe('danger');
-    expect(service.title()).toBe('Erro');
-  });
+    it('should clear the message when clear() is called', () => {
+        service.show('Mensagem');
+        service.clear();
 
-  it('should clear the message when clear() is called', () => {
-    service.show('Mensagem');
-    service.clear();
+        expect(service.message()).toBeNull();
+    });
 
-    expect(service.message()).toBeNull();
-  });
+    it('should automatically clear the toast after timeout', () => {
+        const timeout = 5000;
+        service.show('Mensagem temporária', 'info', timeout);
 
-  it('should automatically clear the toast after timeout', () => {
-    const timeout = 5000;
-    service.show('Mensagem temporária', 'info', timeout);
+        expect(service.message()).toBe('Mensagem temporária');
 
-    expect(service.message()).toBe('Mensagem temporária');
+        vi.advanceTimersByTime(timeout);
 
-    vi.advanceTimersByTime(timeout);
+        expect(service.message()).toBeNull();
+    });
 
-    expect(service.message()).toBeNull();
-  });
+    it('should use default timeout of 3000ms if not provided', () => {
+        service.show('Default timeout');
 
-  it('should use default timeout of 3000ms if not provided', () => {
-    service.show('Default timeout');
+        expect(service.message()).toBe('Default timeout');
 
-    expect(service.message()).toBe('Default timeout');
+        vi.advanceTimersByTime(3000);
 
-    vi.advanceTimersByTime(3000);
-
-    expect(service.message()).toBeNull();
-  });
+        expect(service.message()).toBeNull();
+    });
 });

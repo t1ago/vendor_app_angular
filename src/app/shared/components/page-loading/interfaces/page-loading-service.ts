@@ -1,4 +1,4 @@
 export interface IPageLoadingService {
-    show(): void
-    hide(): void
+    show(): void;
+    hide(): void;
 }

@@ -5,71 +5,68 @@ import { BaseRequestService } from '@shared/services/base-request-service';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
+    override basePath: string = '/moedas';
 
-  override basePath: string = '/moedas';
+    override save(model: ICoinModel): Observable<Object> {
+        if (model.id) {
+            this.request = this.http.put(`${this.APIPath}/${model.id}`, this.mapDto(model));
+        } else {
+            this.request = this.http.post(`${this.APIPath}`, this.mapDto(model));
+        }
 
-  override save(model: ICoinModel): Observable<Object> {
-    if (model.id) {
-      this.request = this.http.put(`${this.APIPath}/${model.id}`, this.mapDto(model));
-    } else {
-      this.request = this.http.post(`${this.APIPath}`, this.mapDto(model));
+        return this.resultObservable();
     }
 
-    return this.resultObservable();
-  }
+    override getById(id: number | string): Observable<ICoinModel> {
+        const queryParams = { id: id };
 
-  override getById(id: number | string): Observable<ICoinModel> {
-    const queryParams = { id: id }
+        this.request = this.http.get(`${this.APIPath}`, { params: queryParams });
 
-    this.request = this.http.get(`${this.APIPath}`, { params: queryParams });
+        return this.resultObservable().pipe(
+            map((value: any) => {
+                return this.mapModel(value.data[0]);
+            })
+        );
+    }
 
+    override getAll(): Observable<ICoinModel[]> {
+        this.request = this.http.get(`${this.APIPath}`);
 
-    return this.resultObservable().pipe(
-      map((value: any) => {
-        return this.mapModel(value.data[0]);
-      })
-    );
-  }
+        return this.resultObservable().pipe(
+            map((value: any) => {
+                return this.mapModels(value.data);
+            })
+        );
+    }
 
-  override getAll(): Observable<ICoinModel[]> {
-    this.request = this.http.get(`${this.APIPath}`);
+    override delete(id: number | string): Observable<Object> {
+        this.request = this.http.delete(`${this.APIPath}/${id}`);
 
-    return this.resultObservable().pipe(
-      map((value: any) => {
-        return this.mapModels(value.data);
-      })
-    );
-  }
+        return this.resultObservable();
+    }
 
-  override delete(id: number | string): Observable<Object> {
-    this.request = this.http.delete(`${this.APIPath}/${id}`);
+    override mapDto(model: ICoinModel): ICoinDto {
+        return {
+            id: model.id,
+            nome: model.name,
+            moeda: model.symbol,
+        };
+    }
 
-    return this.resultObservable();
-  }
+    override mapModel(dto: ICoinDto): ICoinModel {
+        return {
+            id: dto.id,
+            name: dto.nome,
+            symbol: dto.moeda,
+        };
+    }
 
-  override mapDto(model: ICoinModel): ICoinDto {
-    return {
-      id: model.id,
-      nome: model.name,
-      moeda: model.symbol
-    };
-  }
-
-  override mapModel(dto: ICoinDto): ICoinModel {
-    return {
-      id: dto.id,
-      name: dto.nome,
-      symbol: dto.moeda
-    };
-  }
-
-  private mapModels(data: ICoinDto[]): ICoinModel[] {
-    return data.map((value: ICoinDto) => {
-      return this.mapModel(value)
-    })
-  }
-
+    private mapModels(data: ICoinDto[]): ICoinModel[] {
+        return data.map((value: ICoinDto) => {
+            return this.mapModel(value);
+        });
+    }
 }

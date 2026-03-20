@@ -3,12 +3,12 @@
         <div class="col">
             <h1 class="m-0">{{title}}</h1>
         </div>
-        
+
         <div class="col-auto">
             <button type="button" (click)="onAddAction()" class="btn btn-primary">
                 <img src="{{buttonAddIcon}}" />
                 <span>{{buttonAddTitle}}</span>
-          </button>
+            </button>
         </div>
     </div>
     <app-table [tableConfig]="tableConfig()"></app-table>

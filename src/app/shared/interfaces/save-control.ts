@@ -1,9 +1,9 @@
 export enum ISateSaveControl {
-  SAVING = 0,
-  OPEN = 1,
+    SAVING = 0,
+    OPEN = 1,
 }
 
 export interface ISaveControl {
-  state: ISateSaveControl;
-  message: string;
+    state: ISateSaveControl;
+    message: string;
 }

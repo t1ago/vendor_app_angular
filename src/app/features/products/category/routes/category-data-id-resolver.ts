@@ -4,15 +4,15 @@ import { CategoryService } from '../services/category-service';
 import { catchError, EMPTY } from 'rxjs';
 
 export const categoryDataIdResolver: ResolveFn<any> = (route, _state) => {
-  const service = inject(CategoryService);
-  const router = inject(Router);
+    const service = inject(CategoryService);
+    const router = inject(Router);
 
-  const id = route.paramMap.get('id');
+    const id = route.paramMap.get('id');
 
-  if (id) {
-    return service.getById(id);
-  } else {
-    router.navigateByUrl('/category/form');
-    return EMPTY;
-  }
+    if (id) {
+        return service.getById(id);
+    } else {
+        router.navigateByUrl('/category/form');
+        return EMPTY;
+    }
 };

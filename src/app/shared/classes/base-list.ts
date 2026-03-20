@@ -1,11 +1,10 @@
-import { Signal, signal, WritableSignal, inject, computed } from "@angular/core";
-import { ITableConfig } from "../components/table/interfaces/table-config";
-import { ActivatedRoute, Router } from "@angular/router";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { Signal, signal, WritableSignal, inject, computed } from '@angular/core';
+import { ITableConfig } from '../components/table/interfaces/table-config';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export class BaseList<MODEL, SERVICE> {
-
-    model: WritableSignal<MODEL[]> = signal<MODEL[]>([])
+    model: WritableSignal<MODEL[]> = signal<MODEL[]>([]);
 
     tableConfig!: Signal<ITableConfig<MODEL>>;
 
@@ -23,19 +22,19 @@ export class BaseList<MODEL, SERVICE> {
 
     public onRemoveAction = (dataModel: MODEL, callback: any): void => {
         throw new Error('Method not implemented.');
-    }
+    };
 
     public onEditAction = (dataModel: MODEL): void => {
         throw new Error('Method not implemented.');
-    }
+    };
 
     public onRefreshAction = (): void => {
         throw new Error('Method not implemented.');
-    }
+    };
 
     public onAddAction = (): void => {
         throw new Error('Method not implemented.');
-    }
+    };
 
     public getTableConfig(): ITableConfig<MODEL> {
         throw new Error('Method not implemented.');
@@ -48,8 +47,8 @@ export class BaseList<MODEL, SERVICE> {
         this.tableConfig = computed(() => {
             return {
                 ...this.getTableConfig(),
-                data: this.model()
-            }
+                data: this.model(),
+            };
         });
     }
 }

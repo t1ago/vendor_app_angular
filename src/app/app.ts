@@ -7,38 +7,38 @@ import { PageLoading } from './shared/components/page-loading/page-loading';
 import { PageLoadingService } from './shared/components/page-loading/services/page-loading-service';
 
 @Component({
-  selector: 'app-root',
-  imports: [Navbar, RouterOutlet, Toast, PageLoading],
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
+    selector: 'app-root',
+    imports: [Navbar, RouterOutlet, Toast, PageLoading],
+    templateUrl: './app.html',
+    styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('vendor_app_angular');
+    protected readonly title = signal('vendor_app_angular');
 
-  private router = inject(Router);
+    private router = inject(Router);
 
-  private pageLoadingService = inject(PageLoadingService);
+    private pageLoadingService = inject(PageLoadingService);
 
-  navbarItems: INavbarItem[] = [
-    {
-      name: 'Produtos',
-      route: '#',
-      children: [
+    navbarItems: INavbarItem[] = [
         {
-          name: 'Categoria',
-          route: '/category/list',
-          children: [],
+            name: 'Produtos',
+            route: '#',
+            children: [
+                {
+                    name: 'Categoria',
+                    route: '/category/list',
+                    children: [],
+                },
+                {
+                    name: 'Moedas',
+                    route: '/coin/list',
+                    children: [],
+                },
+            ],
         },
-        {
-          name: 'Moedas',
-          route: '/coin/list',
-          children: [],
-        }
-      ],
-    },
-  ];
+    ];
 
-  isCurrentNavigation = computed(() => !!this.router.currentNavigation());
+    isCurrentNavigation = computed(() => !!this.router.currentNavigation());
 
-  isLoading = this.pageLoadingService.isLoading;
+    isLoading = this.pageLoadingService.isLoading;
 }

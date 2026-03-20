@@ -10,9 +10,6 @@ if (testBed.platform) {
     testBed.resetTestEnvironment();
 }
 
-testBed.initTestEnvironment(
-    BrowserTestingModule,
-    platformBrowserTesting()
-);
+testBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting());
 
 console.log('✅ Ambiente de Testes do Angular Inicializado');

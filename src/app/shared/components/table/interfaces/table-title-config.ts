@@ -1,4 +1,4 @@
 export interface ITableTitleConfig<MODEL> {
-    name: string
+    name: string;
     dataField: keyof MODEL;
 }

@@ -11,90 +11,90 @@ import { loadingObservablePipe } from '@shared/observable-pipe/loading-observabl
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 
 @Component({
-  selector: 'app-coin-list',
-  imports: [Table],
-  templateUrl: './coin-list.html',
-  styleUrl: './coin-list.scss',
+    selector: 'app-coin-list',
+    imports: [Table],
+    templateUrl: './coin-list.html',
+    styleUrl: './coin-list.scss',
 })
 export class CoinList extends BaseList<ICoinModel, CoinService> {
-  override service = inject(CoinService);
+    override service = inject(CoinService);
 
-  private toastService = inject(ToastService);
+    private toastService = inject(ToastService);
 
-  private pageLoadingService = inject(PageLoadingService);
+    private pageLoadingService = inject(PageLoadingService);
 
-  override buttonAddTitle: string = 'Nova Moeda';
+    override buttonAddTitle: string = 'Nova Moeda';
 
-  override buttonAddIcon: string = IMAGES.NEW;
+    override buttonAddIcon: string = IMAGES.NEW;
 
-  constructor() {
-    super()
+    constructor() {
+        super();
 
-    this.title = 'Lista de Moedas';
-    this.loadData();
-  }
-
-  public override getTableConfig(): ITableConfig<ICoinModel> {
-    return {
-      hasHover: true,
-      data: this.model(),
-      titles: [
-        {
-          name: 'Símbolo',
-          dataField: 'symbol'
-        },
-        {
-          name: 'Nome da Moeda',
-          dataField: 'name'
-        }
-      ],
-      buttons: [
-        {
-          icon: IMAGES.EDIT,
-          show: SHOW_ALWAYS,
-          name: '',
-          action: (dataModel) => {
-            this.onEditAction(dataModel);
-          }
-        },
-        {
-          icon: IMAGES.REMOVE,
-          show: SHOW_ALWAYS,
-          name: '',
-          action: (dataModel) => {
-            this.onRemoveAction(dataModel, this.onRefreshAction);
-          }
-        }
-      ]
+        this.title = 'Lista de Moedas';
+        this.loadData();
     }
-  }
 
-  public override onEditAction = (dataModel: ICoinModel) => {
-    this.router.navigate(['coin', 'form', dataModel.id!])
-  }
+    public override getTableConfig(): ITableConfig<ICoinModel> {
+        return {
+            hasHover: true,
+            data: this.model(),
+            titles: [
+                {
+                    name: 'Símbolo',
+                    dataField: 'symbol',
+                },
+                {
+                    name: 'Nome da Moeda',
+                    dataField: 'name',
+                },
+            ],
+            buttons: [
+                {
+                    icon: IMAGES.EDIT,
+                    show: SHOW_ALWAYS,
+                    name: '',
+                    action: (dataModel) => {
+                        this.onEditAction(dataModel);
+                    },
+                },
+                {
+                    icon: IMAGES.REMOVE,
+                    show: SHOW_ALWAYS,
+                    name: '',
+                    action: (dataModel) => {
+                        this.onRemoveAction(dataModel, this.onRefreshAction);
+                    },
+                },
+            ],
+        };
+    }
 
-  public override onRemoveAction = (dataModel: ICoinModel, callback: any) => {
-    this.service.delete(dataModel.id!)
-      .pipe(
-        loadingObservablePipe(this.pageLoadingService)
-      ).subscribe({
-        next: () => {
-          callback();
-          this.toastService.show('Registro removido com sucesso', 'success');
-        },
-        error: (errorData) => {
-          this.toastService.show(errorData.message, 'danger');
-        }
-      });
-  };
+    public override onEditAction = (dataModel: ICoinModel) => {
+        this.router.navigate(['coin', 'form', dataModel.id!]);
+    };
 
-  public override onRefreshAction = () => {
-    this.service.getAll().subscribe((result) => {
-      this.model.set(result);
-    });
-  };
+    public override onRemoveAction = (dataModel: ICoinModel, callback: any) => {
+        this.service
+            .delete(dataModel.id!)
+            .pipe(loadingObservablePipe(this.pageLoadingService))
+            .subscribe({
+                next: () => {
+                    callback();
+                    this.toastService.show('Registro removido com sucesso', 'success');
+                },
+                error: (errorData) => {
+                    this.toastService.show(errorData.message, 'danger');
+                },
+            });
+    };
 
-  public override onAddAction = () => {
-    this.router.navigate(['coin', 'form'])
-  };
+    public override onRefreshAction = () => {
+        this.service.getAll().subscribe((result) => {
+            this.model.set(result);
+        });
+    };
+
+    public override onAddAction = () => {
+        this.router.navigate(['coin', 'form']);
+    };
 }

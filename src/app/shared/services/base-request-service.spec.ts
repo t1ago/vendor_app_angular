@@ -8,80 +8,68 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 class TestService extends BaseRequestService<any, any> {
-  override basePath = '/test';
+    override basePath = '/test';
 }
 
 describe('BaseRequestService', () => {
-  let service: TestService;
-  let httpMock: HttpTestingController;
+    let service: TestService;
+    let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        TestService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [TestService, provideHttpClient(), provideHttpClientTesting()],
+        });
+
+        service = TestBed.inject(TestService);
+        httpMock = TestBed.inject(HttpTestingController);
     });
 
-    service = TestBed.inject(TestService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+    afterEach(() => {
+        httpMock.verify();
+    });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+    it('should return data when request is successful', async () => {
+        const mockData = { id: 1 };
+        service.request = of(mockData);
 
+        const response = await firstValueFrom(service.resultObservable());
+        expect(response).toEqual(mockData);
+    });
 
+    it('should throw ForeignKeyViolateError when message contains "violates foreign key constraint"', async () => {
+        const errorResponse = { error: { mensagem: 'violates foreign key constraint' } };
+        service.request = throwError(() => errorResponse);
 
-  it('should return data when request is successful', async () => {
-    const mockData = { id: 1 };
-    service.request = of(mockData);
+        await expect(firstValueFrom(service.resultObservable())).rejects.toThrow(ForeignKeyViolateError);
+    });
 
-    const response = await firstValueFrom(service.resultObservable());
-    expect(response).toEqual(mockData);
-  });
+    it('should throw original error when it is NOT a foreign key violation', async () => {
+        const errorResponse = { error: { mensagem: 'Generic Error' } };
+        service.request = throwError(() => errorResponse);
 
-  it('should throw ForeignKeyViolateError when message contains "violates foreign key constraint"', async () => {
-    const errorResponse = { error: { mensagem: 'violates foreign key constraint' } };
-    service.request = throwError(() => errorResponse);
+        await expect(firstValueFrom(service.resultObservable())).rejects.toEqual(errorResponse);
+    });
 
-    await expect(firstValueFrom(service.resultObservable()))
-      .rejects.toThrow(ForeignKeyViolateError);
-  });
+    it('should call defaultError and log to console on failure', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+        const errorResponse = { error: { mensagem: 'Error' } };
+        service.request = throwError(() => errorResponse);
 
-  it('should throw original error when it is NOT a foreign key violation', async () => {
-    const errorResponse = { error: { mensagem: 'Generic Error' } };
-    service.request = throwError(() => errorResponse);
+        await expect(firstValueFrom(service.resultObservable())).rejects.toBeDefined();
 
-    await expect(firstValueFrom(service.resultObservable()))
-      .rejects.toEqual(errorResponse);
-  });
+        expect(consoleSpy).toHaveBeenCalledWith(errorResponse);
+    });
 
-  it('should call defaultError and log to console on failure', async () => {
-    const consoleSpy = vi.spyOn(console, 'log');
-    const errorResponse = { error: { mensagem: 'Error' } };
-    service.request = throwError(() => errorResponse);
+    it('should throw "Method not implemented" for base methods', () => {
+        expect(() => service.save({})).toThrowError('Method not implemented.');
+        expect(() => service.getById(1)).toThrowError('Method not implemented.');
+        expect(() => service.getAll()).toThrowError('Method not implemented.');
+        expect(() => service.delete(1)).toThrowError('Method not implemented.');
+        expect(() => service.mapDto({})).toThrowError('Method not implemented.');
+        expect(() => service.mapModel({})).toThrowError('Method not implemented.');
+    });
 
-    await expect(firstValueFrom(service.resultObservable())).rejects.toBeDefined();
-
-    expect(consoleSpy).toHaveBeenCalledWith(errorResponse);
-  });
-
-
-
-  it('should throw "Method not implemented" for base methods', () => {
-    expect(() => service.save({})).toThrowError('Method not implemented.');
-    expect(() => service.getById(1)).toThrowError('Method not implemented.');
-    expect(() => service.getAll()).toThrowError('Method not implemented.');
-    expect(() => service.delete(1)).toThrowError('Method not implemented.');
-    expect(() => service.mapDto({})).toThrowError('Method not implemented.');
-    expect(() => service.mapModel({})).toThrowError('Method not implemented.');
-  });
-
-
-  it('should return the correct APIPath', () => {
-    expect(service.APIPath).toBe('http://localhost:3000/test');
-  });
-
+    it('should return the correct APIPath', () => {
+        expect(service.APIPath).toBe('http://localhost:3000/test');
+    });
 });
