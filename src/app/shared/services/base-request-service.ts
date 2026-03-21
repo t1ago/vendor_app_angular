@@ -1,7 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 import { ForeignKeyViolateError } from '../erros/foreign-key-violate-error';
+import { EnvironmentService } from './environment-service';
+import { UnauthorizedError } from '@shared/erros/unauthorized-error';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -9,7 +12,11 @@ import { ForeignKeyViolateError } from '../erros/foreign-key-violate-error';
 export class BaseRequestService<MODEL, DTO> {
     http = inject(HttpClient);
 
-    host: string = 'http://localhost:3000';
+    router = inject(Router);
+
+    environmentService = inject(EnvironmentService);
+
+    host: string = this.environmentService.vendorServiceHost;
 
     basePath: string = '';
 
@@ -39,20 +46,37 @@ export class BaseRequestService<MODEL, DTO> {
         throw new Error('Method not implemented.');
     }
 
-    defaultError(error: any) {
+    logError(error: any) {
         console.log(error);
+    }
+
+    unauthorizedError(error: any): never {
+        this.router.navigate(['/unauthorized']);
+
+        throw new UnauthorizedError(error.statusText);
+    }
+
+    defaultErrorResponse(errorResponse: any): never {
+        const errorMessage = errorResponse.error.mensagem;
+
+        if (errorMessage.toLowerCase().includes('violates foreign key constraint')) {
+            throw new ForeignKeyViolateError();
+        } else {
+            throw errorResponse;
+        }
     }
 
     resultObservable() {
         return this.request!.pipe(
             catchError((errorResponse) => {
-                this.defaultError(errorResponse);
-                const errorMessage = errorResponse.error.mensagem;
+                this.logError(errorResponse);
+                const codeStatus = errorResponse.status;
 
-                if (errorMessage.toLowerCase().includes('violates foreign key constraint')) {
-                    throw new ForeignKeyViolateError();
-                } else {
-                    throw errorResponse;
+                switch (codeStatus) {
+                    case HttpStatusCode.Unauthorized:
+                        this.unauthorizedError(errorResponse);
+                    default:
+                        this.defaultErrorResponse(errorResponse);
                 }
             })
         );
