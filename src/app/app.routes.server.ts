@@ -5,4 +5,12 @@ export const serverRoutes: ServerRoute[] = [
         path: '**',
         renderMode: RenderMode.Prerender,
     },
+    {
+        path: 'category/form/:id',
+        renderMode: RenderMode.Client,
+    },
+    {
+        path: 'coin/form/:id',
+        renderMode: RenderMode.Client,
+    },
 ];

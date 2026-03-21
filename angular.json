@@ -31,16 +31,13 @@
                             },
                             "src/assets"
                         ],
-                        "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css", "src/styles.scss"],
-                        "scripts": [
-                            "node_modules/@popperjs/core/dist/umd/popper.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.min.js"
-                        ],
+                        "styles": ["src/styles.scss"],
+                        "scripts": [],
                         "server": "src/main.server.ts",
-                        "outputMode": "server",
                         "ssr": {
                             "entry": "src/server.ts"
-                        }
+                        },
+                        "prerender": false
                     },
                     "configurations": {
                         "production": {
@@ -64,7 +61,7 @@
                             "sourceMap": true
                         }
                     },
-                    "defaultConfiguration": "production"
+                    "defaultConfiguration": "development"
                 },
                 "serve": {
                     "builder": "@angular/build:dev-server",

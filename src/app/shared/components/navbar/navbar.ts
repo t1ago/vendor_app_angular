@@ -3,8 +3,6 @@ import { INavbarItem } from './interfaces/navbar-item';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-declare var bootstrap: any;
-
 @Component({
     selector: 'app-navbar',
     imports: [CommonModule, RouterLink, RouterLinkActive],

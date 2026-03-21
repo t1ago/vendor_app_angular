@@ -1,7 +1,5 @@
-@use 'bootstrap/scss/bootstrap' as *;
-
 .is-invalid {
-    color: $danger !important;
+    color: var(--bs-danger) !important;
 }
 
 .form-label {
@@ -10,7 +8,7 @@
 
 div {
     > label.save-control.loading {
-        color: $primary !important;
+        color: var(--bs-primary) !important;
     }
 
     > img.save-control.loading {
