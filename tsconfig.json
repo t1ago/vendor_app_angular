@@ -17,7 +17,7 @@
         "typeRoots": ["./node_modules/@types", "./node_modules"],
         "paths": {
             "@shared/*": ["./src/app/shared/*"],
-            "@features/*": ["./src/app/features/*"]
+            "@features/*": ["./src/app/main/features/*"]
         }
     },
     "angularCompilerOptions": {

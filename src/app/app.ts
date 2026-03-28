@@ -8,37 +8,8 @@ import { PageLoadingService } from './shared/components/page-loading/services/pa
 
 @Component({
     selector: 'app-root',
-    imports: [Navbar, RouterOutlet, Toast, PageLoading],
+    imports: [Toast, RouterOutlet],
     templateUrl: './app.html',
     styleUrl: './app.scss',
 })
-export class App {
-    protected readonly title = signal('vendor_app_angular');
-
-    private router = inject(Router);
-
-    private pageLoadingService = inject(PageLoadingService);
-
-    navbarItems: INavbarItem[] = [
-        {
-            name: 'Produtos',
-            route: '#',
-            children: [
-                {
-                    name: 'Categoria',
-                    route: '/category/list',
-                    children: [],
-                },
-                {
-                    name: 'Moedas',
-                    route: '/coin/list',
-                    children: [],
-                },
-            ],
-        },
-    ];
-
-    isCurrentNavigation = computed(() => !!this.router.currentNavigation());
-
-    isLoading = this.pageLoadingService.isLoading;
-}
+export class App {}

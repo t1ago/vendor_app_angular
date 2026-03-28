@@ -66,7 +66,7 @@ export class BaseRequestService<MODEL, DTO> {
         }
     }
 
-    resultObservable() {
+    resultObservable<RESULT>() {
         return this.request!.pipe(
             catchError((errorResponse) => {
                 this.logError(errorResponse);
@@ -79,7 +79,7 @@ export class BaseRequestService<MODEL, DTO> {
                         this.defaultErrorResponse(errorResponse);
                 }
             })
-        );
+        ) as Observable<RESULT>;
     }
 
     get APIPath(): String {
