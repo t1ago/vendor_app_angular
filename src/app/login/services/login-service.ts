@@ -10,7 +10,7 @@ import { HttpHeaders } from '@angular/common/http';
     providedIn: 'root',
 })
 export class LoginService extends BaseRequestService<ILoginModel, ILoginDto> {
-    override basePath: string = '/login/tiago';
+    override basePath: string = '/tiago/credencial/login';
 
     login(model: ILoginModel): Observable<IAuthToken> {
         this.request = this.http

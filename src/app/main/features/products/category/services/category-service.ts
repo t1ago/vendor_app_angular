@@ -8,7 +8,7 @@ import { catchError, map, Observable, Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class CategoryService extends BaseRequestService<ICategoryModel, ICategoryDto> {
-    override basePath: string = '/categorias';
+    override basePath: string = '/tiago/categoria';
 
     override save(model: ICategoryModel): Observable<Object> {
         if (model.id) {
