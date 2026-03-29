@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ICategoryModel } from '../interfaces/category-model';
 import { form, FormField, minLength, required, submit } from '@angular/forms/signals';
 import { CategoryService } from '../services/category-service';
-import { ISateSaveControl } from '@shared/interfaces/save-control';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 import { BaseForm } from '@shared/classes/base-form';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -50,7 +50,7 @@ export class CategoryForm extends BaseForm<ICategoryModel, CategoryService> {
             const category = this.model();
 
             this.updateSaveControl(
-                ISateSaveControl.SAVING,
+                ISateSaveControlModel.SAVING,
                 category.id == null ? 'Salvando categoria' : 'Atualizando categoria'
             );
 
@@ -59,7 +59,7 @@ export class CategoryForm extends BaseForm<ICategoryModel, CategoryService> {
             this.service.save(category).subscribe({
                 next: () => {
                     this.toastService.show('Registro salvo com sucesso', 'success', 1000);
-                    this.updateSaveControl(ISateSaveControl.OPEN, '');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.onCancelAction();
                 },
                 error: (_errorData) => {

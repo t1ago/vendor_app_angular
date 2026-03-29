@@ -1,31 +1,33 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { IAuthUser } from '@shared/interfaces/auth-user';
+import { IAuthTokenModel } from '@shared/interfaces/auth-token-model';
+import { IAuthUserModel } from '@shared/interfaces/auth-user-model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthStoreService {
     token = signal<string>('');
-    user = signal<IAuthUser>({} as any);
+    user = signal<IAuthUserModel>({} as any);
     expiresAt = signal<number>(0);
 
-    isLogged = computed(() => !!this.token());
     isTokenExpired = computed(() => {
         const exp = this.expiresAt();
         return exp ? Date.now() > exp : true;
     });
 
-    setAuth(token: string, expiresIn: number) {
-        const expiresAt = Date.now() + expiresIn * 1000;
+    isLogged = computed(() => !!this.token() && !this.isTokenExpired());
 
-        this.token.set(token);
+    setAuthToken(authToken: IAuthTokenModel) {
+        const expiresAt = Date.now() + authToken.expiresIn * 1000;
+
+        this.token.set(authToken.token);
         this.expiresAt.set(expiresAt);
 
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', authToken.token);
         localStorage.setItem('expiresAt', expiresAt.toString());
     }
 
-    setUser(user: IAuthUser) {
+    setUser(user: IAuthUserModel) {
         this.user.set(user);
         localStorage.setItem('user', JSON.stringify(user));
     }

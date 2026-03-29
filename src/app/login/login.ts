@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { email, FormField, minLength, required, submit } from '@angular/forms/signals';
 import { BaseForm } from '@shared/classes/base-form';
-import { ILoginModel } from './interfaces/login-model';
+import { IAuthLoginModel } from '../shared/interfaces/auth-login-model';
 import { LoginService } from './services/login-service';
 import { Router } from '@angular/router';
 import { ToastService } from '@shared/components/toast/services/toast-service';
-import { ISateSaveControl } from '@shared/interfaces/save-control';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 
 @Component({
     selector: 'app-login',
@@ -13,7 +13,7 @@ import { ISateSaveControl } from '@shared/interfaces/save-control';
     templateUrl: './login.html',
     styleUrl: './login.scss',
 })
-export class Login extends BaseForm<ILoginModel, LoginService> {
+export class Login extends BaseForm<IAuthLoginModel, LoginService> {
     override service = inject(LoginService);
 
     private router = inject(Router);
@@ -30,7 +30,7 @@ export class Login extends BaseForm<ILoginModel, LoginService> {
         });
     }
 
-    private createModel(): ILoginModel {
+    private createModel(): IAuthLoginModel {
         return {
             email: '',
             password: '',
@@ -41,15 +41,15 @@ export class Login extends BaseForm<ILoginModel, LoginService> {
         submit(this.formData, async () => {
             const loginData = this.model();
 
-            this.updateSaveControl(ISateSaveControl.SAVING, 'Autenticando');
+            this.updateSaveControl(ISateSaveControlModel.SAVING, 'Autenticando');
 
             this.service.login(loginData).subscribe({
                 next: (response) => {
-                    this.updateSaveControl(ISateSaveControl.OPEN, '');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.router.navigate(['/home']);
                 },
                 error: (err) => {
-                    this.updateSaveControl(ISateSaveControl.OPEN, '');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.toastService.show('Usuário ou senha inválidos', 'danger');
                 },
             });

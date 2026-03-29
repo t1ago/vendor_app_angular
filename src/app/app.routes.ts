@@ -3,6 +3,7 @@ import { Home } from './main/home/home';
 import { Unauthorized } from '@shared/components/unauthorized/unauthorized';
 import { Login } from './login/login';
 import { Main } from './main/main';
+import { authGuard } from '@shared/guards/auth-guard';
 
 export const routes: Routes = [
     {
@@ -16,7 +17,7 @@ export const routes: Routes = [
     {
         path: '',
         component: Main,
-        // canActivate: [AuthGuard], // Dica: Adicione seu Guard aqui no futuro para proteger tudo
+        canActivate: [authGuard],
         children: [
             {
                 path: 'home',

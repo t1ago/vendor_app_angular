@@ -7,7 +7,7 @@ import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ICategoryModel } from '../../category/interfaces/category-model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, maxLength, minLength, required, submit } from '@angular/forms/signals';
-import { ISateSaveControl } from '@shared/interfaces/save-control';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 
 @Component({
     selector: 'app-coin-form',
@@ -54,7 +54,7 @@ export class CoinForm extends BaseForm<ICoinModel, CoinService> {
             const category = this.model();
 
             this.updateSaveControl(
-                ISateSaveControl.SAVING,
+                ISateSaveControlModel.SAVING,
                 category.id == null ? 'Salvando moeda' : 'Atualizando moeda'
             );
 
@@ -63,7 +63,7 @@ export class CoinForm extends BaseForm<ICoinModel, CoinService> {
             this.service.save(category).subscribe({
                 next: () => {
                     this.toastService.show('Registro salvo com sucesso', 'success', 1000);
-                    this.updateSaveControl(ISateSaveControl.OPEN, '');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.onCancelAction();
                 },
                 error: (_errorData) => {

@@ -1,4 +1,4 @@
-export interface IAuthUser {
+export interface IAuthUserModel {
     credentialId: number;
     credentialName: string;
     profileId: number;

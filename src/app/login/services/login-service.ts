@@ -1,37 +1,34 @@
-import { Injectable } from '@angular/core';
-import { BaseRequestService } from '@shared/services/base-request-service';
-import { catchError, Observable, throwError } from 'rxjs';
-import { ILoginDto } from '../interfaces/login-dto';
-import { ILoginModel } from '../interfaces/login-model';
-import { IAuthToken } from '@shared/interfaces/auth-token';
-import { HttpHeaders } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { IAuthLoginModel } from '@shared/interfaces/auth-login-model';
+import { AuthLoginService } from '@shared/services/auth-login-service';
+import { AuthStoreService } from '@shared/services/auth-store-service';
+import { AuthUserService } from '@shared/services/auth-user-service';
+import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LoginService extends BaseRequestService<ILoginModel, ILoginDto> {
-    override basePath: string = '/tiago/credencial/login';
+export class LoginService {
+    private authLoginService = inject(AuthLoginService);
 
-    login(model: ILoginModel): Observable<IAuthToken> {
-        this.request = this.http
-            .post(`${this.APIPath}`, null, {
-                headers: {
-                    Authorization: `Basic ${this.mapDto(model).basicAuthToken}`,
-                },
+    private authUserService = inject(AuthUserService);
+
+    private authStore = inject(AuthStoreService);
+
+    login(model: IAuthLoginModel): Observable<boolean> {
+        return this.authLoginService.login(model).pipe(
+            switchMap(() => this.authUserService.user()),
+            map((_) => {
+                return this.isLogged();
+            }),
+            catchError((error) => {
+                console.error(error);
+                return throwError(() => error);
             })
-            .pipe(
-                catchError((errorResponse) => {
-                    this.logError(errorResponse);
-                    throw errorResponse;
-                })
-            );
-
-        return this.request as Observable<IAuthToken>;
+        );
     }
 
-    override mapDto(model: ILoginModel): ILoginDto {
-        return {
-            basicAuthToken: btoa(`${model.email}:${model.password}`),
-        };
+    private isLogged(): boolean {
+        return this.authStore.isLogged();
     }
 }

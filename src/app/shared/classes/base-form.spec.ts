@@ -10,7 +10,7 @@ import {
     signal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ISateSaveControl } from '../interfaces/save-control';
+import { ISateSaveControl } from '../interfaces/save-control-model';
 import { required } from '@angular/forms/signals';
 
 describe('BaseForm', () => {

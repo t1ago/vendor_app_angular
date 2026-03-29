@@ -1,4 +1,4 @@
-export interface IAuthToken {
+export interface IAuthTokenDto {
     token: string;
     expiresIn: number;
 }

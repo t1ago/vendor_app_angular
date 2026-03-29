@@ -1,9 +1,9 @@
 import { inject, signal, WritableSignal } from '@angular/core';
-import { ISateSaveControl, ISaveControl } from '../interfaces/save-control';
+import { ISateSaveControlModel, ISaveControlModel } from '../interfaces/save-control-model';
 import { FieldTree, form, FormOptions, SchemaOrSchemaFn } from '@angular/forms/signals';
 
 export class BaseForm<MODEL, SERVICE> {
-    saveControl = signal({} as ISaveControl);
+    saveControl = signal({} as ISaveControlModel);
 
     model!: WritableSignal<MODEL>;
 
@@ -24,7 +24,7 @@ export class BaseForm<MODEL, SERVICE> {
         throw new Error('Method not implemented.');
     }
 
-    updateSaveControl(state: ISateSaveControl, message: string) {
+    updateSaveControl(state: ISateSaveControlModel, message: string) {
         this.saveControl.update(() => {
             return {
                 state: state,
@@ -38,7 +38,7 @@ export class BaseForm<MODEL, SERVICE> {
     }
 
     get isSaveAction(): boolean {
-        return this.saveControl().state == ISateSaveControl.SAVING;
+        return this.saveControl().state == ISateSaveControlModel.SAVING;
     }
 
     get messageSaveAction(): string {
