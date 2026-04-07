@@ -37,7 +37,7 @@ export class Login extends BaseForm<IAuthLoginModel, LoginService> {
         };
     }
 
-    override onSaveAction() {
+    onSign() {
         submit(this.formData, async () => {
             const loginData = this.model();
 

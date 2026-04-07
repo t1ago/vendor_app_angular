@@ -55,12 +55,7 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 } @else {
-                <button
-                    [disabled]="isDisabledSaveAction"
-                    (click)="onSaveAction()"
-                    type="button"
-                    class="btn btn-primary"
-                >
+                <button [disabled]="isDisabledSaveAction" (click)="onSign()" type="button" class="btn btn-primary">
                     <img src="assets/images/salvar.png" />
                     <span>Entrar</span>
                 </button>
