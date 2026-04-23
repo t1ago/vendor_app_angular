@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 describe('CategoryService', () => {
     let service: CategoryService;
     let httpMock: HttpTestingController;
-    const apiUrl = 'http://localhost:3000/categorias';
+    const apiUrl = '/tiago/categoria';
 
     const mockDtoResponse: { data: ICategoryDto[] } = {
         data: [
@@ -19,6 +19,8 @@ describe('CategoryService', () => {
     };
 
     beforeEach(() => {
+        TestBed.resetTestingModule();
+
         TestBed.configureTestingModule({
             providers: [CategoryService, provideHttpClient(), provideHttpClientTesting()],
         });

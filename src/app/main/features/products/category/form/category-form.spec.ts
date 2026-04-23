@@ -4,7 +4,7 @@ import { CategoryService } from '../services/category-service';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError, BehaviorSubject } from 'rxjs';
-import { ISateSaveControl } from '@shared/interfaces/save-control';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 
@@ -109,7 +109,7 @@ describe('CategoryForm', () => {
         component.onSaveAction();
 
         expect(mockToastService.show).toHaveBeenCalledWith('Registro salvo com sucesso', 'success', 1000);
-        expect(component.saveControl().state).toBe(ISateSaveControl.OPEN);
+        expect(component.saveControl().state).toBe(ISateSaveControlModel.OPEN);
         expect(cancelSpy).toHaveBeenCalled();
     });
 

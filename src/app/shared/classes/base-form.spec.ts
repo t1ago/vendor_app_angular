@@ -10,7 +10,7 @@ import {
     signal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ISateSaveControl } from '../interfaces/save-control-model';
+import { ISateSaveControlModel } from '../interfaces/save-control-model';
 import { required } from '@angular/forms/signals';
 
 describe('BaseForm', () => {
@@ -40,7 +40,7 @@ describe('BaseForm', () => {
             name: 'Test',
         };
 
-        const schema = {};
+        const schema = {} as any;
 
         // WHEN
         runInInjectionContext(injector, () => {
@@ -68,7 +68,7 @@ describe('BaseForm', () => {
     it('should updateSaveControl', () => {
         // GIVEN
         runInInjectionContext(injector, () => {
-            form.updateSaveControl(ISateSaveControl.SAVING, 'test');
+            form.updateSaveControl(ISateSaveControlModel.SAVING, 'test');
         });
 
         // THEN

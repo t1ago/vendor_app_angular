@@ -6,6 +6,6 @@
         "outDir": "./out-tsc/app",
         "types": ["node"]
     },
-    "include": ["src/**/*.ts", "vitest.setup.ts"],
-    "exclude": ["src/**/*.spec.ts"]
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts", "src/**/*.spec2.ts"]
 }

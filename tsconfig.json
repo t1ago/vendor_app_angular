@@ -18,7 +18,8 @@
         "paths": {
             "@shared/*": ["./src/app/shared/*"],
             "@features/*": ["./src/app/main/features/*"]
-        }
+        },
+        "rootDir": "./src"
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,

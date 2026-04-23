@@ -3,30 +3,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Angular: Run",
-            "type": "chrome",
-            "request": "launch",
-            "preLaunchTask": "npm: start",
-            "url": "http://localhost:4200/category/form"
-        },
-        {
-            "name": "Angular: Test (Debug)",
-            "type": "node",
-            "request": "launch",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "test"],
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "autoAttachChildProcesses": true
-        },
-        {
-            "name": "Angular: Test (Cobertura)",
-            "type": "chrome",
-            "request": "launch",
-            "file": "${workspaceFolder}/coverage/vendor_app_angular/index.html",
-            "preLaunchTask": "Gerar Cobertura",
-            "sourceMaps": true
+            "name": "Attach Vitest (Angular 21)",
+            "type": "pwa-node",
+            "request": "attach",
+            "port": 9229,
+            "restart": true,
+            "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
         }
     ]
 }
