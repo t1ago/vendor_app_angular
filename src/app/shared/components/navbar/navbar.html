@@ -30,9 +30,13 @@
                     <ul class="dropdown-menu">
                         @for (children of item.children; track $index) {
                         <li>
+                            @if (children.external) {
+                            <a class="dropdown-item" href="{{children.route}}">{{children.name}}</a>
+                            } @else {
                             <a class="dropdown-item" href="#" [routerLink]="children.route" routerLinkActive="active"
                                 >{{children.name}}</a
                             >
+                            }
                         </li>
                         }
                     </ul>

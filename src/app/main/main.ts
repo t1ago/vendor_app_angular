@@ -4,6 +4,7 @@ import { INavbarItem } from '@shared/components/navbar/interfaces/navbar-item';
 import { Navbar } from '@shared/components/navbar/navbar';
 import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
+import { AuthStoreService } from '@shared/services/auth-store-service';
 
 @Component({
     selector: 'app-main',
@@ -18,6 +19,8 @@ export class Main {
 
     private pageLoadingService = inject(PageLoadingService);
 
+    private authStoreService = inject(AuthStoreService);
+
     navbarItems: INavbarItem[] = [
         {
             name: 'Produtos',
@@ -29,9 +32,15 @@ export class Main {
                     children: [],
                 },
                 {
-                    name: 'Moedas',
+                    name: 'Moeda',
                     route: '/coin/list',
                     children: [],
+                },
+                {
+                    name: 'Grupo',
+                    route: this.makeExternalRedirect('https://vendor-app-angular.onrender.com', '/group/list'),
+                    children: [],
+                    external: true,
                 },
             ],
         },
@@ -40,4 +49,8 @@ export class Main {
     isCurrentNavigation = computed(() => !!this.router.currentNavigation());
 
     isLoading = this.pageLoadingService.isLoading;
+
+    private makeExternalRedirect(basePath: string, url: string): string {
+        return `${basePath}/externalPartner?redirect=${url}&secret=${this.authStoreService.getToken()}$exp=3600`;
+    }
 }

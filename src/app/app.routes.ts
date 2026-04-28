@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Unauthorized } from '@shared/components/unauthorized/unauthorized';
 import { authGuard } from '@shared/guards/auth-guard';
 import { Login } from './login/login';
+import { ExternalPartner } from './main/external-partner/external-partner';
 import { Home } from './main/home/home';
 import { Main } from './main/main';
 
@@ -39,6 +40,10 @@ export const routes: Routes = [
                 pathMatch: 'full',
             },
         ],
+    },
+    {
+        path: 'externalPartner',
+        component: ExternalPartner,
     },
     {
         path: '**',
