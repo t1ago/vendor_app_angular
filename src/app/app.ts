@@ -1,11 +1,7 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { Navbar } from './shared/components/navbar/navbar';
-import { INavbarItem } from './shared/components/navbar/interfaces/navbar-item';
-import { Toast } from './shared/components/toast/toast';
-import { PageLoading } from './shared/components/page-loading/page-loading';
-import { PageLoadingService } from './shared/components/page-loading/services/page-loading-service';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AuthStoreService } from '@shared/services/auth-store-service';
+import { Toast } from './shared/components/toast/toast';
 
 @Component({
     selector: 'app-root',

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { CategoryList } from './category-list';
-import { CategoryService } from '../services/category-service';
-import { ToastService } from '@shared/components/toast/services/toast-service';
-import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { ICategoryModel } from '../interfaces/category-model';
+import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
+import { ToastService } from '@shared/components/toast/services/toast-service';
 import { IMAGES } from '@shared/constants/images';
+import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ICategoryModel } from '../interfaces/category-model';
+import { CategoryService } from '../services/category-service';
+import { CategoryList } from './category-list';
 
 describe('CategoryList', () => {
     let component: CategoryList;

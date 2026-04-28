@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { BaseRequestService } from '@shared/services/base-request-service';
-import { map, Observable, tap, throwError } from 'rxjs';
+import { IAuthLoginDto } from '@shared/interfaces/auth-login-dto';
+import { IAuthLoginModel } from '@shared/interfaces/auth-login-model';
+import { IAuthTokenDto } from '@shared/interfaces/auth-token-dto';
 import { IAuthTokenModel } from '@shared/interfaces/auth-token-model';
 import { AuthStoreService } from '@shared/services/auth-store-service';
-import { IAuthLoginModel } from '@shared/interfaces/auth-login-model';
-import { IAuthLoginDto } from '@shared/interfaces/auth-login-dto';
-import { IAuthTokenDto } from '@shared/interfaces/auth-token-dto';
+import { BaseRequestService } from '@shared/services/base-request-service';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',

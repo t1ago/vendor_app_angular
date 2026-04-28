@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { email, FormField, minLength, required, submit } from '@angular/forms/signals';
-import { BaseForm } from '@shared/classes/base-form';
-import { IAuthLoginModel } from '../shared/interfaces/auth-login-model';
-import { LoginService } from './services/login-service';
 import { Router } from '@angular/router';
+import { BaseForm } from '@shared/classes/base-form';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
+import { IAuthLoginModel } from '../shared/interfaces/auth-login-model';
+import { LoginService } from './services/login-service';
 
 @Component({
     selector: 'app-login',

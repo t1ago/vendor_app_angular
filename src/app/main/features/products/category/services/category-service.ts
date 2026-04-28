@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ICategoryModel } from '../interfaces/category-model';
-import { ICategoryDto } from '../interfaces/category-dto';
 import { BaseRequestService } from '@shared/services/base-request-service';
-import { catchError, map, Observable, Subject } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { ICategoryDto } from '../interfaces/category-dto';
+import { ICategoryModel } from '../interfaces/category-model';
 
 @Injectable({
     providedIn: 'root',

@@ -1,7 +1,7 @@
-import { Component, input } from '@angular/core';
-import { INavbarItem } from './interfaces/navbar-item';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, input } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { INavbarItem } from './interfaces/navbar-item';
 
 @Component({
     selector: 'app-navbar',

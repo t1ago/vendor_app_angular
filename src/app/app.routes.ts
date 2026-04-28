@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { Home } from './main/home/home';
 import { Unauthorized } from '@shared/components/unauthorized/unauthorized';
-import { Login } from './login/login';
-import { Main } from './main/main';
 import { authGuard } from '@shared/guards/auth-guard';
+import { Login } from './login/login';
+import { Home } from './main/home/home';
+import { Main } from './main/main';
 
 export const routes: Routes = [
     {

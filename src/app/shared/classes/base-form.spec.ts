@@ -1,5 +1,3 @@
-import { BaseForm } from './base-form';
-import { describe, it, expect } from 'vitest';
 import {
     Component,
     EnvironmentInjector,
@@ -10,8 +8,10 @@ import {
     signal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ISateSaveControlModel } from '../interfaces/save-control-model';
 import { required } from '@angular/forms/signals';
+import { describe, expect, it } from 'vitest';
+import { ISateSaveControlModel } from '../interfaces/save-control-model';
+import { BaseForm } from './base-form';
 
 describe('BaseForm', () => {
     let form: TestForm;

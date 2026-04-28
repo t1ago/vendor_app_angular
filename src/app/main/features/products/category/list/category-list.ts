@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { ICategoryModel } from '../interfaces/category-model';
-import { Table } from '@shared/components/table/table';
-import { ITableConfig } from '@shared/components/table/interfaces/table-config';
-import { CategoryService } from '../services/category-service';
 import { BaseList } from '@shared/classes/base-list';
-import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
-import { IMAGES } from '@shared/constants/images';
-import { ToastService } from '@shared/components/toast/services/toast-service';
 import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
+import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
+import { ITableConfig } from '@shared/components/table/interfaces/table-config';
+import { Table } from '@shared/components/table/table';
+import { ToastService } from '@shared/components/toast/services/toast-service';
+import { IMAGES } from '@shared/constants/images';
 import { loadingObservablePipe } from '@shared/observable-pipe/loading-observable-pipe';
+import { ICategoryModel } from '../interfaces/category-model';
+import { CategoryService } from '../services/category-service';
 
 @Component({
     selector: 'app-category-list',

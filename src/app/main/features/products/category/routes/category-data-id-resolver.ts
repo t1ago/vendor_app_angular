@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn, Router } from '@angular/router';
+import { EMPTY } from 'rxjs';
 import { CategoryService } from '../services/category-service';
-import { catchError, EMPTY } from 'rxjs';
 
 export const categoryDataIdResolver: ResolveFn<any> = (route, _state) => {
     const service = inject(CategoryService);

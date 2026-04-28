@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ICoinModel } from '../interfaces/coin-model';
-import { ICoinDto } from '../interfaces/coin-dto';
 import { BaseRequestService } from '@shared/services/base-request-service';
 import { map, Observable } from 'rxjs';
+import { ICoinDto } from '../interfaces/coin-dto';
+import { ICoinModel } from '../interfaces/coin-model';
 
 @Injectable({
     providedIn: 'root',

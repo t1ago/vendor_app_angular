@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { AuthStoreService } from '@shared/services/auth-store-service';
 import { BaseRequestService } from '@shared/services/base-request-service';
 import { map, Observable, tap } from 'rxjs';
-import { IAuthUserModel } from '../interfaces/auth-user-model';
 import { IAuthUserDto } from '../interfaces/auth-user-dto';
+import { IAuthUserModel } from '../interfaces/auth-user-model';
 
 @Injectable({
     providedIn: 'root',

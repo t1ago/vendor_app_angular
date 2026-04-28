@@ -1,7 +1,7 @@
-import { Signal, signal, WritableSignal, inject, computed } from '@angular/core';
-import { ITableConfig } from '../components/table/interfaces/table-config';
-import { ActivatedRoute, Router } from '@angular/router';
+import { computed, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ITableConfig } from '../components/table/interfaces/table-config';
 
 export class BaseList<MODEL, SERVICE> {
     model: WritableSignal<MODEL[]> = signal<MODEL[]>([]);

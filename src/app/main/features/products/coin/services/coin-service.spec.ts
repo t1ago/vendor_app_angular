@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+
+import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { CoinService } from './coin-service';
 import { ICoinDto } from '../interfaces/coin-dto';
-import { ICoinModel } from '../interfaces/coin-model';
+import { CoinService } from './coin-service';
 
 describe('CoinService', () => {
     let service: CoinService;
@@ -12,6 +12,8 @@ describe('CoinService', () => {
     const apiUrl = 'http://localhost:3000/moedas';
 
     beforeEach(() => {
+        TestBed.resetTestingModule();
+
         TestBed.configureTestingModule({
             providers: [CoinService, provideHttpClient(), provideHttpClientTesting()],
         });
@@ -28,97 +30,135 @@ describe('CoinService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should fetch all coins and map to ICoinModel[]', async () => {
-        const mockDtoResponse: { data: ICoinDto[] } = {
+    it('should fetch all coins and map them to ICoinModel[]', async () => {
+        // GIVEN
+        const coinDtoMock: { data: ICoinDto[] } = {
             data: [
                 { id: 1, nome: 'Real', moeda: 'BRL' },
-                { id: 2, nome: 'Dólar', moeda: 'USD' },
+                { id: 2, nome: 'Dollar', moeda: 'USD' },
             ],
         };
 
-        const requestPromise = firstValueFrom(service.getAll());
+        const getAllPromise = firstValueFrom(service.getAll());
 
         const req = httpMock.expectOne(apiUrl);
+
+        // WHEN
+        req.flush(coinDtoMock);
+
+        const models = await getAllPromise;
+
+        // THEN
         expect(req.request.method).toBe('GET');
-        req.flush(mockDtoResponse);
-
-        const result = await requestPromise;
-
-        expect(result.length).toBe(2);
-        expect(result[0].symbol).toBe('BRL');
-        expect(result[1].name).toBe('Dólar');
+        expect(models.length).toBe(2);
+        expect(models[0].name).toBe('Real');
+        expect(models[0].symbol).toBe('BRL');
     });
 
-    it('should fetch a single coin using query params', async () => {
-        const coinId = 123;
-        const mockDtoResponse = {
-            data: [{ id: 123, nome: 'Bitcoin', moeda: 'BTC' }],
+    it('should fetch a single coin by ID and map it to ICoinModel', async () => {
+        // GIVEN
+        const coinDtoMock = {
+            data: [{ id: 1, nome: 'Real', moeda: 'BRL' }],
         };
+        const coinId = 1;
 
-        const requestPromise = firstValueFrom(service.getById(coinId));
+        const getByIdPromise = firstValueFrom(service.getById(coinId));
 
-        const req = httpMock.expectOne((r) => r.url === apiUrl && r.params.has('id'));
-        expect(req.request.params.get('id')).toBe('123');
+        const req = httpMock.expectOne((request) => {
+            return request.url === apiUrl && request.params.get('id') === String(coinId);
+        });
 
-        req.flush(mockDtoResponse);
-        const result = await requestPromise;
+        // WHEN
+        req.flush(coinDtoMock);
 
-        expect(result.id).toBe(123);
-        expect(result.symbol).toBe('BTC');
+        const model = await getByIdPromise;
+
+        // THEN
+        expect(req.request.method).toBe('GET');
+        expect(req.request.params.get('id')).toBe(String(coinId));
+        expect(model.id).toBe(1);
+        expect(model.name).toBe('Real');
+        expect(model.symbol).toBe('BRL');
     });
 
-    it('should POST when saving a new coin (no ID)', async () => {
-        const newCoin = { name: 'Ethereum', symbol: 'ETH' };
-        const mockResponse = { success: true };
+    it('should POST to create a new coin when id is missing', async () => {
+        // GIVEN
+        const newCoin = { name: 'Euro', symbol: 'EUR' };
 
-        const requestPromise = firstValueFrom(service.save(newCoin as any));
+        const coinResult = { success: true };
+
+        const savePromise = firstValueFrom(service.save(newCoin as any));
 
         const req = httpMock.expectOne(apiUrl);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ id: undefined, nome: 'Ethereum', moeda: 'ETH' });
 
-        req.flush(mockResponse);
-        await requestPromise;
+        // WHEN
+        req.flush(coinResult);
+
+        await savePromise;
+
+        // THEN
+        expect(req.request.method).toBe('POST');
+
+        expect(req.request.body).toEqual({
+            id: undefined,
+            nome: 'Euro',
+            moeda: 'EUR',
+        });
     });
 
-    it('should PUT when saving an existing coin (with ID)', async () => {
-        const existingCoin: ICoinModel = { id: 50, name: 'Solana', symbol: 'SOL' };
+    it('should PUT to update an existing coin when id is present', async () => {
+        // GIVEN
+        const existingCoin = { id: 10, name: 'Bitcoin', symbol: 'BTC' };
 
-        const requestPromise = firstValueFrom(service.save(existingCoin));
+        const coinResult = { success: true };
 
-        const req = httpMock.expectOne(`${apiUrl}/50`);
+        const savePromise = firstValueFrom(service.save(existingCoin));
+
+        const req = httpMock.expectOne(`${apiUrl}/${existingCoin.id}`);
+
+        // WHEN
+        req.flush(coinResult);
+
+        await savePromise;
+
+        // THEN
         expect(req.request.method).toBe('PUT');
-        expect(req.request.body.moeda).toBe('SOL');
 
-        req.flush({ success: true });
-        await requestPromise;
+        expect(req.request.body).toEqual({
+            id: 10,
+            nome: 'Bitcoin',
+            moeda: 'BTC',
+        });
     });
 
     it('should DELETE a coin by ID', async () => {
-        const coinId = 99;
+        // GIVEN
+        const coinId = 5;
 
-        const requestPromise = firstValueFrom(service.delete(coinId));
+        const coinResult = {};
 
-        const req = httpMock.expectOne(`${apiUrl}/99`);
+        const deletePromise = firstValueFrom(service.delete(coinId));
+
+        const req = httpMock.expectOne(`${apiUrl}/${coinId}`);
+
+        // WHEN
+        req.flush(coinResult);
+
+        await deletePromise;
+
+        // THEN
         expect(req.request.method).toBe('DELETE');
-
-        req.flush({});
-        await requestPromise;
     });
 
-    it('should correctly map DTO to Model', () => {
-        const dto = { id: 1, nome: 'Euro', moeda: 'EUR' };
-        const model = service.mapModel(dto as any);
+    it('should correctly map Model to DTO and DTO tp Model', () => {
+        // GIVEN
+        const model = { id: 99, name: 'Test', symbol: 'TST' };
 
-        expect(model.name).toBe('Euro');
-        expect(model.symbol).toBe('EUR');
-    });
+        const dto = { id: 99, nome: 'Test', moeda: 'TST' };
 
-    it('should correctly map Model to DTO', () => {
-        const model = { id: 2, name: 'Litecoin', symbol: 'LTC' };
-        const dto = service.mapDto(model as any);
+        // WHEN - THEN
+        expect(service.mapDto(model)).toEqual(dto);
 
-        expect(dto.nome).toBe('Litecoin');
-        expect(dto.moeda).toBe('LTC');
+        expect(service.mapModel(dto)).toEqual(model);
     });
 });

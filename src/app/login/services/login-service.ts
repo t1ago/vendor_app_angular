@@ -3,7 +3,7 @@ import { IAuthLoginModel } from '@shared/interfaces/auth-login-model';
 import { AuthLoginService } from '@shared/services/auth-login-service';
 import { AuthStoreService } from '@shared/services/auth-store-service';
 import { AuthUserService } from '@shared/services/auth-user-service';
-import { catchError, map, Observable, switchMap, throwError, pipe } from 'rxjs';
+import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',

@@ -3,14 +3,14 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { of, throwError } from 'rxjs';
 import { Mocked } from 'vitest';
-import { CategoryService } from '../services/category-service';
-import { CategoryForm } from './category-form';
+import { CoinService } from '../services/coin-service';
+import { CoinForm } from './coin-form';
 
-describe('CategoryForm', () => {
-    let component: CategoryForm;
-    let fixture: ComponentFixture<CategoryForm>;
+describe('CoinForm', () => {
+    let component: CoinForm;
+    let fixture: ComponentFixture<CoinForm>;
 
-    const categoryServiceStub: Partial<Mocked<CategoryService>> = {
+    const coinServiceStub: Partial<Mocked<CoinService>> = {
         save: vi.fn(),
     };
 
@@ -29,20 +29,20 @@ describe('CategoryForm', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
 
-        categoryServiceStub.save = vi.fn().mockReturnValue(of({}));
+        coinServiceStub.save = vi.fn().mockReturnValue(of({}));
 
         TestBed.configureTestingModule({
-            imports: [CategoryForm],
+            imports: [CoinForm],
             providers: [
                 provideRouter([]),
                 { provide: Router, useValue: routerStub },
-                { provide: CategoryService, useValue: categoryServiceStub },
+                { provide: CoinService, useValue: coinServiceStub },
                 { provide: ToastService, useValue: toastServiceStub },
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
             ],
         });
 
-        fixture = TestBed.createComponent(CategoryForm);
+        fixture = TestBed.createComponent(CoinForm);
         component = fixture.componentInstance;
     });
 
@@ -50,26 +50,28 @@ describe('CategoryForm', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should render form input', () => {
+    it('should render inputs', () => {
         fixture.detectChanges();
 
         const compiled = fixture.nativeElement as HTMLElement;
 
         expect(compiled.querySelector('#name')).toBeTruthy();
-        expect(compiled.querySelectorAll('button').length).toBe(2);
+        expect(compiled.querySelector('#simbol')).toBeTruthy();
     });
 
-    it('should show validation error when name is invalid and touched', () => {
+    it('should show validation errors for name and symbol', () => {
         component.formName().value.set('');
         component.formName().markAsTouched();
+
+        component.formSymbol().value.set('');
+        component.formSymbol().markAsTouched();
 
         fixture.detectChanges();
 
         const compiled = fixture.nativeElement as HTMLElement;
-        const errors = compiled.querySelectorAll('.is-invalid small');
 
-        expect(errors.length).toBeGreaterThan(0);
-        expect(compiled.textContent).toContain('Nome é obrigatório');
+        expect(compiled.textContent).toContain('Nome da Moeda é obrigatório');
+        expect(compiled.textContent).toContain('Símbolo é obrigatório');
     });
 
     it('should disable save button when form is invalid', () => {
@@ -95,8 +97,11 @@ describe('CategoryForm', () => {
     it('should call onSaveAction when save button is clicked', () => {
         const spy = vi.spyOn(component, 'onSaveAction');
 
-        component.formName().value.set('Teste');
+        component.formName().value.set('Bitcoin');
         component.formName().markAsTouched();
+
+        component.formSymbol().value.set('BTC');
+        component.formSymbol().markAsTouched();
 
         fixture.detectChanges();
 
@@ -110,31 +115,37 @@ describe('CategoryForm', () => {
     });
 
     it('should call service.save and navigate on success', () => {
-        categoryServiceStub.save?.mockReturnValue(of({}));
+        coinServiceStub.save?.mockReturnValue(of({}));
 
-        component.formName().value.set('Teste');
+        component.formName().value.set('Bitcoin');
+        component.formSymbol().value.set('BTC');
+
         component.formName().markAsTouched();
+        component.formSymbol().markAsTouched();
 
         fixture.detectChanges();
 
         component.onSaveAction();
 
-        expect(categoryServiceStub.save).toHaveBeenCalled();
+        expect(coinServiceStub.save).toHaveBeenCalled();
         expect(toastServiceStub.show).toHaveBeenCalledWith('Registro salvo com sucesso', 'success', 1000);
-        expect(routerStub.navigate).toHaveBeenCalledWith(['category', 'list']);
+        expect(routerStub.navigate).toHaveBeenCalledWith(['coin', 'list']);
     });
 
     it('should show error toast when save fails', () => {
-        categoryServiceStub.save?.mockReturnValue(throwError(() => ({})));
+        coinServiceStub.save?.mockReturnValue(throwError(() => ({})));
 
-        component.formName().value.set('Teste');
+        component.formName().value.set('Bitcoin');
+        component.formSymbol().value.set('BTC');
+
         component.formName().markAsTouched();
+        component.formSymbol().markAsTouched();
 
         fixture.detectChanges();
 
         component.onSaveAction();
 
-        expect(categoryServiceStub.save).toHaveBeenCalled();
+        expect(coinServiceStub.save).toHaveBeenCalled();
         expect(toastServiceStub.show).toHaveBeenCalledWith('Falha ao salvar o registro', 'danger');
     });
 
@@ -150,57 +161,50 @@ describe('CategoryForm', () => {
     });
 
     it('should initialize form with route data when editing', () => {
-        // GIVEN
         const activatedRouteWithData = {
             data: of({
-                data: { id: 10, name: 'Categoria Editar' },
+                data: { id: 1, name: 'Bitcoin', symbol: 'BTC' },
             }),
         };
 
         TestBed.resetTestingModule();
 
         TestBed.configureTestingModule({
-            imports: [CategoryForm],
+            imports: [CoinForm],
             providers: [
                 provideRouter([]),
                 { provide: Router, useValue: routerStub },
-                { provide: CategoryService, useValue: categoryServiceStub },
+                { provide: CoinService, useValue: coinServiceStub },
                 { provide: ToastService, useValue: toastServiceStub },
                 { provide: ActivatedRoute, useValue: activatedRouteWithData },
             ],
         });
 
-        const fixture = TestBed.createComponent(CategoryForm);
+        const fixture = TestBed.createComponent(CoinForm);
         const component = fixture.componentInstance;
 
         fixture.detectChanges();
 
-        // THEN
-        expect(component.model().id).toBe(10);
-        expect(component.model().name).toBe('Categoria Editar');
+        expect(component.model().id).toBe(1);
+        expect(component.model().name).toBe('Bitcoin');
+        expect(component.model().symbol).toBe('BTC');
     });
 
-    it('should use "Atualizando categoria" message when id exists', () => {
-        // GIVEN
-        categoryServiceStub.save?.mockReturnValue(of({}));
+    it('should use "Atualizando moeda" message when id exists', () => {
+        coinServiceStub.save?.mockReturnValue(of({}));
 
-        component.formName().value.set('Categoria Editar');
-        component.formName().markAsTouched();
-
-        // força modo edição
         component.model.set({
             id: 1,
-            name: 'Categoria Editar',
+            name: 'Bitcoin',
+            symbol: 'BTC',
         });
 
-        const updateSpy = vi.spyOn(component, 'updateSaveControl');
+        const spy = vi.spyOn(component, 'updateSaveControl');
 
         fixture.detectChanges();
 
-        // WHEN
         component.onSaveAction();
 
-        // THEN
-        expect(updateSpy).toHaveBeenCalledWith(expect.anything(), 'Atualizando categoria');
+        expect(spy).toHaveBeenCalledWith(expect.anything(), 'Atualizando moeda');
     });
 });

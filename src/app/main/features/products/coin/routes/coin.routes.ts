@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { coinDataIdResolver } from './coin-data-id-resolver';
 import { coinDataAllResolver } from './coin-data-all-resolver';
+import { coinDataIdResolver } from './coin-data-id-resolver';
 
 export const coinRoutes: Routes = [
     {

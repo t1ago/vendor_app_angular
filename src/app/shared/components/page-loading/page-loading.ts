@@ -1,5 +1,4 @@
-import { Component, inject, input, Signal, signal } from '@angular/core';
-import { PageLoadingService } from './services/page-loading-service';
+import { Component, input } from '@angular/core';
 
 @Component({
     selector: 'app-page-loading',

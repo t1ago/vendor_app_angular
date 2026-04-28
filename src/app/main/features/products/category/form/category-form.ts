@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { ICategoryModel } from '../interfaces/category-model';
-import { form, FormField, minLength, required, submit } from '@angular/forms/signals';
-import { CategoryService } from '../services/category-service';
-import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
-import { BaseForm } from '@shared/classes/base-form';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FormField, minLength, required, submit } from '@angular/forms/signals';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BaseForm } from '@shared/classes/base-form';
 import { ToastService } from '@shared/components/toast/services/toast-service';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
+import { ICategoryModel } from '../interfaces/category-model';
+import { CategoryService } from '../services/category-service';
 
 @Component({
     selector: 'app-category-form',

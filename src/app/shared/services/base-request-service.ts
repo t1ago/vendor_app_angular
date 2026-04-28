@@ -1,10 +1,10 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { UnauthorizedError } from '@shared/erros/unauthorized-error';
 import { catchError, Observable } from 'rxjs';
 import { ForeignKeyViolateError } from '../erros/foreign-key-violate-error';
 import { EnvironmentService } from './environment-service';
-import { UnauthorizedError } from '@shared/erros/unauthorized-error';
-import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',

@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LoginService } from './login-service';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Mocked, vi } from 'vitest';
-import { AuthLoginService } from '@shared/services/auth-login-service';
-import { AuthUserService } from '@shared/services/auth-user-service';
-import { AuthStoreService } from '@shared/services/auth-store-service';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { IAuthLoginModel } from '@shared/interfaces/auth-login-model';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { IAuthUserModel } from '@shared/interfaces/auth-user-model';
-import { of, throwError } from 'rxjs';
 import { IAuthTokenModel } from '@shared/interfaces/auth-token-model';
+import { IAuthUserModel } from '@shared/interfaces/auth-user-model';
+import { AuthLoginService } from '@shared/services/auth-login-service';
+import { AuthStoreService } from '@shared/services/auth-store-service';
+import { AuthUserService } from '@shared/services/auth-user-service';
+import { of, throwError } from 'rxjs';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
+import { Mocked, vi } from 'vitest';
+import { LoginService } from './login-service';
 
 describe('LoginService', () => {
     let service: LoginService;
