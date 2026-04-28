@@ -1,0 +1,21 @@
+{
+    "baseUrl": "https://vendor-app-angular-ypmd.onrender.com/",
+    "menus": [
+        {
+            "name": "Produtos",
+            "route": "#",
+            "children": [
+                {
+                    "name": "Categoria",
+                    "route": "/category/list",
+                    "children:": []
+                },
+                {
+                    "name": "Moedas",
+                    "route": "/coin/list",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
