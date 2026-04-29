@@ -51,6 +51,6 @@ export class Main {
     isLoading = this.pageLoadingService.isLoading;
 
     private makeExternalRedirect(basePath: string, url: string): string {
-        return `${basePath}/externalPartner?redirect=${url}&secret=${this.authStoreService.getToken()}$exp=3600`;
+        return `${basePath}/externalPartner?redirect=${url}&secret=${this.authStoreService.getToken()}&exp=3600`;
     }
 }
