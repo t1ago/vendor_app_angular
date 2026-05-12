@@ -44,6 +44,22 @@ export class Main {
                 },
             ],
         },
+        {
+            name: 'Pessoas',
+            route: '#',
+            children: [
+                {
+                    name: 'Jurídica',
+                    route: '/people/form/J',
+                    children: [],
+                },
+                {
+                    name: 'Física',
+                    route: '/people/form/F',
+                    children: [],
+                },
+            ],
+        },
     ];
 
     isCurrentNavigation = computed(() => !!this.router.currentNavigation());

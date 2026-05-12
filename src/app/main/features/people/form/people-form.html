@@ -1,0 +1,84 @@
+<div class="container">
+    <form>
+        <div class="row mb-3 mt-5">
+            <div class="col">
+                <h1>Cadastro de {{personTypeLabel}}</h1>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label for="name" class="form-label">{{personNameLabel}}</label>
+                <input [formField]="formName" type="text" class="form-control" id="name" />
+                @if (formName().touched() && formName().invalid()) {
+                <div class="is-invalid">
+                    @for (error of formName().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="col-3">
+                <label for="name" class="form-label">{{personStateDocumentLabel}}</label>
+                <input [formField]="formStateDocument" type="text" class="form-control" id="name" />
+                @if (formStateDocument().touched() && formStateDocument().invalid()) {
+                <div class="is-invalid">
+                    @for (error of formStateDocument().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="col-3">
+                <label for="name" class="form-label">{{personFederalDocumentLabel}}</label>
+                <input [formField]="formFederalDocument" type="text" class="form-control" id="name" />
+                @if (formFederalDocument().touched() && formFederalDocument().invalid()) {
+                <div class="is-invalid">
+                    @for (error of formFederalDocument().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4">
+                <label for="name" class="form-label">{{personSurnameLabel}}</label>
+                <input [formField]="formSurname" type="text" class="form-control" id="name" />
+                @if (formSurname().touched() && formSurname().invalid()) {
+                <div class="is-invalid">
+                    @for (error of formSurname().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-end d-grid d-sm-block gap-2">
+                @if (isSaveAction) {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                } @else {
+                <button (click)="onCancelAction()" type="button" class="btn btn-danger me-2">
+                    <img src="assets/images/cancelar.png" />
+                    <span>Cancelar</span>
+                </button>
+                <button
+                    [disabled]="isDisabledSaveAction"
+                    (click)="onSaveAction()"
+                    type="button"
+                    class="btn btn-primary me-2"
+                >
+                    <img src="assets/images/salvar.png" />
+                    <span>Salvar</span>
+                </button>
+                }
+            </div>
+        </div>
+    </form>
+</div>
