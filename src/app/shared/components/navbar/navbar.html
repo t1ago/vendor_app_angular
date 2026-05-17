@@ -14,8 +14,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
+                @for (item of items(); track $index) {
                 <li class="nav-item dropdown">
-                    @for (item of items(); track $index) {
                     <a
                         class="nav-link {{item.children.length > 0 ? 'dropdown-toggle': ''}} "
                         href="#"
@@ -40,8 +40,9 @@
                         </li>
                         }
                     </ul>
-                    } }
+                    }
                 </li>
+                }
             </ul>
         </div>
     </div>

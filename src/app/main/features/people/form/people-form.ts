@@ -1,10 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormField } from '@angular/forms/signals';
+import { FieldTree, FormField } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { BaseForm } from '@shared/classes/base-form';
 import { map } from 'rxjs';
-import { IPeopleModel } from '../interfaces/people.model';
+import { ILegalEntities } from '../interfaces/legal-entities.model';
+import { INaturalPerson } from '../interfaces/natural-person.model';
+
+export type PeopleFormModel = INaturalPerson | ILegalEntities;
 
 @Component({
     selector: 'app-people-form',
@@ -12,8 +15,10 @@ import { IPeopleModel } from '../interfaces/people.model';
     templateUrl: './people-form.html',
     styleUrl: './people-form.scss',
 })
-export class PeopleForm extends BaseForm<IPeopleModel, null> {
+export class PeopleForm extends BaseForm<PeopleFormModel, null> {
     private route = inject(ActivatedRoute);
+
+    private personType = toSignal(this.route.paramMap.pipe(map((params) => params.get('type'))));
 
     constructor() {
         super();
@@ -23,8 +28,12 @@ export class PeopleForm extends BaseForm<IPeopleModel, null> {
         });
     }
 
-    private createModel(): IPeopleModel {
-        const personType = toSignal(this.route.paramMap.pipe(map((params) => params.get('type'))));
+    private createModel(): PeopleFormModel {
+        if (this.isNaturalPerson()) {
+            return this.makeNaturalPerson();
+        } else {
+            return this.makeLegalEntities();
+        }
 
         // const routeData = toSignal(this.route.data);
         // const dataModel = routeData()?.['data'];
@@ -32,20 +41,38 @@ export class PeopleForm extends BaseForm<IPeopleModel, null> {
         // if (dataModel) {
         //    return dataModel as ICategoryModel;
         //} else {
+        // }
+    }
+
+    isNaturalPerson(): boolean {
+        return this.personType() !== 'J';
+    }
+
+    private makeNaturalPerson(): INaturalPerson {
         return {
             id: null,
             name: '',
             surname: '',
-            type: personType() == 'J' ? 'J' : 'F',
+            type: 'F',
             federalDocument: { number: '' },
             stateDocument: { number: '' },
             active: true,
-        };
-        // }
+            sex: 'M',
+            birthDate: '',
+        } satisfies INaturalPerson;
     }
 
-    private isNaturalPerson(): boolean {
-        return this.model().type == 'F';
+    private makeLegalEntities(): ILegalEntities {
+        return {
+            id: null,
+            name: '',
+            surname: '',
+            type: 'J',
+            federalDocument: { number: '' },
+            stateDocument: { number: '' },
+            active: true,
+            naturalPerson: this.makeNaturalPerson(),
+        } satisfies ILegalEntities;
     }
 
     get formName() {
@@ -68,6 +95,26 @@ export class PeopleForm extends BaseForm<IPeopleModel, null> {
         return this.formData.federalDocument.number;
     }
 
+    get formSex() {
+        return (this.formData as FieldTree<INaturalPerson>).sex;
+    }
+
+    get formBirthDate() {
+        return (this.formData as FieldTree<INaturalPerson>).birthDate;
+    }
+
+    private get naturalPersonTree() {
+        return (this.formData as FieldTree<ILegalEntities>).naturalPerson;
+    }
+
+    get formNaturalPersonId() {
+        return this.naturalPersonTree.id;
+    }
+
+    get selectedNaturalPerson() {
+        return (this.model() as ILegalEntities).naturalPerson;
+    }
+
     get personTypeLabel(): string {
         return this.isNaturalPerson() ? 'Pessoa Física' : 'Pessoa Jurídica';
     }
@@ -86,5 +133,17 @@ export class PeopleForm extends BaseForm<IPeopleModel, null> {
 
     get personFederalDocumentLabel(): string {
         return this.isNaturalPerson() ? 'CPF' : 'CNPJ';
+    }
+
+    get personSexLabel(): string {
+        return 'Sexo';
+    }
+
+    get personBirthDateLabel(): string {
+        return 'Data de Nascimento';
+    }
+
+    get personNaturalPersonIdLabel(): string {
+        return 'Sócio';
     }
 }

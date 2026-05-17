@@ -5,12 +5,14 @@
                 <h1>Cadastro de {{personTypeLabel}}</h1>
             </div>
         </div>
+
+        <!-- Campos comuns -->
         <div class="row mb-3">
             <div class="col-4">
                 <label for="name" class="form-label">{{personNameLabel}}</label>
                 <input [formField]="formName" type="text" class="form-control" id="name" />
                 @if (formName().touched() && formName().invalid()) {
-                <div class="is-invalid">
+                <div class="invalid-feedback d-block">
                     @for (error of formName().errors(); track $index) {
                     <small>{{error.message}}</small>
                     }
@@ -19,10 +21,10 @@
             </div>
 
             <div class="col-3">
-                <label for="name" class="form-label">{{personStateDocumentLabel}}</label>
-                <input [formField]="formStateDocument" type="text" class="form-control" id="name" />
+                <label for="stateDocument" class="form-label">{{personStateDocumentLabel}}</label>
+                <input [formField]="formStateDocument" type="text" class="form-control" id="stateDocument" />
                 @if (formStateDocument().touched() && formStateDocument().invalid()) {
-                <div class="is-invalid">
+                <div class="invalid-feedback d-block">
                     @for (error of formStateDocument().errors(); track $index) {
                     <small>{{error.message}}</small>
                     }
@@ -31,10 +33,10 @@
             </div>
 
             <div class="col-3">
-                <label for="name" class="form-label">{{personFederalDocumentLabel}}</label>
-                <input [formField]="formFederalDocument" type="text" class="form-control" id="name" />
+                <label for="federalDocument" class="form-label">{{personFederalDocumentLabel}}</label>
+                <input [formField]="formFederalDocument" type="text" class="form-control" id="federalDocument" />
                 @if (formFederalDocument().touched() && formFederalDocument().invalid()) {
-                <div class="is-invalid">
+                <div class="invalid-feedback d-block">
                     @for (error of formFederalDocument().errors(); track $index) {
                     <small>{{error.message}}</small>
                     }
@@ -45,10 +47,10 @@
 
         <div class="row mb-3">
             <div class="col-4">
-                <label for="name" class="form-label">{{personSurnameLabel}}</label>
-                <input [formField]="formSurname" type="text" class="form-control" id="name" />
+                <label for="surname" class="form-label">{{personSurnameLabel}}</label>
+                <input [formField]="formSurname" type="text" class="form-control" id="surname" />
                 @if (formSurname().touched() && formSurname().invalid()) {
-                <div class="is-invalid">
+                <div class="invalid-feedback d-block">
                     @for (error of formSurname().errors(); track $index) {
                     <small>{{error.message}}</small>
                     }
@@ -56,6 +58,90 @@
                 }
             </div>
         </div>
+
+        <!-- Campos exclusivos de Pessoa Física -->
+        @if (isNaturalPerson()) {
+        <div class="row mb-3">
+            <div class="col-2">
+                <label for="sex" class="form-label">Sexo</label>
+                <select [formField]="formSex" class="form-select" id="sex">
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                </select>
+                @if (formSex().touched() && formSex().invalid()) {
+                <div class="invalid-feedback d-block">
+                    @for (error of formSex().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="col-3">
+                <label for="birthDate" class="form-label">Data de Nascimento</label>
+                <input [formField]="formBirthDate" type="date" class="form-control" id="birthDate" />
+                @if (formBirthDate().touched() && formBirthDate().invalid()) {
+                <div class="invalid-feedback d-block">
+                    @for (error of formBirthDate().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        <!-- Campos exclusivos de Pessoa Jurídica -->
+        } @else {
+        <div class="row mb-3 mt-2">
+            <div class="col">
+                <h5 class="text-muted">Sócio Responsável</h5>
+                <hr />
+            </div>
+        </div>
+        <!-- Campo de busca — visível apenas quando nenhuma PF foi selecionada ainda -->
+        @if (formNaturalPersonId().value() == null) {
+        <div class="row mb-3">
+            <div class="col-2">
+                <label for="naturalPersonId" class="form-label">Código</label>
+                <input [formField]="formNaturalPersonId" type="number" class="form-control" id="naturalPersonId" />
+                @if (formNaturalPersonId().touched() && formNaturalPersonId().invalid()) { <
+                <div class="invalid-feedback d-block">
+                    @for (error of formNaturalPersonId().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+        <!-- Dados somente leitura — visíveis após seleção da PF -->
+        @if (formNaturalPersonId().value() !== null) {
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" [value]="selectedNaturalPerson.name" readonly />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">CPF</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    [value]="selectedNaturalPerson.federalDocument.number"
+                    readonly
+                />
+            </div>
+
+            <div class="col-2">
+                <label class="form-label">Sexo</label>
+                <input type="text" class="form-control" [value]="selectedNaturalPerson.sex" readonly />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Data de Nascimento</label>
+                <input type="date" class="form-control" [value]="selectedNaturalPerson.birthDate" readonly />
+            </div>
+        </div>
+        } }
 
         <div class="row">
             <div class="col text-end d-grid d-sm-block gap-2">
