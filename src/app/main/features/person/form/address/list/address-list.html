@@ -1,0 +1,16 @@
+<div class="row mb-3 align-items-center">
+    <div class="col-auto">
+        <button type="button" (click)="onNew.emit()" class="btn btn-primary">
+            <img src="{{buttonAddIcon}}" />
+            <span>{{buttonAddTitle}}</span>
+        </button>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col">
+        <app-table [tableConfig]="tableConfig()"></app-table>
+    </div>
+</div>

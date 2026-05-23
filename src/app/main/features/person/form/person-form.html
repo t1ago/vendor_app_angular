@@ -6,9 +6,9 @@
             </div>
         </div>
 
-        <!-- Campos comuns -->
+        <!-- Common Fields -->
         <div class="row mb-3">
-            <div class="col-4">
+            <div class="col-7">
                 <label for="name" class="form-label">{{personNameLabel}}</label>
                 <input [formField]="formName" type="text" class="form-control" id="name" />
                 @if (formName().touched() && formName().invalid()) {
@@ -20,6 +20,20 @@
                 }
             </div>
 
+            <div class="col-5">
+                <label for="surname" class="form-label">{{personSurnameLabel}}</label>
+                <input [formField]="formSurname" type="text" class="form-control" id="surname" />
+                @if (formSurname().touched() && formSurname().invalid()) {
+                <div class="invalid-feedback d-block">
+                    @for (error of formSurname().errors(); track $index) {
+                    <small>{{error.message}}</small>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mb-3">
             <div class="col-3">
                 <label for="stateDocument" class="form-label">{{personStateDocumentLabel}}</label>
                 <input [formField]="formStateDocument" type="text" class="form-control" id="stateDocument" />
@@ -43,30 +57,14 @@
                 </div>
                 }
             </div>
-        </div>
 
-        <div class="row mb-3">
-            <div class="col-4">
-                <label for="surname" class="form-label">{{personSurnameLabel}}</label>
-                <input [formField]="formSurname" type="text" class="form-control" id="surname" />
-                @if (formSurname().touched() && formSurname().invalid()) {
-                <div class="invalid-feedback d-block">
-                    @for (error of formSurname().errors(); track $index) {
-                    <small>{{error.message}}</small>
-                    }
-                </div>
-                }
-            </div>
-        </div>
-
-        <!-- Campos exclusivos de Pessoa Física -->
-        @if (isNaturalPerson()) {
-        <div class="row mb-3">
-            <div class="col-2">
-                <label for="sex" class="form-label">Sexo</label>
+            <!-- Natual Person -->
+            @if (isNaturalPerson()) {
+            <div class="col-3">
+                <label for="sex" class="form-label">{{personSexLabel}}</label>
                 <select [formField]="formSex" class="form-select" id="sex">
-                    <option value="M">Masculino</option>
-                    <option value="F">Feminino</option>
+                    <option value="M">{{personSexMaleLabel}}</option>
+                    <option value="F">{{personSexFemaleLabel}}</option>
                 </select>
                 @if (formSex().touched() && formSex().invalid()) {
                 <div class="invalid-feedback d-block">
@@ -78,7 +76,7 @@
             </div>
 
             <div class="col-3">
-                <label for="birthDate" class="form-label">Data de Nascimento</label>
+                <label for="birthDate" class="form-label">{{personBirthDateLabel}}</label>
                 <input [formField]="formBirthDate" type="date" class="form-control" id="birthDate" />
                 @if (formBirthDate().touched() && formBirthDate().invalid()) {
                 <div class="invalid-feedback d-block">
@@ -88,33 +86,19 @@
                 </div>
                 }
             </div>
-        </div>
-        <!-- Campos exclusivos de Pessoa Jurídica -->
-        } @else {
-        <div class="row mb-3 mt-2">
-            <div class="col">
-                <h5 class="text-muted">Sócio Responsável</h5>
-                <hr />
+
+            <!-- Campos exclusivos de Pessoa Jurídica -->
+            } @else {
+            <!-- Legal Entities -->
+            <div class="col-6">
+                <label for="naturalPersonId" class="form-label">{{personNaturalPersonIdLabel}}</label>
+                <input [value]="naturalPersonSearchById()" type="number" class="form-control" id="naturalPersonId" />
             </div>
+            }
         </div>
-        <!-- Campo de busca — visível apenas quando nenhuma PF foi selecionada ainda -->
-        @if (formNaturalPersonId().value() == null) {
-        <div class="row mb-3">
-            <div class="col-2">
-                <label for="naturalPersonId" class="form-label">Código</label>
-                <input [formField]="formNaturalPersonId" type="number" class="form-control" id="naturalPersonId" />
-                @if (formNaturalPersonId().touched() && formNaturalPersonId().invalid()) { <
-                <div class="invalid-feedback d-block">
-                    @for (error of formNaturalPersonId().errors(); track $index) {
-                    <small>{{error.message}}</small>
-                    }
-                </div>
-                }
-            </div>
-        </div>
-        }
-        <!-- Dados somente leitura — visíveis após seleção da PF -->
-        @if (formNaturalPersonId().value() !== null) {
+
+        <!--Ainda vou decidir como fazer-->
+        <!-- @if (formNaturalPersonId().value() !== null) {
         <div class="row mb-3">
             <div class="col-4">
                 <label class="form-label">Nome</label>
@@ -141,7 +125,13 @@
                 <input type="date" class="form-control" [value]="selectedNaturalPerson.birthDate" readonly />
             </div>
         </div>
-        } }
+        } -->
+
+        <br />
+        <hr />
+        <!-- Address -->
+        @if (isAddressModeList()) {
+        <app-address-list [addresses]="addresses" (onNew)="onAddressNew()" />
 
         <div class="row">
             <div class="col text-end d-grid d-sm-block gap-2">
@@ -166,5 +156,8 @@
                 }
             </div>
         </div>
+        } @else {
+        <app-address-form (onSave)="onAddressFormSave($event)" (onCancel)="onAddressFormCancel()" />
+        }
     </form>
 </div>

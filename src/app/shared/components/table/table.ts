@@ -25,4 +25,12 @@ export class Table<MODEL> {
     get hasHover() {
         return this.tableConfig()!.hasHover;
     }
+
+    get emptyColSpan() {
+        return this.titles.length + (this.buttons.length > 0 ? 1 : 0);
+    }
+
+    get emptyMessage() {
+        return 'Nenhuma informação localizada';
+    }
 }

@@ -1,13 +1,17 @@
 import { Routes } from '@angular/router';
 
-export const peopleRoutes: Routes = [
+export const personRoutes: Routes = [
     {
-        path: 'form/:type',
-        loadComponent: () => import('../form/people-form').then((m) => m.PeopleForm),
+        path: 'form/legalEntities',
+        loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
+    },
+    {
+        path: 'form/naturalPerson',
+        loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
     },
     {
         path: 'form/:type/:id',
-        loadComponent: () => import('../form/people-form').then((m) => m.PeopleForm),
+        loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
         // resolve: {
         //     data: categoryDataIdResolver,
         // },

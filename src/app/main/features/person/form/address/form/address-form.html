@@ -1,0 +1,101 @@
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label">Tipo de Endereço</label>
+        <div class="d-flex gap-4">
+            <div class="form-check">
+                <input [formField]="formType" class="form-check-input" type="radio" id="typeM" value="M" />
+                <label class="form-check-label" for="typeM">Moradia</label>
+            </div>
+            <div class="form-check">
+                <input [formField]="formType" class="form-check-input" type="radio" id="typeC" value="C" />
+                <label class="form-check-label" for="typeC">Comercial</label>
+            </div>
+            <div class="form-check">
+                <input [formField]="formType" class="form-check-input" type="radio" id="typeE" value="E" />
+                <label class="form-check-label" for="typeE">Entrega</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-3">
+        <label for="zipCode" class="form-label">CEP</label>
+        <input [formField]="formZipCode" type="text" class="form-control" id="zipCode" />
+        @if (formZipCode().touched() && formZipCode().invalid()) {
+        <div class="invalid-feedback d-block">
+            @for (error of formZipCode().errors(); track $index) {
+            <small>{{ error.message }}</small>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="col-6">
+        <label for="street" class="form-label">Logradouro</label>
+        <input [formField]="formStreet" type="text" class="form-control" id="street" />
+        @if (formStreet().touched() && formStreet().invalid()) {
+        <div class="invalid-feedback d-block">
+            @for (error of formStreet().errors(); track $index) {
+            <small>{{ error.message }}</small>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="col-3">
+        <label for="number" class="form-label">Número</label>
+        <input [formField]="formNumber" type="text" class="form-control" id="number" />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-4">
+        <label for="neighborhood" class="form-label">Bairro</label>
+        <input [formField]="formNeighborhood" type="text" class="form-control" id="neighborhood" />
+        @if (formNeighborhood().touched() && formNeighborhood().invalid()) {
+        <div class="invalid-feedback d-block">
+            @for (error of formNeighborhood().errors(); track $index) {
+            <small>{{ error.message }}</small>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="col-5">
+        <label for="city" class="form-label">Cidade</label>
+        <input [formField]="formCity" type="text" class="form-control" id="city" />
+        @if (formCity().touched() && formCity().invalid()) {
+        <div class="invalid-feedback d-block">
+            @for (error of formCity().errors(); track $index) {
+            <small>{{ error.message }}</small>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="col-3">
+        <label for="state" class="form-label">UF</label>
+        <input [formField]="formState" type="text" class="form-control" id="state" />
+        @if (formState().touched() && formState().invalid()) {
+        <div class="invalid-feedback d-block">
+            @for (error of formState().errors(); track $index) {
+            <small>{{ error.message }}</small>
+            }
+        </div>
+        }
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col text-end d-grid d-sm-block gap-2">
+        <button (click)="onCancelAction()" type="button" class="btn btn-danger me-2">
+            <img src="assets/images/cancelar.png" />
+            <span>Cancelar</span>
+        </button>
+        <button [disabled]="isDisabledSaveAction" (click)="onSaveAction()" type="button" class="btn btn-primary me-2">
+            <img src="assets/images/salvar.png" />
+            <span>Confirmar</span>
+        </button>
+    </div>
+</div>
