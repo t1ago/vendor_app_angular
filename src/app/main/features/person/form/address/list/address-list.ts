@@ -1,14 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
-import { IAddressModel } from '@features/person/interfaces/address.model';
+import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
 import { Table } from '@shared/components/table/table';
 import { IMAGES } from '@shared/constants/images';
-
-const ADDRESS_TYPE_LABEL: Record<string, string> = {
-    M: 'Moradia',
-    C: 'Comercial',
-    E: 'Entrega',
-};
 
 @Component({
     selector: 'app-address-list',
@@ -28,7 +22,7 @@ export class AddressList {
             {
                 name: 'Tipo',
                 dataField: 'type',
-                transform: (data) => ADDRESS_TYPE_LABEL[data.type] ?? data.type,
+                transform: (data) => ADDRESS_TYPE_LABEL[data.type as AddressType] ?? data.type,
             },
             {
                 name: 'CEP',

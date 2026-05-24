@@ -1,6 +1,8 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { FormField, pattern, required } from '@angular/forms/signals';
-import { IAddressModel } from '@features/person/interfaces/address.model';
+import { IAddressStateModel } from '@features/person/interfaces/address-state.model';
+import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
+import { AddressService } from '@features/person/services/address-service';
 import { BaseForm } from '@shared/classes/base-form';
 
 const PATTERNS = {
@@ -13,10 +15,14 @@ const PATTERNS = {
     templateUrl: './address-form.html',
     styleUrl: './address-form.scss',
 })
-export class AddressForm extends BaseForm<IAddressModel, null> {
+export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit {
+    addressService = inject(AddressService);
+
     onSave = output<IAddressModel>();
 
     onCancel = output<void>();
+
+    states = signal<IAddressStateModel[]>([]);
 
     constructor() {
         super();
@@ -27,6 +33,12 @@ export class AddressForm extends BaseForm<IAddressModel, null> {
             required(schemaPath.neighborhood, { message: 'Bairro é obrigatório' });
             required(schemaPath.city, { message: 'Cidade é obrigatória' });
             required(schemaPath.state, { message: 'Estado é obrigatório' });
+        });
+    }
+
+    ngOnInit(): void {
+        this.addressService.getStates().subscribe((result) => {
+            this.states.set(result);
         });
     }
 
@@ -80,5 +92,44 @@ export class AddressForm extends BaseForm<IAddressModel, null> {
 
     get formType() {
         return this.formData.type;
+    }
+
+    get statesValue() {
+        return this.states();
+    }
+
+    get typeLabel() {
+        return 'Tipo de Endereço';
+    }
+
+    typeContentValueLabel(type: AddressType) {
+        return ADDRESS_TYPE_LABEL[type];
+    }
+    typeValueLabel(type: AddressType) {
+        return type;
+    }
+
+    get zipCodeLabel() {
+        return 'Cep';
+    }
+
+    get streetLabel() {
+        return 'Logradouro';
+    }
+
+    get numberLabel() {
+        return 'Número';
+    }
+
+    get neighborhoodLabel() {
+        return 'Bairro';
+    }
+
+    get cityLabel() {
+        return 'Cidade';
+    }
+
+    get stateLabel() {
+        return 'Cidade';
     }
 }
