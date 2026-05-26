@@ -1,0 +1,17 @@
+<label [for]="inputId()" class="form-label">{{ label() }}</label>
+
+@switch (type()) { @case ('select') {
+<select [formField]="field()" class="form-select" [id]="inputId()" (change)="onChange.emit()">
+    @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+    }
+</select>
+} @default {
+<input [formField]="field()" [type]="type()" class="form-control" [id]="inputId()" (blur)="onBlur.emit()" />
+} } @if (field()().touched() && field()().invalid()) {
+<div class="invalid-feedback d-block">
+    @for (error of field()().errors(); track $index) {
+    <small>{{ error.message }}</small>
+    }
+</div>
+}

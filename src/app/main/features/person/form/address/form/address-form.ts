@@ -1,9 +1,10 @@
 import { Component, inject, OnInit, output, signal } from '@angular/core';
-import { FormField, pattern, required } from '@angular/forms/signals';
+import { disabled, FormField, pattern, required } from '@angular/forms/signals';
 import { IAddressStateModel } from '@features/person/interfaces/address-state.model';
 import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
 import { AddressService } from '@features/person/services/address-service';
 import { BaseForm } from '@shared/classes/base-form';
+import { InputField } from '@shared/components/input-field/input-field';
 
 const PATTERNS = {
     CEP: /^\d{5}-\d{3}$/,
@@ -11,7 +12,7 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-address-form',
-    imports: [FormField],
+    imports: [FormField, InputField],
     templateUrl: './address-form.html',
     styleUrl: './address-form.scss',
 })
@@ -24,6 +25,8 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
 
     states = signal<IAddressStateModel[]>([]);
 
+    lockedByZipCode = signal<boolean>(false);
+
     constructor() {
         super();
         this.createForm(this.createModel(), (schemaPath: any) => {
@@ -33,6 +36,10 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
             required(schemaPath.neighborhood, { message: 'Bairro é obrigatório' });
             required(schemaPath.city, { message: 'Cidade é obrigatória' });
             required(schemaPath.state, { message: 'Estado é obrigatório' });
+            disabled(schemaPath.street, () => this.isDisabledByZipCode);
+            disabled(schemaPath.neighborhood, () => this.isDisabledByZipCode);
+            disabled(schemaPath.city, () => this.isDisabledByZipCode);
+            disabled(schemaPath.state, () => this.isDisabledByZipCode);
         });
     }
 
@@ -40,6 +47,51 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
         this.addressService.getStates().subscribe((result) => {
             this.states.set(result);
         });
+    }
+
+    onZipCodeBlur(): void {
+        const zipCode = this.formZipCode().value();
+
+        if (!zipCode || !PATTERNS.CEP.test(zipCode)) {
+            this.clearZipCodeFields();
+            return;
+        }
+
+        this.addressService.getByZipCode(zipCode).subscribe({
+            next: (result) => {
+                if (!result.zipCode) {
+                    this.clearZipCodeFields();
+                    return;
+                }
+
+                this.model.update((m) => ({
+                    ...m,
+                    street: result.street,
+                    neighborhood: result.neighborhood,
+                    city: result.city,
+                    state: result.state.abbreviation,
+                    searchByZipCode: true,
+                }));
+
+                this.lockedByZipCode.set(true);
+            },
+            error: () => {
+                this.clearZipCodeFields();
+            },
+        });
+    }
+
+    private clearZipCodeFields(): void {
+        this.model.update((m) => ({
+            ...m,
+            street: '',
+            neighborhood: '',
+            city: '',
+            state: '',
+            searchByZipCode: false,
+        }));
+
+        this.lockedByZipCode.set(false);
     }
 
     override onSaveAction(): void {
@@ -64,6 +116,10 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
             searchByZipCode: false,
             active: true,
         };
+    }
+
+    get isDisabledByZipCode() {
+        return this.lockedByZipCode();
     }
 
     get formZipCode() {
@@ -130,6 +186,6 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
     }
 
     get stateLabel() {
-        return 'Cidade';
+        return 'Estado';
     }
 }

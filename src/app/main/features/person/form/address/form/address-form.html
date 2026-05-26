@@ -38,15 +38,7 @@
 
 <div class="row mb-3">
     <div class="col-3">
-        <label for="zipCode" class="form-label">{{zipCodeLabel}}</label>
-        <input [formField]="formZipCode" type="text" class="form-control" id="zipCode" />
-        @if (formZipCode().touched() && formZipCode().invalid()) {
-        <div class="invalid-feedback d-block">
-            @for (error of formZipCode().errors(); track $index) {
-            <small>{{ error.message }}</small>
-            }
-        </div>
-        }
+        <app-input-field [field]="formZipCode" [label]="zipCodeLabel" inputId="zipCode" (onBlur)="onZipCodeBlur()" />
     </div>
 
     <div class="col-6">
@@ -93,7 +85,10 @@
     </div>
 
     <div class="col-3">
-        <label for="state" class="form-label">{{stateLabel}}</label>
+        <app-input-field [type]="'select'" [field]="formState" [label]="stateLabel" inputId="stateId" />
+        <!--criar o computed dos options-->
+
+        <!-- <label for="state" class="form-label">{{stateLabel}}</label>
         <select [formField]="formState" class="form-select" id="state">
             @for (state of statesValue; track state.abbreviation) {
             <option [value]="state.abbreviation">{{ state.name }}</option>
@@ -105,7 +100,7 @@
             <small>{{ error.message }}</small>
             }
         </div>
-        }
+        } -->
     </div>
 </div>
 

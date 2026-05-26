@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
-import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
+import { AddressType, IAddressModel } from '@features/person/interfaces/address.model';
+import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
 import { Table } from '@shared/components/table/table';
 import { IMAGES } from '@shared/constants/images';
@@ -22,7 +23,7 @@ export class AddressList {
             {
                 name: 'Tipo',
                 dataField: 'type',
-                transform: (data) => ADDRESS_TYPE_LABEL[data.type as AddressType] ?? data.type,
+                image: (data) => this.addressTypeIcon(data.type),
             },
             {
                 name: 'CEP',
@@ -46,8 +47,38 @@ export class AddressList {
                 dataField: 'state',
             },
         ],
-        buttons: [],
+        buttons: [
+            {
+                icon: IMAGES.EDIT,
+                show: SHOW_ALWAYS,
+                name: '',
+                action: (dataModel) => {},
+            },
+            {
+                icon: IMAGES.REMOVE,
+                show: SHOW_ALWAYS,
+                name: '',
+                action: (dataModel) => {},
+            },
+        ],
     }));
+
+    addressTypeIcon(addressType: AddressType): string {
+        let image = '';
+        switch (addressType) {
+            case 'C':
+                image = IMAGES.BILLING_ADDRESS;
+                break;
+            case 'M':
+                image = IMAGES.RESIDENTIAL_ADDRESS;
+                break;
+            default:
+                image = IMAGES.DELIVERY_ADDRESS;
+                break;
+        }
+
+        return image;
+    }
 
     get buttonAddTitle(): string {
         return 'Adicionar Endereço';

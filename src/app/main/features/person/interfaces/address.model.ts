@@ -17,7 +17,7 @@ export interface IAddressModel {
     neighborhood: string;
     city: string;
     state: string;
-    type: string;
+    type: AddressType;
     searchByZipCode: boolean;
     active: boolean;
 }
