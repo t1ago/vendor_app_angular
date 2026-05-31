@@ -131,7 +131,7 @@
         <hr />
         <!-- Address -->
         @if (isAddressModeList()) {
-        <app-address-list [addresses]="addresses" (onNew)="onAddressNew()" />
+        <app-address-list [addresses]="addresses" (onNew)="onAddressNew()" (onEdit)="onAddressEdit($event)" />
 
         <div class="row">
             <div class="col text-end d-grid d-sm-block gap-2">
@@ -157,7 +157,11 @@
             </div>
         </div>
         } @else {
-        <app-address-form (onSave)="onAddressFormSave($event)" (onCancel)="onAddressFormCancel()" />
+        <app-address-form
+            [addressEvent]="addressEvent"
+            (onSave)="onAddressFormSave($event)"
+            (onCancel)="onAddressFormCancel()"
+        />
         }
     </form>
 </div>

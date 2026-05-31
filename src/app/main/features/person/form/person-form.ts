@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FieldTree, FormField, minLength, pattern, required } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { BaseForm } from '@shared/classes/base-form';
+import { IAddressEvent } from '../interfaces/address-event';
 import { IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
@@ -31,6 +32,8 @@ export class PersonForm extends BaseForm<PersonFormModel, null> {
 
     addressMode = signal<AddressMode>('list');
 
+    addressEvent: IAddressEvent | null = null;
+
     constructor() {
         super();
 
@@ -49,6 +52,12 @@ export class PersonForm extends BaseForm<PersonFormModel, null> {
     }
 
     onAddressNew(): void {
+        this.addressEvent = null;
+        this.addressMode.set('form');
+    }
+
+    onAddressEdit(addressEvent: IAddressEvent) {
+        this.addressEvent = addressEvent;
         this.addressMode.set('form');
     }
 
@@ -56,11 +65,18 @@ export class PersonForm extends BaseForm<PersonFormModel, null> {
         this.addressMode.set('list');
     }
 
-    onAddressFormSave(address: IAddressModel): void {
-        this.model.update((model) => ({
-            ...model,
-            addresses: [...(model.addresses ?? []), address],
-        }));
+    onAddressFormSave(addressEvent: IAddressEvent): void {
+        this.model.update((model) => {
+            const addresses = [...(model.addresses ?? [])];
+
+            if (addressEvent.index !== null && addressEvent.index! >= 0) {
+                addresses[addressEvent.index!] = addressEvent.address;
+            } else {
+                addresses.push(addressEvent.address);
+            }
+
+            return { ...model, addresses: addresses };
+        });
         this.addressMode.set('list');
     }
 

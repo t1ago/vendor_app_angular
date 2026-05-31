@@ -1,8 +1,8 @@
 import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
-import { IFormFieldOption } from './interfaces/input-field-option';
+import { IInputFieldOption } from './interfaces/input-field-option';
 
-type InputFieldType = 'text' | 'date' | 'number' | 'select';
+type InputFieldType = 'text' | 'date' | 'number' | 'select' | 'radio';
 
 @Component({
     selector: 'app-input-field',
@@ -19,7 +19,7 @@ export class InputField {
 
     type = input<InputFieldType>('text');
 
-    options = input<IFormFieldOption[]>([]);
+    options = input<IInputFieldOption[]>([]);
 
     onBlur = output<void>();
 

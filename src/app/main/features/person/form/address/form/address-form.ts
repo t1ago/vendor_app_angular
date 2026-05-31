@@ -1,10 +1,12 @@
-import { Component, inject, OnInit, output, signal } from '@angular/core';
-import { disabled, FormField, pattern, required } from '@angular/forms/signals';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { disabled, pattern, required } from '@angular/forms/signals';
+import { IAddressEvent } from '@features/person/interfaces/address-event';
 import { IAddressStateModel } from '@features/person/interfaces/address-state.model';
 import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
 import { AddressService } from '@features/person/services/address-service';
 import { BaseForm } from '@shared/classes/base-form';
 import { InputField } from '@shared/components/input-field/input-field';
+import { IInputFieldOption } from '@shared/components/input-field/interfaces/input-field-option';
 
 const PATTERNS = {
     CEP: /^\d{5}-\d{3}$/,
@@ -12,23 +14,41 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-address-form',
-    imports: [FormField, InputField],
+    imports: [InputField],
     templateUrl: './address-form.html',
     styleUrl: './address-form.scss',
 })
 export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit {
     addressService = inject(AddressService);
 
-    onSave = output<IAddressModel>();
+    addressEvent = input<IAddressEvent | null>(null);
+
+    onSave = output<IAddressEvent>();
 
     onCancel = output<void>();
 
     states = signal<IAddressStateModel[]>([]);
 
+    stateOptions = computed<IInputFieldOption[]>(() => {
+        return this.states().map((state) => {
+            return {
+                value: state.abbreviation,
+                label: state.name,
+            } as IInputFieldOption;
+        });
+    });
+
+    typeOptions = computed<IInputFieldOption[]>(() => [
+        { value: this.typeValueLabel('M'), label: this.typeContentValueLabel('M') },
+        { value: this.typeValueLabel('E'), label: this.typeContentValueLabel('E') },
+        { value: this.typeValueLabel('C'), label: this.typeContentValueLabel('C') },
+    ]);
+
     lockedByZipCode = signal<boolean>(false);
 
     constructor() {
         super();
+
         this.createForm(this.createModel(), (schemaPath: any) => {
             required(schemaPath.zipCode, { message: 'CEP é obrigatório' });
             pattern(schemaPath.zipCode, PATTERNS.CEP, { message: 'CEP inválido. Formato esperado: 00000-000' });
@@ -44,6 +64,11 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
     }
 
     ngOnInit(): void {
+        if (this.addressEvent()) {
+            this.model.set(this.addressEvent()!.address);
+            this.lockedByZipCode.set(this.addressEvent()!.address.searchByZipCode);
+        }
+
         this.addressService.getStates().subscribe((result) => {
             this.states.set(result);
         });
@@ -95,7 +120,10 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
     }
 
     override onSaveAction(): void {
-        this.onSave.emit(this.model());
+        this.onSave.emit({
+            address: this.model(),
+            index: this.addressEvent() ? this.addressEvent()!.index : null,
+        });
     }
 
     override onCancelAction(): void {

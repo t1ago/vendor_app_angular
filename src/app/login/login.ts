@@ -32,8 +32,8 @@ export class Login extends BaseForm<IAuthLoginModel, LoginService> {
 
     private createModel(): IAuthLoginModel {
         return {
-            email: '',
-            password: '',
+            email: 'tiago@vendor.com',
+            password: 'tiago1234',
         };
     }
 

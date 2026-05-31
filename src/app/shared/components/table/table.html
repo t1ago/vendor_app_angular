@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-        @for (item of data; track $index) {
+        @for (item of data; track $index; let dataIndex = $index) {
         <tr>
             @for (title of titles; track $index) { @if (title.transform) {
             <td>{{title.transform(item) }}</td>
@@ -23,7 +23,7 @@
             <td class="text-end">
                 <div class="d-flex justify-content-end gap-2">
                     @for (button of buttons; track $index) { @if (button.show(item)) {
-                    <button class="btn btn-outline-primary" type="button" (click)="button.action(item)">
+                    <button class="btn btn-outline-primary" type="button" (click)="button.action(item, dataIndex)">
                         @if(button.icon) {
                         <img [src]="button.icon" class="button-icon" />
                         } {{button.name}}

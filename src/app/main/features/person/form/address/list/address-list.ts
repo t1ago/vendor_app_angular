@@ -1,4 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
+import { IAddressEvent } from '@features/person/interfaces/address-event';
 import { AddressType, IAddressModel } from '@features/person/interfaces/address.model';
 import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
@@ -16,6 +17,8 @@ export class AddressList {
 
     onNew = output<void>();
 
+    onEdit = output<IAddressEvent>();
+
     tableConfig = computed<ITableConfig<IAddressModel>>(() => ({
         hasHover: true,
         data: this.addresses(),
@@ -32,7 +35,7 @@ export class AddressList {
             {
                 name: 'Logradouro',
                 dataField: 'street',
-                transform: (data) => `${data.street}, ${data.number}`,
+                transform: (data) => (data.number ? `${data.street}, ${data.number}` : data.street),
             },
             {
                 name: 'Bairro',
@@ -52,7 +55,7 @@ export class AddressList {
                 icon: IMAGES.EDIT,
                 show: SHOW_ALWAYS,
                 name: '',
-                action: (dataModel) => {},
+                action: (dataModel, index) => this.onEdit.emit({ address: dataModel, index: index }),
             },
             {
                 icon: IMAGES.REMOVE,
