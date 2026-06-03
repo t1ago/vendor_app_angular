@@ -1,15 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
-import { FieldTree, FormField, minLength, pattern, required } from '@angular/forms/signals';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { FieldTree, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseForm } from '@shared/classes/base-form';
+import { ToastService } from '@shared/components/toast/services/toast-service';
+import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 import { IAddressEvent } from '../interfaces/address-event';
 import { IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
+import { PersonService } from '../services/person-service';
+import { PersonType } from '../types/person.type';
 import { AddressForm } from './address/form/address-form';
 import { AddressList } from './address/list/address-list';
+import { NaturalPersonSearch } from './natural-person-search/natural-person-search';
 
-export type PersonFormModel = INaturalPerson | ILegalEntities;
 export type AddressMode = 'list' | 'form';
 
 const PATTERNS = {
@@ -21,12 +25,18 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-person-form',
-    imports: [FormField, AddressList, AddressForm],
+    imports: [FormField, AddressList, AddressForm, NaturalPersonSearch],
     templateUrl: './person-form.html',
     styleUrl: './person-form.scss',
 })
-export class PersonForm extends BaseForm<PersonFormModel, null> {
+export class PersonForm extends BaseForm<PersonType, PersonService> implements OnChanges {
     private route = inject(ActivatedRoute);
+
+    private router = inject(Router);
+
+    override service = inject(PersonService);
+
+    private toastService = inject(ToastService);
 
     naturalPersonSearchById = signal<number | null>(null);
 
@@ -44,6 +54,9 @@ export class PersonForm extends BaseForm<PersonFormModel, null> {
                 this.applyLegalEntityValidations(schemaPath);
             }
         });
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        throw new Error('Method not implemented.');
     }
 
     isNaturalPerson(): boolean {
@@ -80,11 +93,50 @@ export class PersonForm extends BaseForm<PersonFormModel, null> {
         this.addressMode.set('list');
     }
 
+    onNaturalPersonSelect(person: INaturalPerson | null): void {
+        this.model.update(
+            (m) =>
+                ({
+                    ...m,
+                    naturalPerson: person,
+                }) as ILegalEntities
+        );
+    }
+
     isAddressModeList(): boolean {
         return this.addressMode() === 'list';
     }
 
-    private createModel(): PersonFormModel {
+    override onSaveAction() {
+        submit(this.formData, async () => {
+            const person = this.model();
+
+            this.updateSaveControl(
+                ISateSaveControlModel.SAVING,
+                person.id == null ? 'Salvando Pessoa' : 'Atualizando Pessoa'
+            );
+
+            this.toastService.show(this.saveControl().message, 'info');
+
+            this.service.save(person).subscribe({
+                next: () => {
+                    this.toastService.show('Registro salvo com sucesso', 'success', 1000);
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
+                    this.onCancelAction();
+                },
+                error: (_errorData) => {
+                    this.toastService.show('Falha ao salvar o registro', 'danger');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
+                },
+            });
+        });
+    }
+
+    override onCancelAction(): void {
+        this.router.navigate(['category', 'list']);
+    }
+
+    private createModel(): PersonType {
         if (this.isNaturalPerson()) {
             return this.makeNaturalPerson();
         }

@@ -34,7 +34,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-3">
+            <div [class.col-3]="isNaturalPerson()" [class.col-6]="!isNaturalPerson()">
                 <label for="stateDocument" class="form-label">{{personStateDocumentLabel}}</label>
                 <input [formField]="formStateDocument" type="text" class="form-control" id="stateDocument" />
                 @if (formStateDocument().touched() && formStateDocument().invalid()) {
@@ -46,7 +46,7 @@
                 }
             </div>
 
-            <div class="col-3">
+            <div [class.col-3]="isNaturalPerson()" [class.col-6]="!isNaturalPerson()">
                 <label for="federalDocument" class="form-label">{{personFederalDocumentLabel}}</label>
                 <input [formField]="formFederalDocument" type="text" class="form-control" id="federalDocument" />
                 @if (formFederalDocument().touched() && formFederalDocument().invalid()) {
@@ -86,46 +86,17 @@
                 </div>
                 }
             </div>
-
-            <!-- Campos exclusivos de Pessoa Jurídica -->
-            } @else {
-            <!-- Legal Entities -->
-            <div class="col-6">
-                <label for="naturalPersonId" class="form-label">{{personNaturalPersonIdLabel}}</label>
-                <input [value]="naturalPersonSearchById()" type="number" class="form-control" id="naturalPersonId" />
-            </div>
             }
         </div>
 
-        <!--Ainda vou decidir como fazer-->
-        <!-- @if (formNaturalPersonId().value() !== null) {
+        <!-- Legal Entities -->
+        @if (!isNaturalPerson()) {
         <div class="row mb-3">
-            <div class="col-4">
-                <label class="form-label">Nome</label>
-                <input type="text" class="form-control" [value]="selectedNaturalPerson.name" readonly />
-            </div>
-
-            <div class="col-3">
-                <label class="form-label">CPF</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    [value]="selectedNaturalPerson.federalDocument.number"
-                    readonly
-                />
-            </div>
-
-            <div class="col-2">
-                <label class="form-label">Sexo</label>
-                <input type="text" class="form-control" [value]="selectedNaturalPerson.sex" readonly />
-            </div>
-
-            <div class="col-3">
-                <label class="form-label">Data de Nascimento</label>
-                <input type="date" class="form-control" [value]="selectedNaturalPerson.birthDate" readonly />
+            <div class="col">
+                <app-natural-person-search (onSelect)="onNaturalPersonSelect($event)" />
             </div>
         </div>
-        } -->
+        }
 
         <br />
         <hr />

@@ -10,7 +10,7 @@ export const personRoutes: Routes = [
         loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
     },
     {
-        path: 'form/:type/:id',
+        path: 'form/:type',
         loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
         // resolve: {
         //     data: categoryDataIdResolver,
