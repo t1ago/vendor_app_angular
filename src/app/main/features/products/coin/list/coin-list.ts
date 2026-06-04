@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { Table } from '@shared/components/table/table';
 import { BaseList } from '@shared/classes/base-list';
-import { ICoinModel } from '../interfaces/coin-model';
-import { CoinService } from '../services/coin-service';
+import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
+import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
+import { ITableConfig } from '@shared/components/table/interfaces/table-config';
+import { Table } from '@shared/components/table/table';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { IMAGES } from '@shared/constants/images';
-import { ITableConfig } from '@shared/components/table/interfaces/table-config';
-import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
 import { loadingObservablePipe } from '@shared/observable-pipe/loading-observable-pipe';
-import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
+import { ICoinModel } from '../interfaces/coin-model';
+import { CoinService } from '../services/coin-service';
 
 @Component({
     selector: 'app-coin-list',
@@ -31,7 +31,7 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
         super();
 
         this.title = 'Lista de Moedas';
-        this.loadData();
+        this.loadTableConfig();
     }
 
     public override getTableConfig(): ITableConfig<ICoinModel> {

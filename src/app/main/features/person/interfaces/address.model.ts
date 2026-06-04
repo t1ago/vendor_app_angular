@@ -1,5 +1,3 @@
-import { IPersonModel } from './person.model';
-
 export type AddressType = 'M' | 'C' | 'E';
 
 export const ADDRESS_TYPE_LABEL: Record<AddressType, string> = {
@@ -10,7 +8,6 @@ export const ADDRESS_TYPE_LABEL: Record<AddressType, string> = {
 
 export interface IAddressModel {
     id: number | null;
-    person: IPersonModel;
     zipCode: string;
     street: string;
     number: string;

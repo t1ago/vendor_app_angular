@@ -33,7 +33,7 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
         super();
 
         this.title = 'Lista de Categorias';
-        this.loadData();
+        this.loadTableConfig();
     }
 
     public override getTableConfig(): ITableConfig<ICategoryModel> {

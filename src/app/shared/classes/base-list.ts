@@ -43,6 +43,10 @@ export class BaseList<MODEL, SERVICE> {
     public loadData() {
         const routeData = toSignal(this.route.data);
         this.model.set(routeData()?.['data']);
+    }
+
+    public loadTableConfig() {
+        this.loadData();
 
         this.tableConfig = computed(() => {
             return {

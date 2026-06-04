@@ -31,36 +31,43 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
         return this.resultObservable().pipe(
             map((value: any) => {
                 const data = value.data as any[];
+
                 return data
                     .map((dataValue) => {
-                        return {
-                            id: dataValue.id,
-                            name: dataValue.nome,
-                            surname: dataValue.apelido,
-                            federalDocument: {
-                                number: dataValue.documento_federeal,
-                            },
-                            stateDocument: {
-                                number: dataValue.documento_estadual,
-                            },
-                            type: dataValue.tipo_pessoa,
-                            active: dataValue.ativo === 'A',
-                        } as INaturalPerson;
+                        return this.mapModelForList(dataValue) as INaturalPerson;
                     })
                     .filter((dataValue) => dataValue.active && dataValue.type === 'F');
             })
         );
     }
 
+    getAllByType(type: string): Observable<IPersonModel[]> {
+        this.request = this.http.get(`${this.APIPath}?tipo_pessoa=${type}`);
+
+        return this.resultObservable().pipe(
+            map((value: any) => {
+                const data = value.data as any[];
+
+                return data.map((dataValue) => {
+                    if (dataValue.tipo_pessoa === 'F') {
+                        return this.mapModelForList(dataValue) as INaturalPerson;
+                    } else {
+                        return this.mapModelForList(dataValue) as ILegalEntities;
+                    }
+                });
+            })
+        );
+    }
+
     override mapDto(model: IPersonModel): IPersonDto {
         if (this.isNaturalPerson(model)) {
-            return this.mapNaturalPerson(model as INaturalPerson);
+            return this.mapNaturalPersonDto(model as INaturalPerson);
         } else {
-            return this.mapLegalEntities(model as ILegalEntities);
+            return this.mapLegalEntitiesDto(model as ILegalEntities);
         }
     }
 
-    private mapNaturalPerson(model: INaturalPerson): IPersonDto {
+    private mapNaturalPersonDto(model: INaturalPerson): IPersonDto {
         const [year, month, day] = model.birthDate.split('-');
 
         return {
@@ -74,11 +81,11 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             tipo_pessoa: model.type,
             id_vinculo: null,
             ativo: model.active ? 'A' : 'I',
-            enderecos: model.addresses.map((address) => this.mapAddress(address)),
+            enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }
 
-    private mapLegalEntities(model: ILegalEntities): IPersonDto {
+    private mapLegalEntitiesDto(model: ILegalEntities): IPersonDto {
         return {
             id_pessoa: model.id,
             nome: model.name,
@@ -90,11 +97,11 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             tipo_pessoa: model.type,
             id_vinculo: model.naturalPerson.id,
             ativo: model.active ? 'A' : 'I',
-            enderecos: model.addresses.map((address) => this.mapAddress(address)),
+            enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }
 
-    private mapAddress(model: IAddressModel): IAddressDto {
+    private mapAddressDto(model: IAddressModel): IAddressDto {
         return {
             id_endereco: model.id,
             cep: model.zipCode,
@@ -111,5 +118,113 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
 
     private isNaturalPerson(model: IPersonModel): boolean {
         return model.type === 'F';
+    }
+
+    private mapModelForList(dto: any): IPersonModel {
+        const isNaturalPerson = dto.tipo_pessoa === 'F';
+        let model: IPersonModel;
+
+        if (isNaturalPerson) {
+            model = this.mapNaturalPersonModel(dto, true);
+        } else {
+            model = this.mapLegalEntitiesModel(dto, true);
+        }
+
+        return model;
+    }
+
+    private mapNaturalPersonModel(dto: any, forList: boolean): INaturalPerson {
+        let birthDate = '';
+
+        if (dto.data_inicio) {
+            birthDate = dto.data_inicio.split('T')[0];
+        }
+
+        const model = {
+            id: dto.id,
+            name: dto.nome,
+            surname: dto.apelido,
+            type: dto.tipo_pessoa,
+            sex: dto.sexo,
+            birthDate: birthDate,
+            federalDocument: {
+                number: dto.documento_federeal,
+            },
+            stateDocument: {
+                number: dto.documento_estadual,
+            },
+            active: dto.ativo === 'A',
+            addresses: [],
+        } as INaturalPerson;
+
+        if (forList) {
+            if (dto.id_moradia !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_moradia));
+            }
+
+            if (dto.id_cobranca !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_cobranca));
+            }
+
+            if (dto.id_entrega !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_entrega));
+            }
+        }
+
+        return model;
+    }
+
+    private mapLegalEntitiesModel(dto: any, forList: boolean): ILegalEntities {
+        const naturalPerson = {
+            id: dto.id_vinculo,
+            nome: dto.nome_vinculo,
+        };
+
+        const model = {
+            id: dto.id,
+            name: dto.nome,
+            surname: dto.apelido,
+            type: dto.tipo_pessoa,
+            federalDocument: {
+                number: dto.documento_federeal,
+            },
+            stateDocument: {
+                number: dto.documento_estadual,
+            },
+            active: dto.ativo === 'A',
+            naturalPerson: this.mapNaturalPersonModel(naturalPerson, forList),
+            addresses: [],
+        } as ILegalEntities;
+
+        if (forList) {
+            if (dto.id_moradia !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_moradia));
+            }
+
+            if (dto.id_cobranca !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_cobranca));
+            }
+
+            if (dto.id_entrega !== null) {
+                model.addresses.push(this.mapAddressIdModel(dto.id_entrega));
+            }
+        }
+
+        return model;
+    }
+
+    private mapAddressIdModel(id: number): IAddressModel {
+        return {
+            id: id,
+            zipCode: '',
+            street: '',
+            state: '',
+            city: '',
+            neighborhood: '',
+            number: '',
+            active: true,
+            searchByZipCode: false,
+            type: 'C',
+        };
     }
 }

@@ -9,7 +9,7 @@ import { IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
 import { PersonService } from '../services/person-service';
-import { PersonType } from '../types/person.type';
+import { PersonModelType } from '../types/person-model.type';
 import { AddressForm } from './address/form/address-form';
 import { AddressList } from './address/list/address-list';
 import { NaturalPersonSearch } from './natural-person-search/natural-person-search';
@@ -29,7 +29,7 @@ const PATTERNS = {
     templateUrl: './person-form.html',
     styleUrl: './person-form.scss',
 })
-export class PersonForm extends BaseForm<PersonType, PersonService> implements OnChanges {
+export class PersonForm extends BaseForm<PersonModelType, PersonService> implements OnChanges {
     private route = inject(ActivatedRoute);
 
     private router = inject(Router);
@@ -136,7 +136,7 @@ export class PersonForm extends BaseForm<PersonType, PersonService> implements O
         this.router.navigate(['category', 'list']);
     }
 
-    private createModel(): PersonType {
+    private createModel(): PersonModelType {
         if (this.isNaturalPerson()) {
             return this.makeNaturalPerson();
         }

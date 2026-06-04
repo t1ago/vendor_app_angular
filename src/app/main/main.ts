@@ -50,12 +50,12 @@ export class Main {
             children: [
                 {
                     name: 'Jurídica',
-                    route: '/person/form/legalEntities',
+                    route: '/person/list/legalEntities',
                     children: [],
                 },
                 {
                     name: 'Física',
-                    route: '/person/form/naturalPerson',
+                    route: '/person/list/naturalPerson',
                     children: [],
                 },
             ],

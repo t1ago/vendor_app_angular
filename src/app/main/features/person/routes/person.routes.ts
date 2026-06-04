@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { personDataAllResolver } from './person-data-all-resolver';
 
 export const personRoutes: Routes = [
     {
@@ -10,17 +11,17 @@ export const personRoutes: Routes = [
         loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
     },
     {
-        path: 'form/:type',
-        loadComponent: () => import('../form/person-form').then((m) => m.PersonForm),
-        // resolve: {
-        //     data: categoryDataIdResolver,
-        // },
+        path: 'list/legalEntities',
+        loadComponent: () => import('../list/person-list').then((m) => m.PersonList),
+        resolve: {
+            data: personDataAllResolver,
+        },
     },
-    // {
-    //     path: 'list',
-    //     loadComponent: () => import('../list/category-list').then((m) => m.CategoryList),
-    //     resolve: {
-    //         data: categoryDataAllResolver,
-    //     },
-    // },
+    {
+        path: 'list/naturalPerson',
+        loadComponent: () => import('../list/person-list').then((m) => m.PersonList),
+        resolve: {
+            data: personDataAllResolver,
+        },
+    },
 ];

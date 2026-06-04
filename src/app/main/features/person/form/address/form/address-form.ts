@@ -133,7 +133,6 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
     private createModel(): IAddressModel {
         return {
             id: null,
-            person: null!,
             zipCode: '',
             street: '',
             number: '',
