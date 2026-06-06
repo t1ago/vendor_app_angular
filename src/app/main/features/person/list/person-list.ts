@@ -3,14 +3,18 @@ import { BaseList } from '@shared/classes/base-list';
 import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
+import { ITableButtonConfig } from '@shared/components/table/interfaces/table-button-config';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
 import { Table } from '@shared/components/table/table';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { IMAGES } from '@shared/constants/images';
 import { loadingObservablePipe } from '@shared/observable-pipe/loading-observable-pipe';
+import { inputDateToBrazilian } from '@shared/types/date.type';
+import { IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
 import { IPersonModel } from '../interfaces/person.model';
+import { makePath } from '../routes/person-path';
 import { PersonService } from '../services/person-service';
 
 @Component({
@@ -72,13 +76,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
     };
 
     public override onAddAction = () => {
-        const path = ['person', 'form'];
-
-        if (this.isNaturalPerson()) {
-            path.push('naturalPerson');
-        } else {
-            path.push('legalEntities');
-        }
+        const path = makePath(this.isNaturalPerson());
         this.router.navigate(path);
     };
 
@@ -117,6 +115,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                 {
                     name: 'Data Nascimento',
                     dataField: 'birthDate',
+                    transform: (data) => inputDateToBrazilian(data.birthDate),
                 },
                 {
                     name: 'RG',
@@ -130,6 +129,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                 },
             ],
             buttons: [
+                ...this.makeAddressButtons(),
                 {
                     icon: IMAGES.EDIT,
                     show: SHOW_ALWAYS,
@@ -143,7 +143,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                     show: SHOW_ALWAYS,
                     name: '',
                     action: (dataModel) => {
-                        this.onRemoveAction(dataModel, this.onRefreshAction);
+                        this.onRemoveAction(dataModel, this.updateToInactiveModel(this.model(), dataModel.id!));
                     },
                 },
             ],
@@ -192,6 +192,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                 },
             ],
             buttons: [
+                ...this.makeAddressButtons(),
                 {
                     icon: IMAGES.EDIT,
                     show: SHOW_ALWAYS,
@@ -210,5 +211,56 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                 },
             ],
         };
+    }
+
+    private updateToInactiveModel(model: IPersonModel[], id: number) {
+        this.model.update((list) => list.map((item) => (item.id === id ? { ...item, active: false } : item)));
+    }
+
+    private makeAddressButtons(): ITableButtonConfig<IPersonModel>[] {
+        return [
+            {
+                icon: IMAGES.RESIDENTIAL_ADDRESS,
+                show: (data) => data.addresses?.some((address) => address.id && address.type === 'M') ?? false,
+                name: '',
+                action: (data) => {
+                    const address = data.addresses?.find((address) => address.type === 'M');
+                    if (address?.id) this.fetchAndOpenMaps(data.id!, address.id);
+                },
+            },
+            {
+                icon: IMAGES.BILLING_ADDRESS,
+                show: (data) => data.addresses?.some((address) => address.id && address.type === 'C') ?? false,
+                name: '',
+                action: (data) => {
+                    const address = data.addresses?.find((address) => address.type === 'C');
+                    if (address?.id) this.fetchAndOpenMaps(data.id!, address.id);
+                },
+            },
+            {
+                icon: IMAGES.DELIVERY_ADDRESS,
+                show: (data) => data.addresses?.some((address) => address.id && address.type === 'E') ?? false,
+                name: '',
+                action: (data) => {
+                    const address = data.addresses?.find((address) => address.type === 'E');
+                    if (address?.id) this.fetchAndOpenMaps(data.id!, address.id);
+                },
+            },
+        ];
+    }
+
+    private fetchAndOpenMaps(personId: number, addressId: number): void {
+        this.service.getAddressByIdPersonAndIdAddress(personId, addressId).subscribe({
+            next: (address) => this.openGoogleMaps(address),
+            error: () => this.toastService.show('Erro ao buscar endereço', 'danger'),
+        });
+    }
+
+    private openGoogleMaps(address: IAddressModel): void {
+        const query = encodeURIComponent(
+            `${address.street}, ${address.number}, ${address.neighborhood}, ${address.city} - ${address.state}, ${address.zipCode}`
+        );
+        console.log(address);
+        window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
     }
 }

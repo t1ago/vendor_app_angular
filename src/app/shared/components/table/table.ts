@@ -10,6 +10,10 @@ import { ITableConfig } from './interfaces/table-config';
 export class Table<MODEL> {
     tableConfig = input<ITableConfig<MODEL>>();
 
+    isInactive(item: MODEL): boolean {
+        return 'active' in (item as any) && (item as any).active === false;
+    }
+
     get titles() {
         return this.tableConfig()!.titles;
     }

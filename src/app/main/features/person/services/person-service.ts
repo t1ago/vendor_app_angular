@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BaseRequestService } from '@shared/services/base-request-service';
+import { inputDateToBrazilian, isoToInputDate } from '@shared/types/date.type';
 import { map, Observable } from 'rxjs';
 import { IAddressDto } from '../interfaces/address.dto';
-import { IAddressModel } from '../interfaces/address.model';
+import { AddressType, IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
 import { IPersonDto } from '../interfaces/person.dto';
@@ -59,6 +60,22 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
         );
     }
 
+    override delete(id: number): Observable<Object> {
+        this.request = this.http.put(`${this.APIPath}/inativar/${id}`, {});
+        return this.resultObservable();
+    }
+
+    getAddressByIdPersonAndIdAddress(personId: number, addressId: number): Observable<IAddressModel> {
+        this.request = this.http.get(`${this.APIPath}/${personId}/enderecos/${addressId}`);
+
+        return this.resultObservable().pipe(
+            map((value: any) => {
+                const data = value.data as any;
+                return this.mapAddress(data);
+            })
+        );
+    }
+
     override mapDto(model: IPersonModel): IPersonDto {
         if (this.isNaturalPerson(model)) {
             return this.mapNaturalPersonDto(model as INaturalPerson);
@@ -68,7 +85,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
     }
 
     private mapNaturalPersonDto(model: INaturalPerson): IPersonDto {
-        const [year, month, day] = model.birthDate.split('-');
+        const birthDate = inputDateToBrazilian(model.birthDate);
 
         return {
             id_pessoa: model.id,
@@ -77,7 +94,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             documento_estadual: model.stateDocument.number,
             documento_federeal: model.federalDocument.number,
             sexo: model.sex,
-            data_inicio: `${day}/${month}/${year}`,
+            data_inicio: birthDate,
             tipo_pessoa: model.type,
             id_vinculo: null,
             ativo: model.active ? 'A' : 'I',
@@ -137,7 +154,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
         let birthDate = '';
 
         if (dto.data_inicio) {
-            birthDate = dto.data_inicio.split('T')[0];
+            birthDate = isoToInputDate(dto.data_inicio);
         }
 
         const model = {
@@ -159,15 +176,15 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
 
         if (forList) {
             if (dto.id_moradia !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_moradia));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_moradia, 'M'));
             }
 
             if (dto.id_cobranca !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_cobranca));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_cobranca, 'C'));
             }
 
             if (dto.id_entrega !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_entrega));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_entrega, 'E'));
             }
         }
 
@@ -177,8 +194,20 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
     private mapLegalEntitiesModel(dto: any, forList: boolean): ILegalEntities {
         const naturalPerson = {
             id: dto.id_vinculo,
-            nome: dto.nome_vinculo,
-        };
+            name: dto.nome_vinculo,
+            surname: '',
+            type: 'F',
+            birthDate: '',
+            stateDocument: {
+                number: '',
+            },
+            federalDocument: {
+                number: '',
+            },
+            active: true,
+            sex: 'M',
+            addresses: [],
+        } as INaturalPerson;
 
         const model = {
             id: dto.id,
@@ -198,22 +227,22 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
 
         if (forList) {
             if (dto.id_moradia !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_moradia));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_moradia, 'M'));
             }
 
             if (dto.id_cobranca !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_cobranca));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_cobranca, 'C'));
             }
 
             if (dto.id_entrega !== null) {
-                model.addresses.push(this.mapAddressIdModel(dto.id_entrega));
+                model.addresses.push(this.mapAddressIdAndTypeModel(dto.id_entrega, 'E'));
             }
         }
 
         return model;
     }
 
-    private mapAddressIdModel(id: number): IAddressModel {
+    private mapAddressIdAndTypeModel(id: number, type: AddressType): IAddressModel {
         return {
             id: id,
             zipCode: '',
@@ -224,7 +253,22 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             number: '',
             active: true,
             searchByZipCode: false,
-            type: 'C',
+            type: type,
+        };
+    }
+
+    private mapAddress(data: any): IAddressModel {
+        return {
+            id: data.id,
+            zipCode: data.cep,
+            street: data.logradouro,
+            number: data.numero,
+            neighborhood: data.bairro,
+            city: data.cidade,
+            state: data.estado,
+            type: data.tipo_endereco,
+            searchByZipCode: data.buscado_por_cep === 'S',
+            active: data.ativo === 'A',
         };
     }
 }
