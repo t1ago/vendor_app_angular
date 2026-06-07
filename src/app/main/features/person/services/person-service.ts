@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseRequestService } from '@shared/services/base-request-service';
 import { inputDateToBrazilian, isoToInputDate } from '@shared/types/date.type';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { IAddressDto } from '../interfaces/address.dto';
 import { AddressType, IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
@@ -87,6 +87,24 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
                 } else {
                     return this.mapLegalEntitiesModelForEdit(dto);
                 }
+            }),
+            switchMap((data: IPersonModel) => {
+                if (data.type == 'J') {
+                    const legalEntities = data as ILegalEntities;
+
+                    if (legalEntities.naturalPerson.id) {
+                        return this.getById(legalEntities.naturalPerson.id).pipe(
+                            map((naturalPerson) => {
+                                legalEntities.naturalPerson = naturalPerson as INaturalPerson;
+                                return legalEntities as IPersonModel;
+                            })
+                        );
+                    } else {
+                        return of(data);
+                    }
+                } else {
+                    return of(data);
+                }
             })
         );
     }
@@ -112,7 +130,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             data_inicio: birthDate,
             tipo_pessoa: model.type,
             id_vinculo: null,
-            ativo: model.active ? 'A' : 'I',
+            ativo: model.active,
             enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }
@@ -128,7 +146,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             data_inicio: null,
             tipo_pessoa: model.type,
             id_vinculo: model.naturalPerson.id,
-            ativo: model.active ? 'A' : 'I',
+            ativo: model.active,
             enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }

@@ -93,10 +93,22 @@
         @if (!isNaturalPerson()) {
         <div class="row mb-3">
             <div class="col">
-                <app-natural-person-search (onSelect)="onNaturalPersonSelect($event)" />
+                <app-natural-person-search
+                    [naturalPerson]="selectedNaturalPerson"
+                    (onSelect)="onNaturalPersonSelect($event)"
+                />
             </div>
         </div>
         }
+
+        <div class="row mb-3">
+            <div class="col-auto">
+                <div class="form-check form-switch">
+                    <input [formField]="formActive" class="form-check-input" type="checkbox" id="active" />
+                    <label class="form-check-label" for="active">{{personActiveLabel}}</label>
+                </div>
+            </div>
+        </div>
 
         <br />
         <hr />

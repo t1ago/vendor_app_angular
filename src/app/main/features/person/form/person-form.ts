@@ -59,6 +59,7 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
     ngOnInit(): void {
         const routeData = this.route.snapshot.data['data'];
+        console.log(routeData);
         if (routeData) {
             this.model.set(routeData);
         }
@@ -266,6 +267,10 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
         return (this.model() as ILegalEntities).naturalPerson;
     }
 
+    get formActive() {
+        return this.formData.active;
+    }
+
     get personTypeLabel(): string {
         return this.isNaturalPerson() ? 'Pessoa Física' : 'Pessoa Jurídica';
     }
@@ -304,5 +309,9 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
 
     get personNaturalPersonIdLabel(): string {
         return 'Sócio';
+    }
+
+    get personActiveLabel(): string {
+        return this.model().active ? 'Ativo' : 'Inativo';
     }
 }

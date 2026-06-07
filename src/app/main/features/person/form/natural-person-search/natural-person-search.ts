@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { INaturalPerson } from '@features/person/interfaces/natural-person.model';
 import { PersonService } from '@features/person/services/person-service';
@@ -11,8 +11,10 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
     templateUrl: './natural-person-search.html',
     styleUrl: './natural-person-search.scss',
 })
-export class NaturalPersonSearch {
+export class NaturalPersonSearch implements OnInit {
     private personService = inject(PersonService);
+
+    naturalPerson = input<INaturalPerson | null>(null);
 
     onSelect = output<INaturalPerson | null>();
 
@@ -47,6 +49,12 @@ export class NaturalPersonSearch {
                     this.isSearching.set(false);
                 },
             });
+    }
+
+    ngOnInit(): void {
+        if (this.naturalPerson()) {
+            this.selectedPerson.set(this.naturalPerson());
+        }
     }
 
     onSearchInput(value: string): void {
