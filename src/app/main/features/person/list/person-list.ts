@@ -51,7 +51,8 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
     }
 
     public override onEditAction = (dataModel: IPersonModel) => {
-        // this.router.navigate(['category', 'form', dataModel.id!]);
+        const path = makePath(this.isNaturalPerson(), 'form', String(dataModel.id!));
+        this.router.navigate(path);
     };
 
     public override onRemoveAction = (dataModel: IPersonModel, callback: any) => {
@@ -60,7 +61,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             .pipe(loadingObservablePipe(this.pageLoadingService))
             .subscribe({
                 next: () => {
-                    callback();
+                    this.updateToInactiveModel(this.model(), dataModel.id!);
                     this.toastService.show('Registro removido com sucesso', 'success');
                 },
                 error: (errorData) => {
@@ -69,14 +70,8 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             });
     };
 
-    public override onRefreshAction = () => {
-        this.service.getAll().subscribe((result) => {
-            this.model.set(result);
-        });
-    };
-
     public override onAddAction = () => {
-        const path = makePath(this.isNaturalPerson());
+        const path = makePath(this.isNaturalPerson(), 'form');
         this.router.navigate(path);
     };
 
@@ -128,25 +123,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                     transform: (data) => data.federalDocument.number,
                 },
             ],
-            buttons: [
-                ...this.makeAddressButtons(),
-                {
-                    icon: IMAGES.EDIT,
-                    show: SHOW_ALWAYS,
-                    name: '',
-                    action: (dataModel) => {
-                        this.onEditAction(dataModel);
-                    },
-                },
-                {
-                    icon: IMAGES.REMOVE,
-                    show: SHOW_ALWAYS,
-                    name: '',
-                    action: (dataModel) => {
-                        this.onRemoveAction(dataModel, this.updateToInactiveModel(this.model(), dataModel.id!));
-                    },
-                },
-            ],
+            buttons: this.makeAddressButtons(),
         };
     }
 
@@ -191,25 +168,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                     transform: (data) => data.naturalPerson.name,
                 },
             ],
-            buttons: [
-                ...this.makeAddressButtons(),
-                {
-                    icon: IMAGES.EDIT,
-                    show: SHOW_ALWAYS,
-                    name: '',
-                    action: (dataModel) => {
-                        this.onEditAction(dataModel);
-                    },
-                },
-                {
-                    icon: IMAGES.REMOVE,
-                    show: SHOW_ALWAYS,
-                    name: '',
-                    action: (dataModel) => {
-                        this.onRemoveAction(dataModel, this.onRefreshAction);
-                    },
-                },
-            ],
+            buttons: this.makeAddressButtons(),
         };
     }
 
@@ -246,15 +205,39 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
                     if (address?.id) this.fetchAndOpenMaps(data.id!, address.id);
                 },
             },
+            {
+                icon: IMAGES.EDIT,
+                show: SHOW_ALWAYS,
+                name: '',
+                action: (dataModel) => this.onEditAction(dataModel),
+            },
+            {
+                icon: IMAGES.REMOVE,
+                show: SHOW_ALWAYS,
+                name: '',
+                action: (dataModel) => this.onRemoveAction(dataModel, null),
+            },
         ];
     }
 
     private fetchAndOpenMaps(personId: number, addressId: number): void {
-        this.service.getAddressByIdPersonAndIdAddress(personId, addressId).subscribe({
-            next: (address) => this.openGoogleMaps(address),
-            error: () => this.toastService.show('Erro ao buscar endereço', 'danger'),
-        });
+        this.service
+            .getAddressByIdPersonAndIdAddress(personId, addressId)
+            .pipe(loadingObservablePipe(this.pageLoadingService))
+            .subscribe({
+                next: (address) => {
+                    if (address.active == false) {
+                        this.toastService.show('Este endereço está inativo', 'info');
+                        setTimeout(() => this.openGoogleMaps(address), 3001);
+                    } else {
+                        this.openGoogleMaps(address);
+                    }
+                },
+                error: () => this.toastService.show('Erro ao buscar endereço', 'danger'),
+            });
     }
+
+    private callbackAlertAddressInactive() {}
 
     private openGoogleMaps(address: IAddressModel): void {
         const query = encodeURIComponent(

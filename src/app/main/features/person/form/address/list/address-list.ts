@@ -19,6 +19,8 @@ export class AddressList {
 
     onEdit = output<IAddressEvent>();
 
+    onUpdateActive = output<IAddressEvent>();
+
     tableConfig = computed<ITableConfig<IAddressModel>>(() => ({
         hasHover: true,
         data: this.addresses(),
@@ -59,9 +61,15 @@ export class AddressList {
             },
             {
                 icon: IMAGES.REMOVE,
-                show: SHOW_ALWAYS,
+                show: (dataModel) => dataModel.active,
                 name: '',
-                action: (dataModel) => {},
+                action: (dataModel, index) => this.onUpdateActive.emit({ address: dataModel, index: index }),
+            },
+            {
+                icon: IMAGES.REMOVE_RESTORE,
+                show: (data) => !data.active,
+                name: '',
+                action: (dataModel, index) => this.onUpdateActive.emit({ address: dataModel, index: index }),
             },
         ],
     }));

@@ -76,6 +76,21 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
         );
     }
 
+    override getById(id: number | string): Observable<IPersonModel> {
+        this.request = this.http.get(`${this.APIPath}/${id}`);
+
+        return this.resultObservable().pipe(
+            map((value: any) => {
+                const dto = value.data;
+                if (dto.tipo_pessoa === 'F') {
+                    return this.mapNaturalPersonModelForEdit(dto);
+                } else {
+                    return this.mapLegalEntitiesModelForEdit(dto);
+                }
+            })
+        );
+    }
+
     override mapDto(model: IPersonModel): IPersonDto {
         if (this.isNaturalPerson(model)) {
             return this.mapNaturalPersonDto(model as INaturalPerson);
@@ -270,5 +285,42 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             searchByZipCode: data.buscado_por_cep === 'S',
             active: data.ativo === 'A',
         };
+    }
+
+    private mapNaturalPersonModelForEdit(dto: any): INaturalPerson {
+        return {
+            id: dto.id,
+            name: dto.nome,
+            surname: dto.apelido,
+            type: dto.tipo_pessoa,
+            sex: dto.sexo,
+            birthDate: dto.data_inicio ? isoToInputDate(dto.data_inicio) : '',
+            federalDocument: {
+                number: dto.documento_federeal,
+            },
+            stateDocument: {
+                number: dto.documento_estadual,
+            },
+            active: dto.ativo === 'A',
+            addresses: (dto.enderecos ?? []).map((address: any) => this.mapAddress(address)),
+        } as INaturalPerson;
+    }
+
+    private mapLegalEntitiesModelForEdit(dto: any): ILegalEntities {
+        return {
+            id: dto.id,
+            name: dto.nome,
+            surname: dto.apelido,
+            type: dto.tipo_pessoa,
+            federalDocument: {
+                number: dto.documento_federeal,
+            },
+            stateDocument: {
+                number: dto.documento_estadual,
+            },
+            active: dto.ativo === 'A',
+            naturalPerson: this.mapNaturalPersonModel({ id: dto.id_vinculo }, false),
+            addresses: (dto.enderecos ?? []).map((address: any) => this.mapAddress(address)),
+        } as ILegalEntities;
     }
 }

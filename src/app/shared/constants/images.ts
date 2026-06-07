@@ -9,6 +9,7 @@ export const IMAGES = {
     LOADING: 'assets/images/loading.png',
     NEW: 'assets/images/novo.png',
     REMOVE: 'assets/images/remover.png',
+    REMOVE_RESTORE: 'assets/images/remover_restore.png',
     SAVE: 'assets/images/salvar.png',
     BACK: 'assets/images/voltar.png',
 } as const;

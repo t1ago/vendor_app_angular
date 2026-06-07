@@ -1,5 +1,5 @@
-export const makePath = (isNaturalPerson: boolean, id: string | null = null) => {
-    const path = ['person', 'form'];
+export const makePath = (isNaturalPerson: boolean, redirectTo: 'list' | 'form' = 'form', id: string | null = null) => {
+    const path = ['person', redirectTo];
 
     if (isNaturalPerson) {
         path.push('naturalPerson');

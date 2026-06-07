@@ -1,4 +1,5 @@
-import { Component, inject, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FieldTree, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseForm } from '@shared/classes/base-form';
@@ -8,6 +9,7 @@ import { IAddressEvent } from '../interfaces/address-event';
 import { IAddressModel } from '../interfaces/address.model';
 import { ILegalEntities } from '../interfaces/legal-entities.model';
 import { INaturalPerson } from '../interfaces/natural-person.model';
+import { makePath } from '../routes/person-path';
 import { PersonService } from '../services/person-service';
 import { PersonModelType } from '../types/person-model.type';
 import { AddressForm } from './address/form/address-form';
@@ -29,7 +31,7 @@ const PATTERNS = {
     templateUrl: './person-form.html',
     styleUrl: './person-form.scss',
 })
-export class PersonForm extends BaseForm<PersonModelType, PersonService> implements OnChanges {
+export class PersonForm extends BaseForm<PersonModelType, PersonService> implements OnInit {
     private route = inject(ActivatedRoute);
 
     private router = inject(Router);
@@ -55,8 +57,11 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
             }
         });
     }
-    ngOnChanges(changes: SimpleChanges): void {
-        throw new Error('Method not implemented.');
+    ngOnInit(): void {
+        const routeData = this.route.snapshot.data['data'];
+        if (routeData) {
+            this.model.set(routeData);
+        }
     }
 
     isNaturalPerson(): boolean {
@@ -72,6 +77,25 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     onAddressEdit(addressEvent: IAddressEvent) {
         this.addressEvent = addressEvent;
         this.addressMode.set('form');
+    }
+
+    onAddressUpdateActive(addressEvent: IAddressEvent): void {
+        this.model.update((model) => {
+            const addresses = [...(model.addresses ?? [])];
+
+            if (addressEvent.index !== null && addressEvent.index! >= 0) {
+                if (addressEvent.address.id === null) {
+                    addresses.splice(addressEvent.index!, 1);
+                } else {
+                    addresses[addressEvent.index!] = {
+                        ...addressEvent.address,
+                        active: !addressEvent.address.active,
+                    };
+                }
+            }
+
+            return { ...model, addresses };
+        });
     }
 
     onAddressFormCancel(): void {
@@ -124,8 +148,13 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
                     this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.onCancelAction();
                 },
-                error: (_errorData) => {
-                    this.toastService.show('Falha ao salvar o registro', 'danger');
+                error: (errorData) => {
+                    if (errorData.status == HttpStatusCode.InternalServerError) {
+                        this.toastService.show(errorData.error?.mensagem || 'Falha ao salvar o registro', 'danger');
+                    } else {
+                        this.toastService.show('Falha ao salvar o registro', 'danger');
+                    }
+
                     this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                 },
             });
@@ -133,7 +162,8 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
 
     override onCancelAction(): void {
-        this.router.navigate(['category', 'list']);
+        const path = makePath(this.isNaturalPerson(), 'list');
+        this.router.navigate(path);
     }
 
     private createModel(): PersonModelType {

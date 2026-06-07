@@ -16,7 +16,7 @@ export const personDataIdResolver: ResolveFn<any> = (route, _state) => {
     if (id) {
         return service.getById(id);
     } else {
-        const path = makePath(personType == 'F', id);
+        const path = makePath(personType == 'F', 'form', id);
 
         router.navigate(path);
 

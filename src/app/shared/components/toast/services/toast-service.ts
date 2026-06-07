@@ -9,7 +9,7 @@ export class ToastService {
 
     title = signal<string>('Sistema');
 
-    show(message: string, type: ToastType = 'info', timeoutClear: number = 3000) {
+    show(message: string, type: ToastType = 'info', timeoutClear: number = 3000, callback: (() => void) | null = null) {
         this.message.set(message);
 
         this.type.set(type);
@@ -18,7 +18,13 @@ export class ToastService {
 
         this.title.set(titles[type]);
 
-        setTimeout(() => this.clear(), timeoutClear);
+        setTimeout(() => {
+            if (callback) {
+                callback();
+            }
+
+            this.clear();
+        }, timeoutClear);
     }
 
     clear() {

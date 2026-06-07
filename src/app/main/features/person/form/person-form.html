@@ -102,7 +102,12 @@
         <hr />
         <!-- Address -->
         @if (isAddressModeList()) {
-        <app-address-list [addresses]="addresses" (onNew)="onAddressNew()" (onEdit)="onAddressEdit($event)" />
+        <app-address-list
+            [addresses]="addresses"
+            (onNew)="onAddressNew()"
+            (onEdit)="onAddressEdit($event)"
+            (onUpdateActive)="onAddressUpdateActive($event)"
+        />
 
         <div class="row">
             <div class="col text-end d-grid d-sm-block gap-2">
