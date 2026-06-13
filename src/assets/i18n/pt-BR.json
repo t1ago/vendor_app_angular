@@ -1,0 +1,72 @@
+{
+    "main": {
+        "features": {
+            "person": {
+                "form": {
+                    "cancel": "Cancelar",
+                    "save": "Salvar",
+                    "loading": "Loading...",
+
+                    "personTypeNatural": "Pessoa Física",
+                    "personTypeLegal": "Pessoa Jurídica",
+
+                    "personNameNatural": "Nome",
+                    "personNameLegal": "Razão Social",
+
+                    "personSurnameNatural": "Apelido",
+                    "personSurnameLegal": "Nome Fantasia",
+
+                    "personStateDocumentNatural": "RG",
+                    "personStateDocumentLegal": "Insc. Estadual",
+
+                    "personFederalDocumentNatural": "CPF",
+                    "personFederalDocumentLegal": "CNPJ",
+
+                    "personSex": "Sexo",
+                    "personSexMale": "Masculino",
+                    "personSexFemale": "Feminino",
+
+                    "personBirthDate": "Data de Nascimento",
+
+                    "personNaturalPersonId": "Sócio",
+
+                    "personActive": "Ativo",
+                    "personInactive": "Inativo",
+
+                    "savingPerson": "Salvando Pessoa",
+                    "updatingPerson": "Atualizando Pessoa",
+
+                    "recordSavedSuccessfully": "Registro salvo com sucesso",
+
+                    "saveFailed": "Falha ao salvar o registro",
+
+                    "validation": {
+                        "nameRequired": "Nome é obrigatório",
+                        "nameMinLength": "Nome deve ter no mínimo 3 caracteres",
+
+                        "surnameRequired": "Apelido é obrigatório",
+                        "surnameMinLength": "Apelido deve ter no mínimo 3 caracteres",
+
+                        "rgRequired": "RG é obrigatório",
+                        "rgInvalid": "RG inválido. Formato esperado: 00.000.000-0",
+
+                        "cpfRequired": "CPF é obrigatório",
+                        "cpfInvalid": "CPF inválido. Formato esperado: 000.000.000-00",
+
+                        "companyNameRequired": "Razão Social é obrigatória",
+                        "companyNameMinLength": "Razão Social deve ter no mínimo 3 caracteres",
+
+                        "tradeNameRequired": "Nome Fantasia é obrigatório",
+                        "tradeNameMinLength": "Nome Fantasia deve ter no mínimo 3 caracteres",
+
+                        "stateRegistrationRequired": "Inscrição Estadual é obrigatória",
+                        "stateRegistrationInvalid": "Inscrição Estadual inválida",
+
+                        "cnpjRequired": "CNPJ é obrigatório",
+                        "cnpjInvalid": "CNPJ inválido. Formato esperado: 00.000.000/0000-00"
+                    }
+                }
+            }
+        }
+    }
+}

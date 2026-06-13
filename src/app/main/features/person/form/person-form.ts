@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FieldTree, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseForm } from '@shared/classes/base-form';
 import { InputField } from '@shared/components/input-field/input-field';
 import { IInputFieldOption } from '@shared/components/input-field/interfaces/input-field-option';
@@ -29,7 +30,7 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-person-form',
-    imports: [InputField, AddressList, AddressForm, NaturalPersonSearch],
+    imports: [InputField, AddressList, AddressForm, NaturalPersonSearch, TranslatePipe],
     templateUrl: './person-form.html',
     styleUrl: './person-form.scss',
 })
@@ -41,6 +42,8 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     override service = inject(PersonService);
 
     private toastService = inject(ToastService);
+
+    private translate = inject(TranslateService);
 
     naturalPersonSearchById = signal<number | null>(null);
 
@@ -280,46 +283,68 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
 
     get personTypeLabel(): string {
-        return this.isNaturalPerson() ? 'Pessoa Física' : 'Pessoa Jurídica';
+        return this.translate.instant(
+            this.isNaturalPerson()
+                ? 'main.features.person.form.personTypeNatural'
+                : 'main.features.person.form.personTypeLegal'
+        );
     }
 
     get personNameLabel(): string {
-        return this.isNaturalPerson() ? 'Nome' : 'Razão Social';
+        return this.translate.instant(
+            this.isNaturalPerson()
+                ? 'main.features.person.form.personNameNatural'
+                : 'main.features.person.form.personNameLegal'
+        );
     }
 
     get personSurnameLabel(): string {
-        return this.isNaturalPerson() ? 'Apelido' : 'Nome Fantasia';
+        return this.translate.instant(
+            this.isNaturalPerson()
+                ? 'main.features.person.form.personSurnameNatural'
+                : 'main.features.person.form.personSurnameLegal'
+        );
     }
 
     get personStateDocumentLabel(): string {
-        return this.isNaturalPerson() ? 'RG' : 'Insc. Estadual';
+        return this.translate.instant(
+            this.isNaturalPerson()
+                ? 'main.features.person.form.personStateDocumentNatural'
+                : 'main.features.person.form.personStateDocumentLegal'
+        );
     }
 
     get personFederalDocumentLabel(): string {
-        return this.isNaturalPerson() ? 'CPF' : 'CNPJ';
+        return this.translate.instant(
+            this.isNaturalPerson()
+                ? 'main.features.person.form.personFederalDocumentNatural'
+                : 'main.features.person.form.personFederalDocumentLegal'
+        );
     }
 
     get personSexLabel(): string {
-        return 'Sexo';
+        return this.translate.instant('main.features.person.form.personSex');
     }
 
     get personSexMaleLabel(): string {
-        return 'Masculino';
+        return this.translate.instant('main.features.person.form.personSexMale');
     }
 
     get personSexFemaleLabel(): string {
-        return 'Feminino';
+        return this.translate.instant('main.features.person.form.personSexFemale');
     }
 
     get personBirthDateLabel(): string {
-        return 'Data de Nascimento';
+        return this.translate.instant('main.features.person.form.personBirthDate');
     }
 
     get personNaturalPersonIdLabel(): string {
-        return 'Sócio';
+        return this.translate.instant('main.features.person.form.personNaturalPersonId');
     }
 
     get personActiveLabel(): string {
-        return this.model().active ? 'Ativo' : 'Inativo';
+        return this.translate.instant(
+            this.model().active ? 'main.features.person.form.personActive' : 'main.features.person.form.personInactive'
+        );
     }
 }
