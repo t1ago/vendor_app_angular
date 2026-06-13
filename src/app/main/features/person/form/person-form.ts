@@ -1,8 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FieldTree, FormField, minLength, pattern, required, submit } from '@angular/forms/signals';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FieldTree, minLength, pattern, required, submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseForm } from '@shared/classes/base-form';
+import { InputField } from '@shared/components/input-field/input-field';
+import { IInputFieldOption } from '@shared/components/input-field/interfaces/input-field-option';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 import { IAddressEvent } from '../interfaces/address-event';
@@ -27,7 +29,7 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-person-form',
-    imports: [FormField, AddressList, AddressForm, NaturalPersonSearch],
+    imports: [InputField, AddressList, AddressForm, NaturalPersonSearch],
     templateUrl: './person-form.html',
     styleUrl: './person-form.scss',
 })
@@ -46,6 +48,11 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
 
     addressEvent: IAddressEvent | null = null;
 
+    personSexOptions = computed<IInputFieldOption[]>(() => [
+        { value: 'M', label: this.personSexMaleLabel },
+        { value: 'F', label: this.personSexFemaleLabel },
+    ]);
+
     constructor() {
         super();
 
@@ -57,6 +64,7 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
             }
         });
     }
+
     ngOnInit(): void {
         const routeData = this.route.snapshot.data['data'];
         console.log(routeData);

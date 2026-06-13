@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
 import { IInputFieldOption } from './interfaces/input-field-option';
 
-type InputFieldType = 'text' | 'date' | 'number' | 'select' | 'radio';
+type InputFieldType = 'text' | 'date' | 'number' | 'select' | 'radio' | 'checkbox';
 
 @Component({
     selector: 'app-input-field',
@@ -11,11 +11,13 @@ type InputFieldType = 'text' | 'date' | 'number' | 'select' | 'radio';
     styleUrl: './input-field.scss',
 })
 export class InputField {
-    field = input.required<Field<string>>();
+    field = input<Field<string>>();
 
-    label = input.required<string>();
+    fieldBool = input<Field<boolean>>();
 
-    inputId = input.required<string>();
+    label = input<string>();
+
+    inputId = input<string>();
 
     type = input<InputFieldType>('text');
 
@@ -24,4 +26,24 @@ export class InputField {
     onBlur = output<void>();
 
     onChange = output<void>();
+
+    get activeField(): Field<any> {
+        if (this.type() === 'checkbox') {
+            return this.fieldBool()!;
+        } else {
+            return this.field()!;
+        }
+    }
+
+    get activeFieldIsInvalid(): Boolean {
+        return this.activeField().touched() && this.activeField().invalid();
+    }
+
+    get activeFieldErrors() {
+        return this.activeField().errors();
+    }
+
+    get showLabel(): boolean {
+        return !(['radio', 'checkbox'] as InputFieldType[]).includes(this.type());
+    }
 }
