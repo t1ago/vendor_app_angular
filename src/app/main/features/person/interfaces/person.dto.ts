@@ -10,6 +10,6 @@ export interface IPersonDto {
     documento_estadual: string;
     documento_federeal: string;
     id_vinculo: number | null;
-    ativo: boolean;
+    ativo: string;
     enderecos: IAddressDto[];
 }

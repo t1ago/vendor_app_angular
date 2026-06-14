@@ -130,7 +130,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             data_inicio: birthDate,
             tipo_pessoa: model.type,
             id_vinculo: null,
-            ativo: model.active,
+            ativo: model.active ? 'A' : 'I',
             enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }
@@ -146,7 +146,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             data_inicio: null,
             tipo_pessoa: model.type,
             id_vinculo: model.naturalPerson ? model.naturalPerson.id : null,
-            ativo: model.active,
+            ativo: model.active ? 'A' : 'I',
             enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
     }
