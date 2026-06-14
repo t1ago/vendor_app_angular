@@ -149,22 +149,27 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
 
             this.updateSaveControl(
                 ISateSaveControlModel.SAVING,
-                person.id == null ? 'Salvando Pessoa' : 'Atualizando Pessoa'
+                person.id == null
+                    ? this.translate.instant('COMMONS.SAVING')
+                    : this.translate.instant('COMMONS.UPDATING')
             );
 
             this.toastService.show(this.saveControl().message, 'info');
 
             this.service.save(person).subscribe({
                 next: () => {
-                    this.toastService.show('Registro salvo com sucesso', 'success', 1000);
+                    this.toastService.show(this.translate.instant('COMMONS.RECORDSAVEDWITHSUCCESS'), 'success', 1000);
                     this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.onCancelAction();
                 },
                 error: (errorData) => {
                     if (errorData.status == HttpStatusCode.InternalServerError) {
-                        this.toastService.show(errorData.error?.mensagem || 'Falha ao salvar o registro', 'danger');
+                        this.toastService.show(
+                            errorData.error?.mensagem || this.translate.instant('COMMONS.FAILSTOSAVERECORD'),
+                            'danger'
+                        );
                     } else {
-                        this.toastService.show('Falha ao salvar o registro', 'danger');
+                        this.toastService.show(this.translate.instant('COMMONS.FAILSTOSAVERECORD'), 'danger');
                     }
 
                     this.updateSaveControl(ISateSaveControlModel.OPEN, '');
@@ -201,17 +206,17 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
 
     private applyNaturalPersonValidations(schemaPath: any): void {
-        required(schemaPath.name, { message: 'Nome é obrigatório' });
-        minLength(schemaPath.name, 3, { message: 'Nome deve ter no mínimo 3 caracteres' });
-        required(schemaPath.surname, { message: 'Apelido é obrigatório' });
-        minLength(schemaPath.surname, 3, { message: 'Apelido deve ter no mínimo 3 caracteres' });
-        required(schemaPath.stateDocument.number, { message: 'RG é obrigatório' });
+        required(schemaPath.name, { message: 'MAIN.FEATURES.PERSON.VALIDATION.NAMEREQUIRED' });
+        minLength(schemaPath.name, 3, { message: 'MAIN.FEATURES.PERSON.VALIDATION.NAMEMINLENGTH' });
+        required(schemaPath.surname, { message: 'MAIN.FEATURES.PERSON.VALIDATION.SURNAMEREQUIRED' });
+        minLength(schemaPath.surname, 3, { message: 'MAIN.FEATURES.PERSON.VALIDATION.SURNAMEMINLENGTH' });
+        required(schemaPath.stateDocument.number, { message: 'MAIN.FEATURES.PERSON.VALIDATION.RGREQUIRED' });
         pattern(schemaPath.stateDocument.number, PATTERNS.RG, {
-            message: 'RG inválido. Formato esperado: 00.000.000-0',
+            message: 'MAIN.FEATURES.PERSON.VALIDATION.RGINVALID',
         });
-        required(schemaPath.federalDocument.number, { message: 'CPF é obrigatório' });
+        required(schemaPath.federalDocument.number, { message: 'MAIN.FEATURES.PERSON.VALIDATION.CPFREQUIRED' });
         pattern(schemaPath.federalDocument.number, PATTERNS.CPF, {
-            message: 'CPF inválido. Formato esperado: 000.000.000-00',
+            message: 'MAIN.FEATURES.PERSON.VALIDATION.CPFINVALID',
         });
     }
 
@@ -230,15 +235,19 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
 
     private applyLegalEntityValidations(schemaPath: any): void {
-        required(schemaPath.name, { message: 'Razão Social é obrigatória' });
-        minLength(schemaPath.name, 3, { message: 'Razão Social deve ter no mínimo 3 caracteres' });
-        required(schemaPath.surname, { message: 'Nome Fantasia é obrigatório' });
-        minLength(schemaPath.surname, 3, { message: 'Nome Fantasia deve ter no mínimo 3 caracteres' });
-        required(schemaPath.stateDocument.number, { message: 'Inscrição Estadual é obrigatória' });
-        pattern(schemaPath.stateDocument.number, PATTERNS.IE, { message: 'Inscrição Estadual inválida' });
-        required(schemaPath.federalDocument.number, { message: 'CNPJ é obrigatório' });
+        required(schemaPath.name, { message: 'MAIN.FEATURES.PERSON.VALIDATION.COMPANYNAMEREQUIRED' });
+        minLength(schemaPath.name, 3, { message: 'MAIN.FEATURES.PERSON.VALIDATION.COMPANYNAMEMINLENGTH' });
+        required(schemaPath.surname, { message: 'MAIN.FEATURES.PERSON.VALIDATION.TRADENAMEREQUIRED' });
+        minLength(schemaPath.surname, 3, { message: 'MAIN.FEATURES.PERSON.VALIDATION.TRADENAMEMINLENGTH' });
+        required(schemaPath.stateDocument.number, {
+            message: 'MAIN.FEATURES.PERSON.VALIDATION.STATEREGISTRATIONREQUIRED',
+        });
+        pattern(schemaPath.stateDocument.number, PATTERNS.IE, {
+            message: 'MAIN.FEATURES.PERSON.VALIDATION.STATEREGISTRATIONINVALID',
+        });
+        required(schemaPath.federalDocument.number, { message: 'MAIN.FEATURES.PERSON.VALIDATION.CNPJREQUIRED' });
         pattern(schemaPath.federalDocument.number, PATTERNS.CNPJ, {
-            message: 'CNPJ inválido. Formato esperado: 00.000.000/0000-00',
+            message: 'MAIN.FEATURES.PERSON.VALIDATION.CNPJINVALID',
         });
     }
 

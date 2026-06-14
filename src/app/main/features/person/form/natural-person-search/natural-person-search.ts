@@ -2,12 +2,13 @@ import { Component, inject, input, OnInit, output, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { INaturalPerson } from '@features/person/interfaces/natural-person.model';
 import { PersonService } from '@features/person/services/person-service';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IMAGES } from '@shared/constants/images';
 import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-natural-person-search',
-    imports: [],
+    imports: [TranslatePipe],
     templateUrl: './natural-person-search.html',
     styleUrl: './natural-person-search.scss',
 })
@@ -79,30 +80,6 @@ export class NaturalPersonSearch implements OnInit {
         this.searchTerm.set('');
         this.results.set([]);
         this.onSelect.emit(null);
-    }
-
-    get searchTermLabel(): string {
-        return 'Sócio';
-    }
-
-    get selectedNameLabel(): string {
-        return 'Nome';
-    }
-
-    get selectedSurnameLabel(): string {
-        return 'Apelido';
-    }
-
-    get selectedRgLabel(): string {
-        return 'RG';
-    }
-
-    get selectedCpfLabel(): string {
-        return 'CPF';
-    }
-
-    get removeLabel(): string {
-        return 'Remover';
     }
 
     get removeIcon(): string {

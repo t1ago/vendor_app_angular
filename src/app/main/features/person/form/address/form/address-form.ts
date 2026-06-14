@@ -2,8 +2,9 @@ import { Component, computed, inject, input, OnInit, output, signal } from '@ang
 import { disabled, pattern, required } from '@angular/forms/signals';
 import { IAddressEvent } from '@features/person/interfaces/address-event';
 import { IAddressStateModel } from '@features/person/interfaces/address-state.model';
-import { ADDRESS_TYPE_LABEL, AddressType, IAddressModel } from '@features/person/interfaces/address.model';
+import { AddressType, IAddressModel } from '@features/person/interfaces/address.model';
 import { AddressService } from '@features/person/services/address-service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseForm } from '@shared/classes/base-form';
 import { InputField } from '@shared/components/input-field/input-field';
 import { IInputFieldOption } from '@shared/components/input-field/interfaces/input-field-option';
@@ -14,12 +15,14 @@ const PATTERNS = {
 
 @Component({
     selector: 'app-address-form',
-    imports: [InputField],
+    imports: [InputField, TranslatePipe],
     templateUrl: './address-form.html',
     styleUrl: './address-form.scss',
 })
 export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit {
     addressService = inject(AddressService);
+
+    translateService = inject(TranslateService);
 
     addressEvent = input<IAddressEvent | null>(null);
 
@@ -39,23 +42,29 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
     });
 
     typeOptions = computed<IInputFieldOption[]>(() => [
-        { value: this.typeValueLabel('M'), label: this.typeContentValueLabel('M') },
-        { value: this.typeValueLabel('E'), label: this.typeContentValueLabel('E') },
-        { value: this.typeValueLabel('C'), label: this.typeContentValueLabel('C') },
+        { value: 'M' as AddressType, label: this.typeContentValueLabel('M') },
+        { value: 'E' as AddressType, label: this.typeContentValueLabel('E') },
+        { value: 'C' as AddressType, label: this.typeContentValueLabel('C') },
     ]);
 
     lockedByZipCode = signal<boolean>(false);
+
+    ADDRESS_TYPE_LABEL: Record<AddressType, string> = {
+        M: this.translateService.instant('MAIN.FEATURES.ADDRESS.ADDRESSTYPERESIDENTIAL'),
+        C: this.translateService.instant('MAIN.FEATURES.ADDRESS.ADDRESSTYPEBILLING'),
+        E: this.translateService.instant('MAIN.FEATURES.ADDRESS.ADDRESSTYPEDELIVERY'),
+    };
 
     constructor() {
         super();
 
         this.createForm(this.createModel(), (schemaPath: any) => {
-            required(schemaPath.zipCode, { message: 'CEP é obrigatório' });
-            pattern(schemaPath.zipCode, PATTERNS.CEP, { message: 'CEP inválido. Formato esperado: 00000-000' });
-            required(schemaPath.street, { message: 'Logradouro é obrigatório' });
-            required(schemaPath.neighborhood, { message: 'Bairro é obrigatório' });
-            required(schemaPath.city, { message: 'Cidade é obrigatória' });
-            required(schemaPath.state, { message: 'Estado é obrigatório' });
+            required(schemaPath.zipCode, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.ZIPCODEREQUIRED' });
+            pattern(schemaPath.zipCode, PATTERNS.CEP, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.ZIPCODEINVALID' });
+            required(schemaPath.street, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.STREETREQUIRED' });
+            required(schemaPath.neighborhood, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.NEIGHBORHOODREQUIRED' });
+            required(schemaPath.city, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.CITYREQUIRED' });
+            required(schemaPath.state, { message: 'MAIN.FEATURES.ADDRESS.VALIDATION.STATEREQUIRED' });
             disabled(schemaPath.street, () => this.isDisabledByZipCode);
             disabled(schemaPath.neighborhood, () => this.isDisabledByZipCode);
             disabled(schemaPath.city, () => this.isDisabledByZipCode);
@@ -181,38 +190,7 @@ export class AddressForm extends BaseForm<IAddressModel, null> implements OnInit
         return this.states();
     }
 
-    get typeLabel() {
-        return 'Tipo de Endereço';
-    }
-
     typeContentValueLabel(type: AddressType) {
-        return ADDRESS_TYPE_LABEL[type];
-    }
-    typeValueLabel(type: AddressType) {
-        return type;
-    }
-
-    get zipCodeLabel() {
-        return 'Cep';
-    }
-
-    get streetLabel() {
-        return 'Logradouro';
-    }
-
-    get numberLabel() {
-        return 'Número';
-    }
-
-    get neighborhoodLabel() {
-        return 'Bairro';
-    }
-
-    get cityLabel() {
-        return 'Cidade';
-    }
-
-    get stateLabel() {
-        return 'Estado';
+        return this.ADDRESS_TYPE_LABEL[type];
     }
 }

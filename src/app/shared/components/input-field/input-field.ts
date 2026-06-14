@@ -1,12 +1,13 @@
 import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IInputFieldOption } from './interfaces/input-field-option';
 
 type InputFieldType = 'text' | 'date' | 'number' | 'select' | 'radio' | 'checkbox';
 
 @Component({
     selector: 'app-input-field',
-    imports: [FormField],
+    imports: [FormField, TranslatePipe],
     templateUrl: './input-field.html',
     styleUrl: './input-field.scss',
 })

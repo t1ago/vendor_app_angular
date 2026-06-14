@@ -145,7 +145,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
             sexo: null,
             data_inicio: null,
             tipo_pessoa: model.type,
-            id_vinculo: model.naturalPerson.id,
+            id_vinculo: model.naturalPerson ? model.naturalPerson.id : null,
             ativo: model.active,
             enderecos: model.addresses.map((address) => this.mapAddressDto(address)),
         };
@@ -225,22 +225,10 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
     }
 
     private mapLegalEntitiesModel(dto: any, forList: boolean): ILegalEntities {
-        const naturalPerson = {
+        const naturalPersonDto = {
             id: dto.id_vinculo,
-            name: dto.nome_vinculo,
-            surname: '',
-            type: 'F',
-            birthDate: '',
-            stateDocument: {
-                number: '',
-            },
-            federalDocument: {
-                number: '',
-            },
-            active: true,
-            sex: 'M',
-            addresses: [],
-        } as INaturalPerson;
+            nome: dto.nome_vinculo,
+        };
 
         const model = {
             id: dto.id,
@@ -254,7 +242,7 @@ export class PersonService extends BaseRequestService<IPersonModel, IPersonDto> 
                 number: dto.documento_estadual,
             },
             active: dto.ativo === 'A',
-            naturalPerson: this.mapNaturalPersonModel(naturalPerson, forList),
+            naturalPerson: this.mapNaturalPersonModel(naturalPersonDto, forList),
             addresses: [],
         } as ILegalEntities;
 

@@ -8,7 +8,11 @@
         "LISTOF": "Lista de ",
         "RECORDREMOVEDWITHSUCCESS": "Registro removido com sucesso",
         "LISTOFACTION": "Ações",
-        "LISTEMPTY": "Nenhuma informação localizada"
+        "LISTEMPTY": "Nenhuma informação localizada",
+        "SAVING": "Salvando",
+        "UPDATING": "Atualizando",
+        "RECORDSAVEDWITHSUCCESS": "Registro salvo com sucesso",
+        "FAILSTOSAVERECORD": "Falha ao salvar o registro"
     },
     "MAIN": {
         "FEATURES": {
@@ -74,7 +78,35 @@
             },
             "ADDRESS": {
                 "FAILSEARCHADDRESS": "Erro ao buscar endereço",
-                "INACTIVESEARCHADDRESS": "Este endereço está inativo"
+                "INACTIVESEARCHADDRESS": "Este endereço está inativo",
+
+                "ADDADDRESS": "Adicionar Endereço",
+
+                "ADDRESSTYPE": "Tipo de Endereço",
+
+                "ADDRESSTYPERESIDENTIAL": "Residencial",
+                "ADDRESSTYPEDELIVERY": "Entrega",
+                "ADDRESSTYPEBILLING": "Cobrança",
+
+                "ZIPCODE": "CEP",
+                "STREET": "Logradouro",
+                "NUMBER": "Número",
+                "NEIGHBORHOOD": "Bairro",
+                "CITY": "Cidade",
+                "STATE": "Estado",
+
+                "VALIDATION": {
+                    "ZIPCODEREQUIRED": "CEP é obrigatório",
+                    "ZIPCODEINVALID": "CEP inválido. Formato esperado: 00000-000",
+
+                    "STREETREQUIRED": "Logradouro é obrigatório",
+
+                    "NEIGHBORHOODREQUIRED": "Bairro é obrigatório",
+
+                    "CITYREQUIRED": "Cidade é obrigatória",
+
+                    "STATEREQUIRED": "Estado é obrigatório"
+                }
             }
         }
     }

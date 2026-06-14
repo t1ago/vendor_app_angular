@@ -1,49 +1,54 @@
 <div class="row mb-3">
     <div class="col-12">
-        <label class="form-label">{{typeLabel}}</label>
+        <label class="form-label">{{ 'MAIN.FEATURES.ADDRESS.ADDRESSTYPE' | translate }}</label>
         <div class="d-flex gap-4">
             <app-input-field
                 [type]="'radio'"
                 [field]="formType"
                 [label]="'formType'"
                 inputId="formType"
-                [options]="typeOptions()"
-            />
+                [options]="typeOptions()" />
         </div>
     </div>
 </div>
 
 <div class="row mb-3">
     <div class="col-3">
-        <app-input-field [field]="formZipCode" [label]="zipCodeLabel" inputId="zipCode" (onBlur)="onZipCodeBlur()" />
+        <app-input-field
+            [field]="formZipCode"
+            [label]="'MAIN.FEATURES.ADDRESS.ZIPCODE' | translate"
+            inputId="zipCode"
+            (onBlur)="onZipCodeBlur()" />
     </div>
 
     <div class="col-6">
-        <app-input-field [field]="formStreet" [label]="streetLabel" inputId="street" />
+        <app-input-field [field]="formStreet" [label]="'MAIN.FEATURES.ADDRESS.STREET' | translate" inputId="street" />
     </div>
 
     <div class="col-3">
-        <app-input-field [field]="formNumber" [label]="numberLabel" inputId="number" />
+        <app-input-field [field]="formNumber" [label]="'MAIN.FEATURES.ADDRESS.NUMBER' | translate" inputId="number" />
     </div>
 </div>
 
 <div class="row mb-3">
     <div class="col-4">
-        <app-input-field [field]="formNeighborhood" [label]="neighborhoodLabel" inputId="neighborhood" />
+        <app-input-field
+            [field]="formNeighborhood"
+            [label]="'MAIN.FEATURES.ADDRESS.NEIGHBORHOOD' | translate"
+            inputId="neighborhood" />
     </div>
 
     <div class="col-5">
-        <app-input-field [field]="formCity" [label]="cityLabel" inputId="city" />
+        <app-input-field [field]="formCity" [label]="'MAIN.FEATURES.ADDRESS.CITY' | translate" inputId="city" />
     </div>
 
     <div class="col-3">
         <app-input-field
             [type]="'select'"
             [field]="formState"
-            [label]="stateLabel"
+            [label]="'MAIN.FEATURES.ADDRESS.STATE' | translate"
             [options]="stateOptions()"
-            inputId="stateId"
-        />
+            inputId="stateId" />
     </div>
 </div>
 
@@ -51,11 +56,11 @@
     <div class="col text-end d-grid d-sm-block gap-2">
         <button (click)="onCancelAction()" type="button" class="btn btn-danger me-2">
             <img src="assets/images/cancelar.png" />
-            <span>Cancelar</span>
+            <span>{{ 'COMMONS.CANCEL' | translate }}</span>
         </button>
         <button [disabled]="isDisabledSaveAction" (click)="onSaveAction()" type="button" class="btn btn-primary me-2">
             <img src="assets/images/salvar.png" />
-            <span>Confirmar</span>
+            <span>{{ 'COMMONS.SAVE' | translate }}</span>
         </button>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { IAddressEvent } from '@features/person/interfaces/address-event';
 import { AddressType, IAddressModel } from '@features/person/interfaces/address.model';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
 import { Table } from '@shared/components/table/table';
@@ -8,7 +9,7 @@ import { IMAGES } from '@shared/constants/images';
 
 @Component({
     selector: 'app-address-list',
-    imports: [Table],
+    imports: [Table, TranslatePipe],
     templateUrl: './address-list.html',
     styleUrl: './address-list.scss',
 })
@@ -26,29 +27,29 @@ export class AddressList {
         data: this.addresses(),
         titles: [
             {
-                name: 'Tipo',
+                name: 'MAIN.FEATURES.ADDRESS.ADDRESSTYPE',
                 dataField: 'type',
                 image: (data) => this.addressTypeIcon(data.type),
             },
             {
-                name: 'CEP',
+                name: 'MAIN.FEATURES.ADDRESS.ZIPCODE',
                 dataField: 'zipCode',
             },
             {
-                name: 'Logradouro',
+                name: 'MAIN.FEATURES.ADDRESS.STREET',
                 dataField: 'street',
                 transform: (data) => (data.number ? `${data.street}, ${data.number}` : data.street),
             },
             {
-                name: 'Bairro',
+                name: 'MAIN.FEATURES.ADDRESS.NEIGHBORHOOD',
                 dataField: 'neighborhood',
             },
             {
-                name: 'Cidade',
+                name: 'MAIN.FEATURES.ADDRESS.CITY',
                 dataField: 'city',
             },
             {
-                name: 'UF',
+                name: 'MAIN.FEATURES.ADDRESS.STATE',
                 dataField: 'state',
             },
         ],
@@ -92,7 +93,7 @@ export class AddressList {
     }
 
     get buttonAddTitle(): string {
-        return 'Adicionar Endereço';
+        return 'MAIN.FEATURES.ADDRESS.ADDADDRESS';
     }
 
     get buttonAddIcon(): string {

@@ -1,11 +1,5 @@
 export type AddressType = 'M' | 'C' | 'E';
 
-export const ADDRESS_TYPE_LABEL: Record<AddressType, string> = {
-    M: 'Moradia',
-    C: 'Comercial',
-    E: 'Entrega',
-};
-
 export interface IAddressModel {
     id: number | null;
     zipCode: string;

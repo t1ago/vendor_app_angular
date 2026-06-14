@@ -1,57 +1,59 @@
 <!-- Campo de busca — visível apenas quando nenhuma PF selecionada -->
 @if (!selectedPerson()) {
-<div class="position-relative">
-    <label class="form-label">{{ searchTermLabel }}</label>
-    <input
-        type="text"
-        class="form-control"
-        [value]="searchTerm()"
-        (input)="onSearchInput($any($event.target).value)"
-        autocomplete="off"
-    />
+    <div class="position-relative">
+        <label class="form-label">{{ 'MAIN.FEATURES.PERSON.PERSONNATURALPERSONID' | translate }}</label>
+        <input
+            type="text"
+            class="form-control"
+            [value]="searchTerm()"
+            (input)="onSearchInput($any($event.target).value)"
+            autocomplete="off" />
 
-    @if (isSearching()) {
-    <div class="position-absolute top-55 end-0 pe-2">
-        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-    </div>
-    }
-
-    <!-- Lista de resultados -->
-    @if (results().length > 0) {
-    <ul class="list-group position-absolute w-100 z-3 shadow-sm mt-1">
-        @for (person of results(); track person.id) {
-        <li class="list-group-item list-group-item-action" style="cursor: pointer" (click)="onSelectPerson(person)">
-            <span class="fw-semibold">{{ person.name }}</span>
-            <small class="text-muted ms-2">{{ person.federalDocument.number }}</small>
-        </li>
+        @if (isSearching()) {
+            <div class="position-absolute top-55 end-0 pe-2">
+                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            </div>
         }
-    </ul>
-    }
-</div>
+
+        <!-- Lista de resultados -->
+        @if (results().length > 0) {
+            <ul class="list-group position-absolute w-100 z-3 shadow-sm mt-1">
+                @for (person of results(); track person.id) {
+                    <li
+                        class="list-group-item list-group-item-action"
+                        style="cursor: pointer"
+                        (click)="onSelectPerson(person)">
+                        <span class="fw-semibold">{{ person.name }}</span>
+                        <small class="text-muted ms-2">{{ person.federalDocument.number }}</small>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 }
 
 <!-- Dados da PF selecionada -->
 @if (selectedPerson()) {
-<div class="row mt-2 align-items-center">
-    <div class="col-5">
-        <label class="form-label">{{ selectedNameLabel }}</label>
-        <p>{{selectedPerson()!.name}} ({{selectedPerson()!.surname}})</p>
-    </div>
+    <div class="row mt-2 align-items-center">
+        <div class="col-5">
+            <label class="form-label">{{ 'MAIN.FEATURES.PERSON.PERSONNAMENATURAL' | translate }}</label>
+            <p>{{ selectedPerson()!.name }} ({{ selectedPerson()!.surname }})</p>
+        </div>
 
-    <div class="col-3">
-        <label class="form-label">{{ selectedRgLabel }}</label>
-        <p>{{selectedPerson()!.stateDocument.number}}</p>
-    </div>
+        <div class="col-3">
+            <label class="form-label">{{ 'MAIN.FEATURES.PERSON.PERSONSTATEDOCUMENTNATURAL' | translate }}</label>
+            <p>{{ selectedPerson()!.stateDocument.number }}</p>
+        </div>
 
-    <div class="col-3">
-        <label class="form-label">{{ selectedCpfLabel }}</label>
-        <p>{{selectedPerson()!.federalDocument.number}}</p>
-    </div>
+        <div class="col-3">
+            <label class="form-label">{{ 'MAIN.FEATURES.PERSON.PERSONFEDERALDOCUMENTNATURAL' | translate }}</label>
+            <p>{{ selectedPerson()!.federalDocument.number }}</p>
+        </div>
 
-    <div class="col-1">
-        <button class="btn btn-outline-primary" type="button" (click)="onRemove()">
-            <img [src]="removeIcon" class="button-icon" />
-        </button>
+        <div class="col-1">
+            <button class="btn btn-outline-primary" type="button" (click)="onRemove()">
+                <img [src]="removeIcon" class="button-icon" />
+            </button>
+        </div>
     </div>
-</div>
 }

@@ -35,7 +35,7 @@
 @if (activeFieldIsInvalid) {
     <div class="invalid-feedback d-block">
         @for (error of activeFieldErrors; track $index) {
-            <small>{{ error.message }}</small>
+            <small>{{ error.message | translate }}</small>
         }
     </div>
 }
