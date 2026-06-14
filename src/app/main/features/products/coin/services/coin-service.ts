@@ -8,7 +8,7 @@ import { ICoinModel } from '../interfaces/coin-model';
     providedIn: 'root',
 })
 export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
-    override basePath: string = '/moedas';
+    override basePath: string = '/miguel/moeda';
 
     override save(model: ICoinModel): Observable<Object> {
         if (model.id) {
