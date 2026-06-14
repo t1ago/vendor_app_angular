@@ -52,8 +52,8 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     addressEvent: IAddressEvent | null = null;
 
     personSexOptions = computed<IInputFieldOption[]>(() => [
-        { value: 'M', label: this.personSexMaleLabel },
-        { value: 'F', label: this.personSexFemaleLabel },
+        { value: 'M', label: this.translate.instant('MAIN.FEATURES.PERSON.PERSONSEXMALE') },
+        { value: 'F', label: this.translate.instant('MAIN.FEATURES.PERSON.PERSONSEXFEMALE') },
     ]);
 
     constructor() {
@@ -283,68 +283,36 @@ export class PersonForm extends BaseForm<PersonModelType, PersonService> impleme
     }
 
     get personTypeLabel(): string {
-        return this.translate.instant(
-            this.isNaturalPerson()
-                ? 'main.features.person.form.personTypeNatural'
-                : 'main.features.person.form.personTypeLegal'
-        );
+        return this.isNaturalPerson()
+            ? 'MAIN.FEATURES.PERSON.PERSONTYPENATURAL'
+            : 'MAIN.FEATURES.PERSON.PERSONTYPELEGAL';
     }
 
     get personNameLabel(): string {
-        return this.translate.instant(
-            this.isNaturalPerson()
-                ? 'main.features.person.form.personNameNatural'
-                : 'main.features.person.form.personNameLegal'
-        );
+        return this.isNaturalPerson()
+            ? 'MAIN.FEATURES.PERSON.PERSONNAMENATURAL'
+            : 'MAIN.FEATURES.PERSON.PERSONNAMELEGAL';
     }
 
     get personSurnameLabel(): string {
-        return this.translate.instant(
-            this.isNaturalPerson()
-                ? 'main.features.person.form.personSurnameNatural'
-                : 'main.features.person.form.personSurnameLegal'
-        );
+        return this.isNaturalPerson()
+            ? 'MAIN.FEATURES.PERSON.PERSONSURNAMENATURAL'
+            : 'MAIN.FEATURES.PERSON.PERSONSURNAMELEGAL';
     }
 
     get personStateDocumentLabel(): string {
-        return this.translate.instant(
-            this.isNaturalPerson()
-                ? 'main.features.person.form.personStateDocumentNatural'
-                : 'main.features.person.form.personStateDocumentLegal'
-        );
+        return this.isNaturalPerson()
+            ? 'MAIN.FEATURES.PERSON.PERSONSTATEDOCUMENTNATURAL'
+            : 'MAIN.FEATURES.PERSON.PERSONSTATEDOCUMENTLEGAL';
     }
 
     get personFederalDocumentLabel(): string {
-        return this.translate.instant(
-            this.isNaturalPerson()
-                ? 'main.features.person.form.personFederalDocumentNatural'
-                : 'main.features.person.form.personFederalDocumentLegal'
-        );
-    }
-
-    get personSexLabel(): string {
-        return this.translate.instant('main.features.person.form.personSex');
-    }
-
-    get personSexMaleLabel(): string {
-        return this.translate.instant('main.features.person.form.personSexMale');
-    }
-
-    get personSexFemaleLabel(): string {
-        return this.translate.instant('main.features.person.form.personSexFemale');
-    }
-
-    get personBirthDateLabel(): string {
-        return this.translate.instant('main.features.person.form.personBirthDate');
-    }
-
-    get personNaturalPersonIdLabel(): string {
-        return this.translate.instant('main.features.person.form.personNaturalPersonId');
+        return this.isNaturalPerson()
+            ? 'MAIN.FEATURES.PERSON.PERSONFEDERALDOCUMENTNATURAL'
+            : 'MAIN.FEATURES.PERSON.PERSONFEDERALDOCUMENTLEGAL';
     }
 
     get personActiveLabel(): string {
-        return this.translate.instant(
-            this.model().active ? 'main.features.person.form.personActive' : 'main.features.person.form.personInactive'
-        );
+        return this.model().active ? 'MAIN.FEATURES.PERSON.PERSONACTIVE' : 'MAIN.FEATURES.PERSON.PERSONINACTIVE';
     }
 }

@@ -1,71 +1,80 @@
 {
-    "main": {
-        "features": {
-            "person": {
-                "form": {
-                    "cancel": "Cancelar",
-                    "save": "Salvar",
-                    "loading": "Loading...",
+    "COMMONS": {
+        "CANCEL": "Cancelar",
+        "SAVE": "Salvar",
+        "LOADING": "Loading...",
+        "NEWRECORD": "Cadastro de ",
+        "ADDRECORD": "Adicionar ",
+        "LISTOF": "Lista de ",
+        "RECORDREMOVEDWITHSUCCESS": "Registro removido com sucesso",
+        "LISTOFACTION": "Ações",
+        "LISTEMPTY": "Nenhuma informação localizada"
+    },
+    "MAIN": {
+        "FEATURES": {
+            "PERSON": {
+                "PERSONTYPENATURAL": "Pessoa Física",
+                "PERSONTYPELEGAL": "Pessoa Jurídica",
 
-                    "personTypeNatural": "Pessoa Física",
-                    "personTypeLegal": "Pessoa Jurídica",
+                "PERSONNAMENATURAL": "Nome",
+                "PERSONNAMELEGAL": "Razão Social",
 
-                    "personNameNatural": "Nome",
-                    "personNameLegal": "Razão Social",
+                "PERSONSURNAMENATURAL": "Apelido",
+                "PERSONSURNAMELEGAL": "Nome Fantasia",
 
-                    "personSurnameNatural": "Apelido",
-                    "personSurnameLegal": "Nome Fantasia",
+                "PERSONSTATEDOCUMENTNATURAL": "RG",
+                "PERSONSTATEDOCUMENTLEGAL": "Insc. Estadual",
 
-                    "personStateDocumentNatural": "RG",
-                    "personStateDocumentLegal": "Insc. Estadual",
+                "PERSONFEDERALDOCUMENTNATURAL": "CPF",
+                "PERSONFEDERALDOCUMENTLEGAL": "CNPJ",
 
-                    "personFederalDocumentNatural": "CPF",
-                    "personFederalDocumentLegal": "CNPJ",
+                "PERSONSEX": "Sexo",
+                "PERSONSEXMALE": "Masculino",
+                "PERSONSEXFEMALE": "Feminino",
 
-                    "personSex": "Sexo",
-                    "personSexMale": "Masculino",
-                    "personSexFemale": "Feminino",
+                "PERSONBIRTHDATE": "Data de Nascimento",
 
-                    "personBirthDate": "Data de Nascimento",
+                "PERSONNATURALPERSONID": "Sócio",
 
-                    "personNaturalPersonId": "Sócio",
+                "PERSONACTIVE": "Ativo",
+                "PERSONINACTIVE": "Inativo",
 
-                    "personActive": "Ativo",
-                    "personInactive": "Inativo",
+                "SAVINGPERSON": "Salvando Pessoa",
+                "UPDATINGPERSON": "Atualizando Pessoa",
 
-                    "savingPerson": "Salvando Pessoa",
-                    "updatingPerson": "Atualizando Pessoa",
+                "RECORDSAVEDSUCCESSFULLY": "Registro salvo com sucesso",
 
-                    "recordSavedSuccessfully": "Registro salvo com sucesso",
+                "SAVEFAILED": "Falha ao salvar o registro",
 
-                    "saveFailed": "Falha ao salvar o registro",
+                "VALIDATION": {
+                    "NAMEREQUIRED": "Nome é obrigatório",
+                    "NAMEMINLENGTH": "Nome deve ter no mínimo 3 caracteres",
 
-                    "validation": {
-                        "nameRequired": "Nome é obrigatório",
-                        "nameMinLength": "Nome deve ter no mínimo 3 caracteres",
+                    "SURNAMEREQUIRED": "Apelido é obrigatório",
+                    "SURNAMEMINLENGTH": "Apelido deve ter no mínimo 3 caracteres",
 
-                        "surnameRequired": "Apelido é obrigatório",
-                        "surnameMinLength": "Apelido deve ter no mínimo 3 caracteres",
+                    "RGREQUIRED": "RG é obrigatório",
+                    "RGINVALID": "RG inválido. Formato esperado: 00.000.000-0",
 
-                        "rgRequired": "RG é obrigatório",
-                        "rgInvalid": "RG inválido. Formato esperado: 00.000.000-0",
+                    "CPFREQUIRED": "CPF é obrigatório",
+                    "CPFINVALID": "CPF inválido. Formato esperado: 000.000.000-00",
 
-                        "cpfRequired": "CPF é obrigatório",
-                        "cpfInvalid": "CPF inválido. Formato esperado: 000.000.000-00",
+                    "COMPANYNAMEREQUIRED": "Razão Social é obrigatória",
+                    "COMPANYNAMEMINLENGTH": "Razão Social deve ter no mínimo 3 caracteres",
 
-                        "companyNameRequired": "Razão Social é obrigatória",
-                        "companyNameMinLength": "Razão Social deve ter no mínimo 3 caracteres",
+                    "TRADENAMEREQUIRED": "Nome Fantasia é obrigatório",
+                    "TRADENAMEMINLENGTH": "Nome Fantasia deve ter no mínimo 3 caracteres",
 
-                        "tradeNameRequired": "Nome Fantasia é obrigatório",
-                        "tradeNameMinLength": "Nome Fantasia deve ter no mínimo 3 caracteres",
+                    "STATEREGISTRATIONREQUIRED": "Inscrição Estadual é obrigatória",
+                    "STATEREGISTRATIONINVALID": "Inscrição Estadual inválida",
 
-                        "stateRegistrationRequired": "Inscrição Estadual é obrigatória",
-                        "stateRegistrationInvalid": "Inscrição Estadual inválida",
-
-                        "cnpjRequired": "CNPJ é obrigatório",
-                        "cnpjInvalid": "CNPJ inválido. Formato esperado: 00.000.000/0000-00"
-                    }
+                    "CNPJREQUIRED": "CNPJ é obrigatório",
+                    "CNPJINVALID": "CNPJ inválido. Formato esperado: 00.000.000/0000-00"
                 }
+            },
+            "ADDRESS": {
+                "FAILSEARCHADDRESS": "Erro ao buscar endereço",
+                "INACTIVESEARCHADDRESS": "Este endereço está inativo"
             }
         }
     }

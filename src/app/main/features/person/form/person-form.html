@@ -2,18 +2,18 @@
     <form>
         <div class="row mb-3 mt-5">
             <div class="col">
-                <h1>Cadastro de {{ personTypeLabel }}</h1>
+                <h1>{{ 'COMMONS.NEWRECORD' | translate }}{{ personTypeLabel | translate }}</h1>
             </div>
         </div>
 
         <!-- Common Fields -->
         <div class="row mb-3">
             <div class="col-7">
-                <app-input-field [field]="formName" [label]="personNameLabel" inputId="name" />
+                <app-input-field [field]="formName" [label]="personNameLabel | translate" inputId="name" />
             </div>
 
             <div class="col-5">
-                <app-input-field [field]="formSurname" [label]="personSurnameLabel" inputId="surname" />
+                <app-input-field [field]="formSurname" [label]="personSurnameLabel | translate" inputId="surname" />
             </div>
         </div>
 
@@ -21,24 +21,23 @@
             <div [class.col-3]="isNaturalPerson()" [class.col-6]="!isNaturalPerson()">
                 <app-input-field
                     [field]="formStateDocument"
-                    [label]="personStateDocumentLabel"
+                    [label]="personStateDocumentLabel | translate"
                     inputId="stateDocument" />
             </div>
 
             <div [class.col-3]="isNaturalPerson()" [class.col-6]="!isNaturalPerson()">
                 <app-input-field
                     [field]="formFederalDocument"
-                    [label]="personFederalDocumentLabel"
+                    [label]="personFederalDocumentLabel | translate"
                     inputId="federalDocument" />
             </div>
 
-            <!-- Natual Person -->
+            <!-- Natural Person -->
             @if (isNaturalPerson()) {
                 <div class="col-3">
-                    <label for="sex" class="form-label">{{ personSexLabel }}</label>
                     <app-input-field
                         [field]="formSex"
-                        [label]="personSexLabel"
+                        [label]="'MAIN.FEATURES.PERSON.PERSONSEX' | translate"
                         inputId="sex"
                         type="select"
                         [options]="personSexOptions()" />
@@ -47,7 +46,7 @@
                 <div class="col-3">
                     <app-input-field
                         [field]="formBirthDate"
-                        [label]="personBirthDateLabel"
+                        [label]="'MAIN.FEATURES.PERSON.PERSONBIRTHDATE' | translate"
                         inputId="personBirthDate"
                         [type]="'date'" />
                 </div>
@@ -69,7 +68,7 @@
             <div class="col-auto">
                 <app-input-field
                     [fieldBool]="formActive"
-                    [label]="personActiveLabel"
+                    [label]="personActiveLabel | translate"
                     inputId="active"
                     type="checkbox" />
             </div>
@@ -77,6 +76,7 @@
 
         <br />
         <hr />
+
         <!-- Address -->
         @if (isAddressModeList()) {
             <app-address-list
@@ -89,20 +89,21 @@
                 <div class="col text-end d-grid d-sm-block gap-2">
                     @if (isSaveAction) {
                         <div class="spinner-border text-primary" role="status">
-                            {{ 'main.features.person.form.loading' | translate }}
+                            {{ 'COMMONS.LOADING' | translate }}
                         </div>
                     } @else {
                         <button (click)="onCancelAction()" type="button" class="btn btn-danger me-2">
                             <img src="assets/images/cancelar.png" />
-                            <span>Cancelar</span>
+                            <span>{{ 'COMMONS.CANCEL' | translate }}</span>
                         </button>
+
                         <button
                             [disabled]="isDisabledSaveAction"
                             (click)="onSaveAction()"
                             type="button"
                             class="btn btn-primary me-2">
                             <img src="assets/images/salvar.png" />
-                            <span>Salvar</span>
+                            <span>{{ 'COMMONS.SAVE' | translate }}</span>
                         </button>
                     }
                 </div>

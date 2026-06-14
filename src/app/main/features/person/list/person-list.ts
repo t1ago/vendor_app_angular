@@ -1,4 +1,5 @@
 import { Component, computed, inject, Signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseList } from '@shared/classes/base-list';
 import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
@@ -19,7 +20,7 @@ import { PersonService } from '../services/person-service';
 
 @Component({
     selector: 'app-person-list',
-    imports: [Table, PageLoading],
+    imports: [Table, PageLoading, TranslatePipe],
     templateUrl: './person-list.html',
     styleUrl: './person-list.scss',
 })
@@ -29,6 +30,8 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
     private toastService = inject(ToastService);
 
     private pageLoadingService = inject(PageLoadingService);
+
+    private translate = inject(TranslateService);
 
     override buttonAddTitle: string = '';
 
@@ -62,7 +65,7 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             .subscribe({
                 next: () => {
                     this.updateToInactiveModel(this.model(), dataModel.id!);
-                    this.toastService.show('Registro removido com sucesso', 'success');
+                    this.toastService.show(this.translate.instant('COMMONS.RECORDREMOVEDWITHSUCCESS'), 'success');
                 },
                 error: (errorData) => {
                     this.toastService.show(errorData.message, 'danger');
@@ -81,8 +84,8 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
     }
 
     private loadTableConfigNaturalPerson() {
-        this.title = 'Lista de Pessoas Físicas';
-        this.buttonAddTitle = 'Adcionar Pessoa Física';
+        this.title = 'MAIN.FEATURES.PERSON.PERSONTYPENATURAL';
+        this.buttonAddTitle = this.title;
 
         this.tableConfigNaturalPerson = computed(() => {
             return {
@@ -98,27 +101,30 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             data: this.model() as INaturalPerson[],
             titles: [
                 {
-                    name: 'Nome',
+                    name: 'MAIN.FEATURES.PERSON.PERSONNAMENATURAL',
                     dataField: 'name',
                     transform: (data) => `${data.name} (${data.surname})`,
                 },
                 {
-                    name: 'Sexo',
+                    name: 'MAIN.FEATURES.PERSON.PERSONSEX',
                     dataField: 'sex',
-                    transform: (data) => (data.sex === 'F' ? 'Feminino' : 'Masculino'),
+                    transform: (data) =>
+                        data.sex === 'F'
+                            ? this.translate.instant('MAIN.FEATURES.PERSON.PERSONSEXFEMALE')
+                            : this.translate.instant('MAIN.FEATURES.PERSON.PERSONSEXMALE'),
                 },
                 {
-                    name: 'Data Nascimento',
+                    name: 'MAIN.FEATURES.PERSON.PERSONBIRTHDATE',
                     dataField: 'birthDate',
                     transform: (data) => inputDateToBrazilian(data.birthDate),
                 },
                 {
-                    name: 'RG',
+                    name: 'MAIN.FEATURES.PERSON.PERSONSTATEDOCUMENTNATURAL',
                     dataField: 'stateDocument',
                     transform: (data) => data.stateDocument.number,
                 },
                 {
-                    name: 'CPF',
+                    name: 'MAIN.FEATURES.PERSON.PERSONFEDERALDOCUMENTNATURAL',
                     dataField: 'federalDocument',
                     transform: (data) => data.federalDocument.number,
                 },
@@ -128,8 +134,8 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
     }
 
     private loadTableConfigLegalEntities() {
-        this.title = 'Lista de Pessoas Jurídicas';
-        this.buttonAddTitle = 'Adcionar Pessoa Jurídica';
+        this.title = 'MAIN.FEATURES.PERSON.PERSONTYPELEGAL';
+        this.buttonAddTitle = this.title;
 
         this.tableConfigLegalEntities = computed(() => {
             return {
@@ -145,25 +151,25 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             data: this.model() as ILegalEntities[],
             titles: [
                 {
-                    name: 'Nome',
+                    name: 'MAIN.FEATURES.PERSON.PERSONNAMELEGAL',
                     dataField: 'name',
                 },
                 {
-                    name: 'Nome Fantasia',
+                    name: 'MAIN.FEATURES.PERSON.PERSONSURNAMELEGAL',
                     dataField: 'surname',
                 },
                 {
-                    name: 'Insc. Estadual',
+                    name: 'MAIN.FEATURES.PERSON.PERSONSTATEDOCUMENTLEGAL',
                     dataField: 'stateDocument',
                     transform: (data) => data.stateDocument.number,
                 },
                 {
-                    name: 'CNPJ',
+                    name: 'MAIN.FEATURES.PERSON.PERSONFEDERALDOCUMENTLEGAL',
                     dataField: 'federalDocument',
                     transform: (data) => data.federalDocument.number,
                 },
                 {
-                    name: 'Sócio',
+                    name: 'MAIN.FEATURES.PERSON.PERSONNATURALPERSONID',
                     dataField: 'naturalPerson',
                     transform: (data) => data.naturalPerson.name,
                 },
@@ -227,17 +233,19 @@ export class PersonList extends BaseList<IPersonModel, PersonService> {
             .subscribe({
                 next: (address) => {
                     if (address.active == false) {
-                        this.toastService.show('Este endereço está inativo', 'info');
+                        this.toastService.show(
+                            this.translate.instant('MAIN.FEATURES.ADDRESS.INACTIVESEARCHADDRESS'),
+                            'info'
+                        );
                         setTimeout(() => this.openGoogleMaps(address), 3001);
                     } else {
                         this.openGoogleMaps(address);
                     }
                 },
-                error: () => this.toastService.show('Erro ao buscar endereço', 'danger'),
+                error: () =>
+                    this.toastService.show(this.translate.instant('MAIN.FEATURES.ADDRESS.FAILSEARCHADDRESS'), 'danger'),
             });
     }
-
-    private callbackAlertAddressInactive() {}
 
     private openGoogleMaps(address: IAddressModel): void {
         const query = encodeURIComponent(

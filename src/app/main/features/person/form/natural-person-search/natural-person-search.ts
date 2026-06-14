@@ -52,7 +52,7 @@ export class NaturalPersonSearch implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.naturalPerson()) {
+        if (this.naturalPerson() && this.naturalPerson()?.id != null) {
             this.selectedPerson.set(this.naturalPerson());
         }
     }

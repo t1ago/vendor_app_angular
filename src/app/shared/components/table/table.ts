@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ITableConfig } from './interfaces/table-config';
 
 @Component({
     selector: 'app-table',
-    imports: [],
+    imports: [TranslatePipe],
     templateUrl: './table.html',
     styleUrl: './table.scss',
 })
@@ -32,9 +33,5 @@ export class Table<MODEL> {
 
     get emptyColSpan() {
         return this.titles.length + (this.buttons.length > 0 ? 1 : 0);
-    }
-
-    get emptyMessage() {
-        return 'Nenhuma informação localizada';
     }
 }

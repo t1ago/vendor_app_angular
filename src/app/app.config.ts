@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
         provideClientHydration(withEventReplay()),
         provideTranslateService({
             lang: 'pt-BR',
-            fallbackLang: 'en',
+            fallbackLang: 'pt-BR',
             loader: provideTranslateHttpLoader({
                 prefix: '/assets/i18n/',
                 suffix: '.json',
