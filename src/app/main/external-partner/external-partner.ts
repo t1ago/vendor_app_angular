@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IAuthTokenModel } from '@shared/interfaces/auth-token-model';
 import { AuthStoreService } from '@shared/services/auth-store-service';
 import { AuthUserService } from '@shared/services/auth-user-service';
 
 @Component({
     selector: 'app-external-partner',
-    imports: [],
+    imports: [TranslatePipe],
     templateUrl: './external-partner.html',
     styleUrl: './external-partner.scss',
 })

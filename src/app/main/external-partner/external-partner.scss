@@ -1,0 +1,39 @@
+.redirect-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.redirect-card {
+    max-width: 450px;
+    width: 100%;
+    border: 0;
+    border-radius: 1rem;
+}
+
+.redirect-icon {
+    font-size: 4rem;
+    opacity: 0.85;
+}
+
+.redirect-icon i {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+}

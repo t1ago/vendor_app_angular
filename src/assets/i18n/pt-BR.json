@@ -108,6 +108,10 @@
                     "STATEREQUIRED": "Estado é obrigatório"
                 }
             }
+        },
+        "EXTERNALPARTNER": {
+            "REDIRECTING": "Redirecionando",
+            "MESSAGE": "Você está sendo encaminhado para a próxima página. Aguarde alguns instantes"
         }
     }
 }
