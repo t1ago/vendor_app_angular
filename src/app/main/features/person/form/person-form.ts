@@ -19,8 +19,6 @@ import { AddressForm } from './address/form/address-form';
 import { AddressList } from './address/list/address-list';
 import { NaturalPersonSearch } from './natural-person-search/natural-person-search';
 
-// TODO: Verificar porque os ativos mesmo colocando como inativo ao salvar fica ativo o registro
-
 export type AddressMode = 'list' | 'form';
 
 const PATTERNS = {
