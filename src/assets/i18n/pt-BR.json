@@ -78,7 +78,7 @@
             },
             "ADDRESS": {
                 "FAILSEARCHADDRESS": "Erro ao buscar endereço",
-                "INACTIVESEARCHADDRESS": "Este endereço está inativo",
+                "INACTIVESEARCHADDRESS": "Este endereço está inativo, mas você será redirecionado",
 
                 "ADDADDRESS": "Adicionar Endereço",
 
