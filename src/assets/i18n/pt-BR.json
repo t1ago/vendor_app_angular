@@ -107,6 +107,15 @@
 
                     "STATEREQUIRED": "Estado é obrigatório"
                 }
+            },
+            "CATEGORY": {
+                "TITLE": "Categoria",
+                "FORMTITLE": "Cadastro de Categoria",
+                "NAME": "Nome da Categoria",
+                "VALIDATION": {
+                    "NAMEREQUIRED": "Nome é obrigatório",
+                    "NAMEMINLENGTH": "Nome deve ter no mínimo 3 caracteres"
+                }
             }
         },
         "EXTERNALPARTNER": {

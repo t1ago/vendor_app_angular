@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { IMAGES } from '@shared/constants/images';
@@ -16,6 +17,7 @@ describe('CategoryList', () => {
     let pageLoadingServiceMock: any;
     let routerMock: any;
     let activatedRouteMock: any;
+    let translateServiceMock: any;
 
     const mockCategories: ICategoryModel[] = [
         { id: 1, name: 'Electronics' },
@@ -45,6 +47,10 @@ describe('CategoryList', () => {
             data: of({ data: mockCategories }),
         };
 
+        translateServiceMock = {
+            instant: vi.fn((key: string) => key),
+        };
+
         await TestBed.configureTestingModule({
             imports: [CategoryList],
             providers: [
@@ -53,6 +59,7 @@ describe('CategoryList', () => {
                 { provide: PageLoadingService, useValue: pageLoadingServiceMock },
                 { provide: Router, useValue: routerMock },
                 { provide: ActivatedRoute, useValue: activatedRouteMock },
+                { provide: TranslateService, useValue: translateServiceMock },
             ],
         }).compileComponents();
 
@@ -61,7 +68,7 @@ describe('CategoryList', () => {
 
     it('should create the component and initialize with route data', () => {
         expect(component).toBeTruthy();
-        expect(component.title).toBe('Lista de Categorias');
+        expect(component.title).toBe('MAIN.FEATURES.CATEGORY.TITLE');
         expect(component.model()).toEqual(mockCategories);
     });
 
@@ -69,7 +76,7 @@ describe('CategoryList', () => {
         const config = component.getTableConfig();
 
         expect(config.hasHover).toBe(true);
-        expect(config.titles[0].name).toBe('Nome da Categoria');
+        expect(config.titles[0].name).toBe('MAIN.FEATURES.CATEGORY.NAME');
         expect(config.titles[0].dataField).toBe('name');
         expect(config.buttons.length).toBe(2);
         expect(component.buttonAddIcon).toBe(IMAGES.NEW);
@@ -86,28 +93,17 @@ describe('CategoryList', () => {
         expect(routerMock.navigate).toHaveBeenCalledWith(['category', 'form']);
     });
 
-    it('should update model when onRefreshAction is triggered', () => {
-        const newData: ICategoryModel[] = [{ id: 3, name: 'Games' }];
-        categoryServiceMock.getAll.mockReturnValue(of(newData));
-
-        component.onRefreshAction();
-
-        expect(categoryServiceMock.getAll).toHaveBeenCalled();
-        expect(component.model()).toEqual(newData);
-    });
-
     describe('onRemoveAction', () => {
-        it('should remove record successfully, call callback and show success toast', () => {
+        it('should remove record from model signal and show success toast', () => {
             const category = mockCategories[0];
-            const callback = vi.fn();
 
             categoryServiceMock.delete.mockReturnValue(of({}));
 
-            component.onRemoveAction(category, callback);
+            component.onRemoveAction(category, null);
 
             expect(categoryServiceMock.delete).toHaveBeenCalledWith(category.id);
-            expect(callback).toHaveBeenCalled();
-            expect(toastServiceMock.show).toHaveBeenCalledWith('Registro removido com sucesso', 'success');
+            expect(component.model()).not.toContainEqual(category);
+            expect(toastServiceMock.show).toHaveBeenCalledWith('COMMONS.RECORDREMOVEDWITHSUCCESS', 'success');
         });
 
         it('should show danger toast when deletion fails', () => {
@@ -116,7 +112,7 @@ describe('CategoryList', () => {
 
             categoryServiceMock.delete.mockReturnValue(throwError(() => errorResponse));
 
-            component.onRemoveAction(category, vi.fn());
+            component.onRemoveAction(category, null);
 
             expect(toastServiceMock.show).toHaveBeenCalledWith(errorResponse.message, 'danger');
         });
@@ -132,6 +128,6 @@ describe('CategoryList', () => {
         expect(editSpy).toHaveBeenCalledWith(category);
 
         config.buttons[1].action(category);
-        expect(removeSpy).toHaveBeenCalledWith(category, component.onRefreshAction);
+        expect(removeSpy).toHaveBeenCalledWith(category, null);
     });
 });

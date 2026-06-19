@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseList } from '@shared/classes/base-list';
 import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
@@ -13,10 +14,9 @@ import { CategoryService } from '../services/category-service';
 
 @Component({
     selector: 'app-category-list',
-    imports: [Table, PageLoading],
+    imports: [Table, PageLoading, TranslatePipe],
     templateUrl: './category-list.html',
     styleUrl: './category-list.scss',
-    standalone: true,
 })
 export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
     override service = inject(CategoryService);
@@ -25,14 +25,16 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
 
     private pageLoadingService = inject(PageLoadingService);
 
-    override buttonAddTitle: string = 'Nova Categoria';
+    private translate = inject(TranslateService);
+
+    override buttonAddTitle: string = 'MAIN.FEATURES.CATEGORY.TITLE';
 
     override buttonAddIcon: string = IMAGES.NEW;
 
     constructor() {
         super();
 
-        this.title = 'Lista de Categorias';
+        this.title = 'MAIN.FEATURES.CATEGORY.TITLE';
         this.loadTableConfig();
     }
 
@@ -42,7 +44,7 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
             data: this.model(),
             titles: [
                 {
-                    name: 'Nome da Categoria',
+                    name: 'MAIN.FEATURES.CATEGORY.NAME',
                     dataField: 'name',
                 },
             ],
@@ -51,17 +53,13 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
                     icon: IMAGES.EDIT,
                     show: SHOW_ALWAYS,
                     name: '',
-                    action: (dataModel) => {
-                        this.onEditAction(dataModel);
-                    },
+                    action: (dataModel) => this.onEditAction(dataModel),
                 },
                 {
                     icon: IMAGES.REMOVE,
                     show: SHOW_ALWAYS,
                     name: '',
-                    action: (dataModel) => {
-                        this.onRemoveAction(dataModel, this.onRefreshAction);
-                    },
+                    action: (dataModel) => this.onRemoveAction(dataModel, null),
                 },
             ],
         };
@@ -71,25 +69,19 @@ export class CategoryList extends BaseList<ICategoryModel, CategoryService> {
         this.router.navigate(['category', 'form', dataModel.id!]);
     };
 
-    public override onRemoveAction = (dataModel: ICategoryModel, callback: any) => {
+    public override onRemoveAction = (dataModel: ICategoryModel, _callback: any) => {
         this.service
             .delete(dataModel.id!)
             .pipe(loadingObservablePipe(this.pageLoadingService))
             .subscribe({
                 next: () => {
-                    callback();
-                    this.toastService.show('Registro removido com sucesso', 'success');
+                    this.model.update((list) => list.filter((i) => i.id !== dataModel.id));
+                    this.toastService.show(this.translate.instant('COMMONS.RECORDREMOVEDWITHSUCCESS'), 'success');
                 },
                 error: (errorData) => {
                     this.toastService.show(errorData.message, 'danger');
                 },
             });
-    };
-
-    public override onRefreshAction = () => {
-        this.service.getAll().subscribe((result) => {
-            this.model.set(result);
-        });
     };
 
     public override onAddAction = () => {
