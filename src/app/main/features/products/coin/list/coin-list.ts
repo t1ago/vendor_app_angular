@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseList } from '@shared/classes/base-list';
+import { PageLoading } from '@shared/components/page-loading/page-loading';
 import { PageLoadingService } from '@shared/components/page-loading/services/page-loading-service';
 import { SHOW_ALWAYS } from '@shared/components/table/constants/table-constants';
 import { ITableConfig } from '@shared/components/table/interfaces/table-config';
@@ -12,7 +14,7 @@ import { CoinService } from '../services/coin-service';
 
 @Component({
     selector: 'app-coin-list',
-    imports: [Table],
+    imports: [Table, PageLoading, TranslatePipe],
     templateUrl: './coin-list.html',
     styleUrl: './coin-list.scss',
 })
@@ -23,14 +25,16 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
 
     private pageLoadingService = inject(PageLoadingService);
 
-    override buttonAddTitle: string = 'Nova Moeda';
+    private translate = inject(TranslateService);
+
+    override buttonAddTitle: string = 'MAIN.FEATURES.COIN.TITLE';
 
     override buttonAddIcon: string = IMAGES.NEW;
 
     constructor() {
         super();
 
-        this.title = 'Lista de Moedas';
+        this.title = 'MAIN.FEATURES.COIN.TITLE';
         this.loadTableConfig();
     }
 
@@ -40,11 +44,11 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
             data: this.model(),
             titles: [
                 {
-                    name: 'Símbolo',
+                    name: 'MAIN.FEATURES.COIN.SYMBOL',
                     dataField: 'symbol',
                 },
                 {
-                    name: 'Nome da Moeda',
+                    name: 'MAIN.FEATURES.COIN.NAME',
                     dataField: 'name',
                 },
             ],
@@ -53,17 +57,13 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
                     icon: IMAGES.EDIT,
                     show: SHOW_ALWAYS,
                     name: '',
-                    action: (dataModel) => {
-                        this.onEditAction(dataModel);
-                    },
+                    action: (dataModel) => this.onEditAction(dataModel),
                 },
                 {
                     icon: IMAGES.REMOVE,
                     show: SHOW_ALWAYS,
                     name: '',
-                    action: (dataModel) => {
-                        this.onRemoveAction(dataModel, this.onRefreshAction);
-                    },
+                    action: (dataModel) => this.onRemoveAction(dataModel, null),
                 },
             ],
         };
@@ -73,25 +73,19 @@ export class CoinList extends BaseList<ICoinModel, CoinService> {
         this.router.navigate(['coin', 'form', dataModel.id!]);
     };
 
-    public override onRemoveAction = (dataModel: ICoinModel, callback: any) => {
+    public override onRemoveAction = (dataModel: ICoinModel, _callback: any) => {
         this.service
             .delete(dataModel.id!)
             .pipe(loadingObservablePipe(this.pageLoadingService))
             .subscribe({
                 next: () => {
-                    callback();
-                    this.toastService.show('Registro removido com sucesso', 'success');
+                    this.model.update((list) => list.filter((i) => i.id !== dataModel.id));
+                    this.toastService.show(this.translate.instant('COMMONS.RECORDREMOVEDWITHSUCCESS'), 'success');
                 },
                 error: (errorData) => {
                     this.toastService.show(errorData.message, 'danger');
                 },
             });
-    };
-
-    public override onRefreshAction = () => {
-        this.service.getAll().subscribe((result) => {
-            this.model.set(result);
-        });
     };
 
     public override onAddAction = () => {

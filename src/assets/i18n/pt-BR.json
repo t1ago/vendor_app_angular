@@ -116,6 +116,18 @@
                     "NAMEREQUIRED": "Nome é obrigatório",
                     "NAMEMINLENGTH": "Nome deve ter no mínimo 3 caracteres"
                 }
+            },
+            "COIN": {
+                "TITLE": "Moeda",
+                "FORMTITLE": "Cadastro de Moeda",
+                "NAME": "Nome da Moeda",
+                "SYMBOL": "Símbolo",
+                "VALIDATION": {
+                    "NAMEREQUIRED": "Nome da Moeda é obrigatório",
+                    "NAMEMINLENGTH": "Nome da Moeda deve ter no mínimo 3 caracteres",
+                    "SYMBOLREQUIRED": "Símbolo é obrigatório",
+                    "SYMBOLMAXLENGTH": "Símbolo deve ter no máximo 3 caracteres"
+                }
             }
         },
         "EXTERNALPARTNER": {

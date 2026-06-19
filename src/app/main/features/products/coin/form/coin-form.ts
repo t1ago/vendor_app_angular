@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormField, maxLength, minLength, required, submit } from '@angular/forms/signals';
+import { Component, inject, OnInit } from '@angular/core';
+import { maxLength, minLength, required, submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseForm } from '@shared/classes/base-form';
+import { PageLoading } from '@shared/components/page-loading/page-loading';
+import { InputField } from '@shared/components/input-field/input-field';
 import { ToastService } from '@shared/components/toast/services/toast-service';
 import { ISateSaveControlModel } from '@shared/interfaces/save-control-model';
 import { ICoinModel } from '../interfaces/coin-model';
@@ -10,11 +12,11 @@ import { CoinService } from '../services/coin-service';
 
 @Component({
     selector: 'app-coin-form',
-    imports: [FormField],
+    imports: [InputField, PageLoading, TranslatePipe],
     templateUrl: './coin-form.html',
     styleUrl: './coin-form.scss',
 })
-export class CoinForm extends BaseForm<ICoinModel, CoinService> {
+export class CoinForm extends BaseForm<ICoinModel, CoinService> implements OnInit {
     override service = inject(CoinService);
 
     private router = inject(Router);
@@ -23,50 +25,47 @@ export class CoinForm extends BaseForm<ICoinModel, CoinService> {
 
     private toastService = inject(ToastService);
 
+    private translate = inject(TranslateService);
+
     constructor() {
         super();
-        this.createForm(this.createModel(), (schemaPath: any) => {
-            (required(schemaPath.name, { message: 'Nome da Moeda é obrigatório' }),
-                minLength(schemaPath.name, 3, { message: 'Nome da Moeda deve ter 3 caracteres' }),
-                required(schemaPath.symbol, { message: 'Símbolo é obrigatório' }),
-                maxLength(schemaPath.symbol, 3, { message: 'Símbolo deve ter até 3 caracteres ' }));
+        this.createForm(this.makeEmptyModel(), (schemaPath: any) => {
+            required(schemaPath.name, { message: 'MAIN.FEATURES.COIN.VALIDATION.NAMEREQUIRED' });
+            minLength(schemaPath.name, 3, { message: 'MAIN.FEATURES.COIN.VALIDATION.NAMEMINLENGTH' });
+            required(schemaPath.symbol, { message: 'MAIN.FEATURES.COIN.VALIDATION.SYMBOLREQUIRED' });
+            maxLength(schemaPath.symbol, 3, { message: 'MAIN.FEATURES.COIN.VALIDATION.SYMBOLMAXLENGTH' });
         });
     }
 
-    private createModel(): ICoinModel {
-        const routeData = toSignal(this.route.data);
-        const dataModel = routeData()?.['data'];
-
-        if (dataModel) {
-            return dataModel as ICoinModel;
-        } else {
-            return {
-                id: null,
-                name: '',
-                symbol: '',
-            };
+    ngOnInit(): void {
+        const routeData = this.route.snapshot.data['data'];
+        if (routeData) {
+            this.model.set(routeData);
         }
     }
 
-    override onSaveAction() {
+    override onSaveAction(): void {
         submit(this.formData, async () => {
-            const category = this.model();
+            const coin = this.model();
 
             this.updateSaveControl(
                 ISateSaveControlModel.SAVING,
-                category.id == null ? 'Salvando moeda' : 'Atualizando moeda'
+                coin.id == null
+                    ? this.translate.instant('COMMONS.SAVING')
+                    : this.translate.instant('COMMONS.UPDATING')
             );
 
             this.toastService.show(this.saveControl().message, 'info');
 
-            this.service.save(category).subscribe({
+            this.service.save(coin).subscribe({
                 next: () => {
-                    this.toastService.show('Registro salvo com sucesso', 'success', 1000);
+                    this.toastService.show(this.translate.instant('COMMONS.RECORDSAVEDWITHSUCCESS'), 'success', 1000);
                     this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                     this.onCancelAction();
                 },
-                error: (_errorData) => {
-                    this.toastService.show('Falha ao salvar o registro', 'danger');
+                error: () => {
+                    this.toastService.show(this.translate.instant('COMMONS.FAILSTOSAVERECORD'), 'danger');
+                    this.updateSaveControl(ISateSaveControlModel.OPEN, '');
                 },
             });
         });
@@ -74,6 +73,10 @@ export class CoinForm extends BaseForm<ICoinModel, CoinService> {
 
     override onCancelAction(): void {
         this.router.navigate(['coin', 'list']);
+    }
+
+    private makeEmptyModel(): ICoinModel {
+        return { id: null, name: '', symbol: '' };
     }
 
     get formName() {

@@ -9,7 +9,7 @@ import { CoinService } from './coin-service';
 describe('CoinService', () => {
     let service: CoinService;
     let httpMock: HttpTestingController;
-    const apiUrl = 'http://localhost:3000/moedas';
+    const apiUrl = 'http://localhost:3000/miguel/moeda';
 
     beforeEach(() => {
         TestBed.resetTestingModule();
