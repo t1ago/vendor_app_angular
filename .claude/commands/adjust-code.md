@@ -29,6 +29,17 @@ adding a new service method, fixing a bug, or updating i18n keys.
 
 ---
 
+## [P] Plan — present before acting
+
+After completing the analysis and **before writing any code**, present a plan to the user containing:
+
+- List of files that will be created or modified, with a one-line description of each change.
+- Any ambiguities or decisions that require the user's input.
+
+**Wait for explicit approval before proceeding.** Do not start editing files until the user confirms.
+
+---
+
 ## [S] Spec — what to respect during edits
 
 Read `$PWD/.claude/patterns/spec-pattern.md` for the full contract. Key invariants that must hold after any edit:

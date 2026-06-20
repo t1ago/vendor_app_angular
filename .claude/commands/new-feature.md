@@ -25,6 +25,18 @@ Every file must conform to `$PWD/.claude/patterns/spec-pattern.md` — read it b
 
 ---
 
+## [P] Plan — present before acting
+
+After completing the analysis and **before writing any code**, present a plan to the user containing:
+
+- List of files that will be created or modified, with a one-line description of each.
+- The chosen entity name, route path, and API base path.
+- Any ambiguities or missing information that require the user's input.
+
+**Wait for explicit approval before proceeding.** Do not create any file until the user confirms.
+
+---
+
 ## [S] Spec — what to generate
 
 Read `$PWD/.claude/patterns/spec-pattern.md` for the complete contract.
