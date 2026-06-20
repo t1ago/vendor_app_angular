@@ -34,20 +34,33 @@ When new files were created or imports changed:
 
 When a model, DTO, or service was touched (or for any new feature):
 
-1. Fetch the API spec from the backend (requires `SWAGGER_ENABLED=true` on vendor_service):
+Fetch the live API contract first — the backend must be running:
+
 ```bash
-curl -s http://localhost:3000/api-spec | jq '.components.schemas.{EntityName}'
+curl -s http://localhost:3000/api-spec
 ```
 
-2. Compare each field in the schema against the Angular model/DTO:
+> This is the single source of truth. Never read backend source files directly.
 
-| Campo API | Tipo API | Nullable | Campo Model Angular | Campo DTO | Mapeamento |
-|---|---|---|---|---|---|
-| ... | ... | ... | ... | ... | ✅ / ❌ |
+For each Angular service method, execute the following steps:
 
-3. Report:
-   - ✅ if every field maps correctly with no divergence.
-   - If any mismatch exists, show the table with the problem row highlighted and fix before proceeding.
+**Step A — Locate the path in the spec**
+Find the matching `verb + path` under `paths` in the spec JSON.
 
-> If vendor_service is not running, fall back to reading the schema file directly:
-> `vendor_service/src/modulos/tiago/{module}/{module}_schema.ts`
+**Step B — Resolve the response schema**
+From `responses.200.content.application/json.schema.$ref`, resolve the `$ref` chain through `components.schemas` until you reach the concrete field list (e.g. `EnderecoResponse → allOf → ResultadoAPI + { data: Endereco }` → `Endereco` fields).
+
+**Step C — Read the Angular implementation**
+Read the method body: what does it extract from the response? Trace through `value.data`, `pipe/map`, `mapModel`, `mapDto`, nested field access — whatever the method actually reads.
+
+**Step D — Compare field by field**
+Every field the Angular code reads must exist in the resolved schema. Flag any field that is read but absent from the schema, or any required schema field that is never read.
+
+**Step E — Output the result table**
+
+| service.method | endpoint | status | description |
+|---|---|---|---|
+| `ServiceName.methodName` | `VERB /path` | ✅ | |
+| `ServiceName.methodName` | `VERB /path` | ❌ | field `x` read by Angular but absent from spec schema `Y` |
+
+Report one row per method. If all fields match, leave description empty. If any mismatch, describe exactly which field and which schema diverges.
