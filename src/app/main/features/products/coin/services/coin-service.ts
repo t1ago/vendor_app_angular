@@ -8,7 +8,7 @@ import { ICoinModel } from '../interfaces/coin-model';
     providedIn: 'root',
 })
 export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
-    override basePath: string = '/miguel/moeda';
+    override basePath: string = '/tiago/moeda';
 
     override save(model: ICoinModel): Observable<Object> {
         if (model.id) {
@@ -21,13 +21,11 @@ export class CoinService extends BaseRequestService<ICoinModel, ICoinDto> {
     }
 
     override getById(id: number | string): Observable<ICoinModel> {
-        const queryParams = { id: id };
-
-        this.request = this.http.get(`${this.APIPath}`, { params: queryParams });
+        this.request = this.http.get(`${this.APIPath}/${id}`);
 
         return this.resultObservable().pipe(
             map((value: any) => {
-                return this.mapModel(value.data[0]);
+                return this.mapModel(value.data);
             })
         );
     }
