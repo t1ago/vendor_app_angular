@@ -37,6 +37,11 @@ export class Main {
                     children: [],
                 },
                 {
+                    name: 'Medida',
+                    route: '/measure/list',
+                    children: [],
+                },
+                {
                     name: 'Grupo',
                     route: this.makeExternalRedirect('https://vendor-app-angular.onrender.com', '/group/list'),
                     children: [],

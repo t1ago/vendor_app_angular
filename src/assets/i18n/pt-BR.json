@@ -117,6 +117,15 @@
                     "NAMEMINLENGTH": "Nome deve ter no mínimo 3 caracteres"
                 }
             },
+            "MEASURE": {
+                "TITLE": "Medida",
+                "FORMTITLE": "Cadastro de Medida",
+                "NAME": "Nome da Medida",
+                "VALIDATION": {
+                    "NAMEREQUIRED": "Nome da Medida é obrigatório",
+                    "NAMEMINLENGTH": "Nome da Medida deve ter no mínimo 3 caracteres"
+                }
+            },
             "COIN": {
                 "TITLE": "Moeda",
                 "FORMTITLE": "Cadastro de Moeda",

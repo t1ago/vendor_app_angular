@@ -35,6 +35,11 @@ export const routes: Routes = [
                     import('./main/features/products/coin/routes/coin.routes').then((m) => m.coinRoutes),
             },
             {
+                path: 'measure',
+                loadChildren: () =>
+                    import('./main/features/products/measure/routes/measure.routes').then((m) => m.measureRoutes),
+            },
+            {
                 path: 'person',
                 loadChildren: () => import('./main/features/person/routes/person.routes').then((m) => m.personRoutes),
             },
